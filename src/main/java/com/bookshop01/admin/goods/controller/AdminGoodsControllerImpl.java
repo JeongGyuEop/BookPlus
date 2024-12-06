@@ -103,7 +103,8 @@ public class AdminGoodsControllerImpl extends BaseController  implements AdminGo
 	//상품등록하기 버튼을 클릭해 상품을 등록할수 있는 addNewGoodsForm.jsp중앙화면에서 
 	//등록할 상품정보를 입력하고  이미지파일을 첨부해서   상품등록요청이 들어오면 호출됩니다. 
 	@RequestMapping(value="/addNewGoods.do" ,method={RequestMethod.POST})
-	public ResponseEntity addNewGoods(MultipartHttpServletRequest multipartRequest, HttpServletResponse response)  throws Exception {
+	public ResponseEntity addNewGoods(MultipartHttpServletRequest multipartRequest, 
+									 HttpServletRequest request, HttpServletResponse response)  throws Exception {
 		
 		multipartRequest.setCharacterEncoding("utf-8");
 		response.setContentType("text/html; charset=UTF-8");
@@ -129,7 +130,7 @@ public class AdminGoodsControllerImpl extends BaseController  implements AdminGo
 		
 		
 		//첨부한 이미지 정보를 가져옵니다. 
-		List<ImageFileVO> imageFileList =upload(multipartRequest);
+		List<ImageFileVO> imageFileList =upload(multipartRequest, request);
 		
 		//이미지 정보에 상품 관리자  ID를 속성으로 추가합니다. 
 		if(imageFileList!= null && imageFileList.size()!=0) {
@@ -228,7 +229,8 @@ public class AdminGoodsControllerImpl extends BaseController  implements AdminGo
 	
 
 	@RequestMapping(value="/modifyGoodsImageInfo.do" ,method={RequestMethod.POST})
-	public void modifyGoodsImageInfo(MultipartHttpServletRequest multipartRequest, HttpServletResponse response)  throws Exception {
+	public void modifyGoodsImageInfo(MultipartHttpServletRequest multipartRequest,
+			 						HttpServletRequest request, HttpServletResponse response)  throws Exception {
 		System.out.println("modifyGoodsImageInfo");
 		multipartRequest.setCharacterEncoding("utf-8");
 		response.setContentType("text/html; charset=utf-8");
@@ -250,7 +252,7 @@ public class AdminGoodsControllerImpl extends BaseController  implements AdminGo
 		int goods_id=0;
 		int image_id=0;
 		try {
-			imageFileList =upload(multipartRequest);
+			imageFileList =upload(multipartRequest, request);
 			if(imageFileList!= null && imageFileList.size()!=0) {
 				for(ImageFileVO imageFileVO : imageFileList) {
 					goods_id = Integer.parseInt((String)goodsMap.get("goods_id"));
@@ -284,7 +286,8 @@ public class AdminGoodsControllerImpl extends BaseController  implements AdminGo
 
 	@Override
 	@RequestMapping(value="/addNewGoodsImage.do" ,method={RequestMethod.POST})
-	public void addNewGoodsImage(MultipartHttpServletRequest multipartRequest, HttpServletResponse response)
+	public void addNewGoodsImage(MultipartHttpServletRequest multipartRequest, 
+			 					HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		System.out.println("addNewGoodsImage");
 		multipartRequest.setCharacterEncoding("utf-8");
@@ -306,7 +309,7 @@ public class AdminGoodsControllerImpl extends BaseController  implements AdminGo
 		List<ImageFileVO> imageFileList=null;
 		int goods_id=0;
 		try {
-			imageFileList =upload(multipartRequest);
+			imageFileList =upload(multipartRequest, request);
 			if(imageFileList!= null && imageFileList.size()!=0) {
 				for(ImageFileVO imageFileVO : imageFileList) {
 					goods_id = Integer.parseInt((String)goodsMap.get("goods_id"));
