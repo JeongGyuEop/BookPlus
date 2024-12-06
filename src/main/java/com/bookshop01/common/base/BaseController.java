@@ -25,9 +25,9 @@ import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 import com.bookshop01.goods.vo.ImageFileVO;
 
 public abstract class BaseController  {
-	private static final String CURR_IMAGE_REPO_PATH = "/resources/image/shopping/file_repo";
 	
-	protected List<ImageFileVO> upload(MultipartHttpServletRequest multipartRequest) throws Exception{
+	protected List<ImageFileVO> upload(MultipartHttpServletRequest multipartRequest, HttpServletRequest request) throws Exception{
+	    String path = request.getSession().getServletContext().getRealPath("/resources/image/shopping/file_repo");
 		List<ImageFileVO> fileList= new ArrayList<ImageFileVO>();
 		Iterator<String> fileNames = multipartRequest.getFileNames();
 		while(fileNames.hasNext()){
@@ -39,21 +39,22 @@ public abstract class BaseController  {
 			imageFileVO.setFileName(originalFileName);
 			fileList.add(imageFileVO);
 			
-			File file = new File(CURR_IMAGE_REPO_PATH +"/"+ fileName);
+			File file = new File(path +"/"+ fileName);
 			if(mFile.getSize()!=0){ //File Null Check
 				if(! file.exists()){ //��λ� ������ �������� ���� ���
 					if(file.getParentFile().mkdirs()){ //��ο� �ش��ϴ� ���丮���� ����
 							file.createNewFile(); //���� ���� ����
 					}
 				}
-				mFile.transferTo(new File(CURR_IMAGE_REPO_PATH +"/"+"temp"+ "/"+originalFileName)); //�ӽ÷� ����� multipartFile�� ���� ���Ϸ� ����
+				mFile.transferTo(new File(path +"/"+"temp"+ "/"+originalFileName)); //�ӽ÷� ����� multipartFile�� ���� ���Ϸ� ����
 			}
 		}
 		return fileList;
 	}
 	
-	private void deleteFile(String fileName) {
-		File file =new File(CURR_IMAGE_REPO_PATH+"\\"+fileName);
+	private void deleteFile(String fileName, HttpServletRequest request) {
+	    String path = request.getSession().getServletContext().getRealPath("/resources/image/shopping/file_repo");
+	    File file = new File(path + "/" + fileName);
 		try{
 			file.delete();
 		}catch(Exception e){
