@@ -1,0 +1,10 @@
+/.metadata/
+/.recommenders/
+.classpath
+.project
+.settings/
+/Servers/
+/build/
+.DS_Store
+.springBeans
+target/
