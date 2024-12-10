@@ -1,3 +1,4 @@
+<%@page import="org.json.JSONObject"%>
 <%@ page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8"
 	isELIgnored="false"%>
@@ -7,60 +8,57 @@
 <html>
 <head>
 <meta charset="utf-8">
-<script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script>
-
-
 function execDaumPostcode() {
-  new daum.Postcode({
-    oncomplete: function(data) {
-      // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+	  new daum.Postcode({
+	    oncomplete: function (data) {
+	      // 팝업에서 검색결과 항목을 클릭했을 때 실행할 코드를 작성하는 부분.
 
-      // 도로명 주소의 노출 규칙에 따라 주소를 조합한다.
-      // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
-      var fullRoadAddr = data.roadAddress; // 도로명 주소 변수
-      var extraRoadAddr = ''; // 도로명 조합형 주소 변수
+	      var fullRoadAddr = data.roadAddress; // 도로명 주소 변수
+	      var extraRoadAddr = ''; // 도로명 조합형 주소 변수
 
-      // 법정동명이 있을 경우 추가한다. (법정리는 제외)
-      // 법정동의 경우 마지막 문자가 "동/로/가"로 끝난다.
-      if(data.bname !== '' && /[동|로|가]$/g.test(data.bname)){
-        extraRoadAddr += data.bname;
-      }
-      // 건물명이 있고, 공동주택일 경우 추가한다.
-      if(data.buildingName !== '' && data.apartment === 'Y'){
-        extraRoadAddr += (extraRoadAddr !== '' ? ', ' + data.buildingName : data.buildingName);
-      }
-      // 도로명, 지번 조합형 주소가 있을 경우, 괄호까지 추가한 최종 문자열을 만든다.
-      if(extraRoadAddr !== ''){
-        extraRoadAddr = ' (' + extraRoadAddr + ')';
-      }
-      // 도로명, 지번 주소의 유무에 따라 해당 조합형 주소를 추가한다.
-      if(fullRoadAddr !== ''){
-        fullRoadAddr += extraRoadAddr;
-      }
+	      // 법정동명이 있을 경우 추가 (법정리는 제외)
+	      if (data.bname !== '' && /[동|로|가]$/g.test(data.bname)) {
+	        extraRoadAddr += data.bname;
+	      }
+	      // 건물명이 있고 공동주택일 경우 추가
+	      if (data.buildingName !== '' && data.apartment === 'Y') {
+	        extraRoadAddr += (extraRoadAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+	      }
+	      // 참고 항목이 있을 경우 추가
+	      if (extraRoadAddr !== '') {
+	        extraRoadAddr = ' (' + extraRoadAddr + ')';
+	      }
+	      
+	      // 주소 정보를 해당 필드에 입력
+	      document.getElementById('zipcode').value = data.zonecode;
+	      document.getElementById('roadAddress').value = fullRoadAddr;
+	      document.getElementById('jibunAddress').value = data.jibunAddress;
+	      
+	      if (fullRoadAddr !== '') {
+	        fullRoadAddr += extraRoadAddr;
+	      }
 
-      // 우편번호와 주소 정보를 해당 필드에 넣는다.
-      document.getElementById('zipcode').value = data.zonecode; //5자리 새우편번호 사용
-      document.getElementById('roadAddress').value = fullRoadAddr;
-      document.getElementById('jibunAddress').value = data.jibunAddress;
+	      // 예상 주소 표시
+	      var guideElement = document.getElementById('guide');
 
-      // 사용자가 '선택 안함'을 클릭한 경우, 예상 주소라는 표시를 해준다.
-      if(data.autoRoadAddress) {
-        //예상되는 도로명 주소에 조합형 주소를 추가한다.
-        var expRoadAddr = data.autoRoadAddress + extraRoadAddr;
-        document.getElementById('guide').innerHTML = '(예상 도로명 주소 : ' + expRoadAddr + ')';
+	      if (data.autoRoadAddress) {
+	        var expRoadAddr = data.autoRoadAddress + extraRoadAddr;
+	        guideElement.innerHTML = '(예상 도로명 주소 : ' + expRoadAddr + ')';
+	        guideElement.style.display = 'block';
+	      } else if (data.autoJibunAddress) {
+	        var expJibunAddr = data.autoJibunAddress;
+	        guideElement.innerHTML = '(예상 지번 주소 : ' + expJibunAddr + ')';
+	        guideElement.style.display = 'block';
+	      } else {
+	        guideElement.innerHTML = '';
+	        guideElement.style.display = 'none';
+	      }
+	    }
+	  }).open(); // 팝업 창 열기 (기본 동작으로 닫힘)
+	}
 
-      } else if(data.autoJibunAddress) {
-          var expJibunAddr = data.autoJibunAddress;
-          document.getElementById('guide').innerHTML = '(예상 지번 주소 : ' + expJibunAddr + ')';
-      } else {
-          document.getElementById('guide').innerHTML = '';
-      }
-      
-     
-    }
-  }).open();
-}
 
 //아이디 중복 확인
 function fn_overlapped(){
@@ -89,18 +87,56 @@ function fn_overlapped(){
           }
        },
        error:function(data,textStatus){
-          alert("에러가 발생했습니다.");ㅣ
+          alert("에러가 발생했습니다.");
        },
        complete:function(data,textStatus){
           //alert("작업을완료 했습니다");
        }
     });  //end ajax	 
  }	
+ 
+ 
+// 이메일 선택한 option 값을 email2Input 필드에 넣는 함수
+function updateEmailDomain() {
+  // select 요소와 input 요소 가져오기
+  var select = document.getElementById('email2Select');
+  var emailInput = document.getElementById('email2Input');
+
+  // 선택한 옵션 값을 input 요소에 설정
+  emailInput.value = select.value;
+}
+ 
+// 선택 체크박스 미 클릭시 DB 등록 가능하게 설정  
+	// 제출 전에 체크박스 값 설정
+		function prepareFormData() {
+			const smsCheckbox = document.getElementById('smsstsCheckbox');
+			const emailCheckbox = document.getElementById('emailstsCheckbox');
+
+			// SMS 수신 동의 여부
+			if (smsCheckbox.checked) {
+				document.getElementById('smsHidden').disabled = true; // hidden input 비활성화
+			} else {
+				document.getElementById('smsHidden').disabled = false; // hidden input 활성화
+			} 
+
+			// 이메일 수신 동의 여부
+			if (emailCheckbox.checked) {
+				document.getElementById('emailHidden').disabled = true; // hidden input 비활성화
+			} else {
+				document.getElementById('emailHidden').disabled = false; // hidden input 활성화
+			}
+		}
+
 </script>
 </head>
 <body>
+
+<%
+    JSONObject userProfile = (JSONObject) request.getAttribute("userProfile");
+%>
 	<h3>필수입력사항</h3>
-	<form action="${contextPath}/member/addMember.do" method="post">	
+	<form action="${contextPath}/member/addMember.do" method="post" onsubmit="prepareFormData()">
+		
 	<div id="detail_table">
 		<table>
 			<tbody>
@@ -119,12 +155,12 @@ function fn_overlapped(){
 				</tr>
 				<tr class="dot_line">
 					<td class="fixed_join">이름</td>
-					<td><input name="member_name" type="text" size="20" /></td>
+					<td><input name="member_name" type="text" size="20"  /></td>
 				</tr>
 				<tr class="dot_line">
 					<td class="fixed_join">성별</td>
-					<td><input type="radio" name="member_gender" value="102" />여성
-						 <span style="padding-left:120px"></span>
+					<td><input type="radio" name="member_gender" value="102" />
+						여성<span style="padding-left:120px"></span>
 						 <input type="radio" name="member_gender" value="101" checked />남성
 					</td>
 				</tr>
@@ -133,7 +169,7 @@ function fn_overlapped(){
 					<td>
 					<select name="member_birth_y">
 					 
-					     <c:forEach var="year" begin="1" end="100">
+					     <c:forEach var="year" begin="1" end="104">
 					       <c:choose>
 					         <c:when test="${year==80}">
 							   <option value="${ 1920+year}" selected>${ 1920+year} </option>
@@ -178,6 +214,7 @@ function fn_overlapped(){
 					<td class="fixed_join">전화번호</td>
 					<td><select  name="tel1">
 							<option>없음</option>
+							<option value="010">010</option>
 							<option value="02">02</option>
 							<option value="031">031</option>
 							<option value="032">032</option>
@@ -216,13 +253,16 @@ function fn_overlapped(){
 							<option value="018">018</option>
 							<option value="019">019</option>
 					</select> - <input size="10px"  type="text" name="hp2"> - <input size="10px"  type="text"name="hp3"><br> <br> 
-					<input type="checkbox"	name="smssts_yn" value="Y" checked /> 쇼핑몰에서 발송하는 SMS 소식을 수신합니다.</td>
+					  <input type="checkbox" id="smsstsCheckbox" name="smssts_yn" value="Y"  checked />
+					    쇼핑몰에서 발송하는 SMS 소식을 수신합니다.
+					 <input type="hidden" id="smsHidden" name="smssts_yn" value="N" />
 				</tr>
 				<tr class="dot_line">
 					<td class="fixed_join">이메일<br>(e-mail)</td>
-					<td><input size="10px"   type="text" name="email1" /> @ <input  size="10px"  type="text"name="email2" /> 
-						  <select name="email2" onChange=""	title="직접입력">
-									<option value="non">직접입력</option>
+					<td><input size="10px"   type="text" name="email1"/> @ 
+						<input size="10px" type="text" name="email2" id="email2Input"/>
+						 <select id="email2Select" name="email2Select" onChange="updateEmailDomain()" title="직접입력">
+									<option value="">직접입력</option>
 									<option value="hanmail.net">hanmail.net</option>
 									<option value="naver.com">naver.com</option>
 									<option value="yahoo.co.kr">yahoo.co.kr</option>
@@ -234,7 +274,10 @@ function fn_overlapped(){
 									<option value="empal.com">empal.com</option>
 									<option value="korea.com">korea.com</option>
 									<option value="freechal.com">freechal.com</option>
-							</select><br> <br> <input type="checkbox" name="emailsts_yn" value="Y" checked /> 쇼핑몰에서 발송하는 e-mail을 수신합니다.</td>
+							</select><br> <br> 
+							 <input type="checkbox" id="emailstsCheckbox" name="emailsts_yn" value="Y" checked />
+							   쇼핑몰에서 발송하는 e-mail을 수신합니다.
+							 <input type="hidden" id="emailHidden" name="emailsts_yn" value="N" />
 				</tr>
 				<tr class="dot_line">
 					<td class="fixed_join">주소</td>
@@ -242,10 +285,10 @@ function fn_overlapped(){
 					   <input type="text" id="zipcode" name="zipcode" size="10" > <a href="javascript:execDaumPostcode()">우편번호검색</a>
 					  <br>
 					  <p> 
-					   지번 주소:<br><input type="text" id="roadAddress"  name="roadAddress" size="50"><br><br>
-					  도로명 주소: <input type="text" id="jibunAddress" name="jibunAddress" size="50"><br><br>
-					  나머지 주소: <input type="text"  name="namujiAddress" size="50" />
-					 <!--   <span id="guide" style="color:#999"></span> -->
+					  도로명 주소:<br><input type="text" id="roadAddress"  name="roadAddress" size="50"><br><br>
+					  지번 주소: <input type="text" id="jibunAddress" name="jibunAddress" size="50"><br><br>
+					  나머지 주소: <input type="text"  id="namujiAddress" name="namujiAddress" size="50" />
+					  <span id="guide" style="color:#999;display:none"></span>
 					   </p>
 					</td>
 				</tr>

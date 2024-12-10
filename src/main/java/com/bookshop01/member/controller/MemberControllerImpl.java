@@ -1,16 +1,25 @@
 package com.bookshop01.member.controller;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.util.Map;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -25,6 +34,7 @@ import com.bookshop01.member.vo.MemberVO;
 
 
 
+
 @Controller("memberController")
 @RequestMapping(value="/member")
 public class MemberControllerImpl extends BaseController implements MemberController{
@@ -35,7 +45,7 @@ public class MemberControllerImpl extends BaseController implements MemberContro
 	
 	
 	
-	//loginForm.jsp화면에서 아이디 비밀번호를 입력하고 로그인 버튼을 눌러 로그인요청을 했을때..호출되는 메소드 
+	//loginForm.jsp화면에서 아이디 비밀번호를 입력하고 로그인 버튼을 눌러 로그인요청을 했을때.. 호출되는 메소드 
 	//   /member/login.do
 	@Override
 	@RequestMapping(value="/login.do" ,method = RequestMethod.POST)
@@ -99,6 +109,147 @@ public class MemberControllerImpl extends BaseController implements MemberContro
 	}
 	
 	
+	// 네이버 로그인
+	@Override
+	@RequestMapping(value = "NaverCallback.do", method = RequestMethod.GET )
+	public void NaverCallback(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+	String clientId = "JyvgOzKzRCnvAIRqpVXo"; // 발급받은 Client ID
+	String clientSecret = "I9xmN7Uqi3"; // 발급받은 Client Secret
+		
+	String code = request.getParameter("code"); // 네이버가 보내준 인증 코드
+    String state = request.getParameter("state"); // CSRF 방지를 위한 상태값
+    System.out.println("Code: " + code);
+    System.out.println("State: " + state);
+    String redirectURI = URLEncoder.encode("http://localhost:8090/BookPlus/member/Naverlogin.do", "UTF-8");
+
+    //API URL 구성하기   
+    String apiURL;
+    apiURL = "https://nid.naver.com/oauth2.0/token?grant_type=authorization_code&";
+    apiURL += "client_id=" + clientId;
+    apiURL += "&client_secret=" + clientSecret;
+    apiURL += "&redirect_uri=" + redirectURI;
+    apiURL += "&code=" + code;
+    apiURL += "&state=" + state;
+
+    String access_token = "";
+    String refresh_token = "";
+    System.out.println("apiURL="+apiURL);
+
+    String accessToken = null;
+    
+    try {
+    	//HttpURLConnection으로 Access Token 요청	 
+        URL url = new URL(apiURL);
+        HttpURLConnection con = (HttpURLConnection)url.openConnection();
+        con.setRequestMethod("GET");
+        int responseCode = con.getResponseCode();
+        System.out.print("responseCode="+responseCode);
+        BufferedReader br;
+
+        if(responseCode==200) { // 정상 호출
+          br = new BufferedReader(new InputStreamReader(con.getInputStream()));
+        } else {  // 에러 발생
+          br = new BufferedReader(new InputStreamReader(con.getErrorStream()));
+        }
+        
+        String inputLine;
+        StringBuffer res = new StringBuffer();
+        while ((inputLine = br.readLine()) != null) {
+          res.append(inputLine);
+        }
+        br.close();
+        
+        if(responseCode==200) {
+          System.out.println(res.toString());
+          JSONObject jsonResponse = new JSONObject(res.toString());
+          accessToken = jsonResponse.getString("access_token");
+        } else {
+            System.out.println("Error Response: " + res.toString());
+        }
+        
+      } catch (Exception e) {
+        System.out.println(e);
+      }
+    // 사용자 정보 요청
+    if (accessToken != null) {
+        // Access Token을 세션에 저장
+        request.getSession().setAttribute("accessToken", accessToken);
+
+        // 사용자 정보를 요청할 API 호출
+        response.sendRedirect("http://localhost:8090/BookPlus/member/Naverlogin.do");
+    } else {
+        // Access Token 획득 실패 시 메시지 반환
+        response.getWriter().write("Access Token 획득 실패");
+    }
+}
+
+
+	@Override
+	@RequestMapping(value = "Naverlogin.do", method = RequestMethod.GET)
+	public ModelAndView NaverLogin(HttpServletRequest request, HttpServletResponse response)
+										throws Exception {
+		
+		ModelAndView mav = new ModelAndView();
+		
+		//1.세션에서 Access Token 가져오기
+		String accessToken = (String) request.getSession().getAttribute("accessToken");
+
+		//2.Access Token 유효성 검사
+		if (accessToken == null) {
+            response.getWriter().write("로그인이 필요합니다.");
+        //    return;
+        }
+		
+		//3.인증 헤더 생성
+        String header = "Bearer " + accessToken;
+        
+        //4.API URL 설정
+        String apiURL = "https://openapi.naver.com/v1/nid/me";
+
+        //5.URL 객체 생성
+        URL url = new URL(apiURL);
+     
+        //6.HTTP 연결 설정
+        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        
+        //7.HTTP 요청 방식 설정
+        con.setRequestMethod("GET");
+        
+        //8.인증 헤더 설정   
+        con.setRequestProperty("Authorization", header);
+
+        //9.응답 코드 확인
+        int responseCode = con.getResponseCode();
+        
+        //10.응답 데이터 읽기 준비
+        BufferedReader br = (responseCode == 200) ? new BufferedReader(new InputStreamReader(con.getInputStream()))
+                                                 : new BufferedReader(new InputStreamReader(con.getErrorStream()));
+        //11.응답 데이터 읽기
+        String inputLine;
+        StringBuffer responseContent = new StringBuffer();
+        while ((inputLine = br.readLine()) != null) {
+            responseContent.append(inputLine);
+        }
+        br.close();
+        
+        //12.응답 데이터를 JSON 객체로 변환
+        JSONObject userProfile = new JSONObject(responseContent.toString()).getJSONObject("response");
+        System.out.println(userProfile);
+        
+        //13.응답 데이터에서 사용자 정보 추출
+        request.setAttribute("userProfile", userProfile);
+        
+        //14.재요청(디스패처 방식 포워딩) 시 request공유        
+       mav.setViewName("/member/memberForm");
+        
+        
+        
+        return mav;
+    }
+	
+  
+
 	
 /*
 	참고.
@@ -177,7 +328,7 @@ public class MemberControllerImpl extends BaseController implements MemberContro
 		String message = null;
 		ResponseEntity resEntity = null;
 		HttpHeaders responseHeaders = new HttpHeaders();
-		responseHeaders.add("Content-Type", "text/html; charset=utf-8");
+		responseHeaders.add("Content-Type", "text/html; charset=utf-8");  //저장해서 보여줄 값도 아래에 작성 보여줄 수 있음.
 		try {
 		    memberService.addMember(_memberVO);//새 회원 정보를 DB에 추가~ 
 		    message  = "<script>";
@@ -197,7 +348,9 @@ public class MemberControllerImpl extends BaseController implements MemberContro
 	}
 	
 	
-	//memberForm.jsp페이지에서  회원가입시 입력한 아이디가 DB에 존재 하는지 유무 요청 주소 /member/overlapped.do을 받았을때... 
+
+	//memberForm.jsp페이지에서  회원가입시 입력한 아이디가 DB에 존재 하는지 유무 요청 주소 /member/overlapped.do을 받았을때...
+	//  ResponseEntity 객체형태로 반환 (좀 더 자세한 정보를 담아서 반환) HttpStatus.OK (OK는 200을 반환?성공응답메세지 위에주석확인.)
 	@Override
 	@RequestMapping(value="/overlapped.do" ,method = RequestMethod.POST)
 	public ResponseEntity overlapped(@RequestParam("id") String id,
@@ -213,12 +366,3 @@ public class MemberControllerImpl extends BaseController implements MemberContro
 		return resEntity;
 	}
 }
-
-
-
-
-
-
-
-
-

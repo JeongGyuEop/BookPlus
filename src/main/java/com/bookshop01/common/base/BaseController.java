@@ -39,14 +39,14 @@ public abstract class BaseController  {
 			imageFileVO.setFileName(originalFileName);
 			fileList.add(imageFileVO);
 			
-			File file = new File(path +"/"+ fileName);
-			if(mFile.getSize()!=0){ //File Null Check
-				if(! file.exists()){ //��λ� ������ �������� ���� ���
-					if(file.getParentFile().mkdirs()){ //��ο� �ش��ϴ� ���丮���� ����
-							file.createNewFile(); //���� ���� ����
-					}
-				}
-				mFile.transferTo(new File(path +"/"+"temp"+ "/"+originalFileName)); //�ӽ÷� ����� multipartFile�� ���� ���Ϸ� ����
+			File file = new File(path + "/" + fileName);
+			if (mFile.getSize() != 0) { // 파일이 비어있는지 확인
+			    if (!file.exists()) { // 해당 파일이 존재하지 않는 경우
+			        if (file.getParentFile().mkdirs()) { // 필요한 상위 디렉터리를 생성
+			            file.createNewFile(); // 새 파일 생성
+			        }
+			    }
+			    mFile.transferTo(new File(path + "/" + "temp" + "/" + originalFileName)); // 임시 폴더에 multipartFile을 파일로 저장
 			}
 		}
 		return fileList;
