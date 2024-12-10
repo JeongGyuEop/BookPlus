@@ -3,7 +3,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.spring</groupId>
-	<artifactId>mytest04</artifactId>
+	<artifactId>BookPlus</artifactId>
 	<name>spring_test04</name>
 	<packaging>war</packaging>
 	<version>1.0.0-BUILD-SNAPSHOT</version>
@@ -261,7 +261,13 @@
 		    <version>8.0.28</version>
 		</dependency>
 		
-	
+	<!-- Gson 라이브러리 의존성 추가 -->
+		<dependency>
+		    <groupId>com.google.code.gson</groupId>
+		    <artifactId>gson</artifactId>
+		    <version>2.8.9</version>
+		</dependency>
+		
 	
 	
 	</dependencies>

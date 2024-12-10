@@ -1,9 +1,8 @@
-@font-face {
-	font-family: NanumGothic;
-	src: local("?"), url(../imgs/nanum.woff) format("woff"), url(../imgs/nanum.ttf) format("truetype");
-}
+/* styles.css */
+@import url('https://hangeul.pstatic.net/hangeul_static/css/nanum-square-neo.css');
+
 * {
-	margin: 0px; padding: 0px; vertical-align: middle;
+	font-family: 'NanumSquareNeo', sans-serif; margin: 0px; padding: 0px; vertical-align: middle;
 }
 body {
 	background-position: top; margin: 0px; padding: 0px; color: rgb(102, 102, 102); font-family: "Dotum", Arial,serif; font-size: 1em; background-image: url("../imgs/body_back.gif"); background-repeat: repeat-x; background-color: rgb(255, 255, 255);

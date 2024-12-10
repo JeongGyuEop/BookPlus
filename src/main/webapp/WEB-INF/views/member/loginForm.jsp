@@ -40,6 +40,13 @@ function result(){
 		<INPUT	type="submit" value="로그인"> 
 		<INPUT type="button" value="초기화">
 		
+		<a href="https://kauth.kakao.com/oauth/authorize?
+					client_id=f6d8eb0ebbe1cc122b97b3f7be2a2b1a&
+					redirect_uri=http://localhost:8090/BookPlus/member/kakao/callback&
+					response_type=code">
+		    카카오 로그인
+		</a>
+		
 		<Br><br>
 		   <a href="#">아이디 찾기</a>  | 
 		   <a href="#">비밀번호 찾기</a> | 

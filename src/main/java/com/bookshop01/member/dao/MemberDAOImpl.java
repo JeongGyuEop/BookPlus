@@ -7,6 +7,8 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
+
+import com.bookshop01.api.vo.APILoginVO;
 import com.bookshop01.member.vo.MemberVO;
 
 @Repository("memberDAO")
@@ -15,7 +17,7 @@ public class MemberDAOImpl  implements MemberDAO{
 	private SqlSession sqlSession;	
 	
 	@Override
-	public MemberVO login(Map loginMap) throws DataAccessException{
+	public MemberVO login(Map<String, String> loginMap) throws DataAccessException{
 		
 		MemberVO member=(MemberVO)sqlSession.selectOne("mapper.member.login",loginMap);
 		
@@ -31,6 +33,17 @@ public class MemberDAOImpl  implements MemberDAO{
 	public String selectOverlappedID(String id) throws DataAccessException {
 		String result =  sqlSession.selectOne("mapper.member.selectOverlappedID",id);
 		return result;
+	}
+	
+	@Override
+	public MemberVO selectKakaoUser(String apiId) throws DataAccessException {
+	    return sqlSession.selectOne("mapper.member.selectKakaoUser", apiId);
+	}
+
+
+	@Override
+	public void insertKakaoUser(APILoginVO kakaoUser) throws DataAccessException {
+	    sqlSession.insert("mapper.member.insertKakaoUser", kakaoUser);
 	}
 	
 	

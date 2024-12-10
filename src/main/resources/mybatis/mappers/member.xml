@@ -33,7 +33,15 @@
         <result property="jibunAddress" column="jibunAddress" />
         <result property="namujiAddress" column="namujiAddress" />
         <result property="joinDate" column="joinDate" />
+        <result property="apiLoginVO" column="apiLoginVO" />
     </resultMap>    
+    
+    <select id="selectKakaoUser" parameterType="String" resultMap="memberResult">
+	    SELECT *
+	    FROM T_SHOPPING_MEMBER 
+	    WHERE api_id = #{apiId}
+	</select>
+	
 
     <!-- 로그인 시 입력한 아이디, 비밀번호 값에 해당하는 정보를 테이블에서 조회 -->
     <select id="login" resultType="memberVO" parameterType="java.util.Map">
@@ -60,10 +68,6 @@
             member_pw,
             member_name,
             member_gender,
-            member_birth_y,
-            member_birth_m,
-            member_birth_d,
-            member_birth_gn,
             tel1,
             tel2,
             tel3,
@@ -77,17 +81,19 @@
             zipcode,
             roadAddress,
             jibunAddress,
-            namujiAddress
+            namujiAddress,
+            member_birth_y,
+            member_birth_m,
+            member_birth_d,
+            member_birth_gn,
+           	social_provider,
+           	api_id
         ) 
         VALUES(
             #{member_id},
             #{member_pw},
             #{member_name},
             #{member_gender},
-            #{member_birth_y},
-            #{member_birth_m},
-            #{member_birth_d},
-            #{member_birth_gn},
             #{tel1},
             #{tel2},
             #{tel3},
@@ -101,7 +107,13 @@
             #{zipcode},
             #{roadAddress},
             #{jibunAddress},
-            #{namujiAddress}
+            #{namujiAddress},
+            #{member_birth_y},
+            #{member_birth_m},
+            #{member_birth_d},
+            #{member_birth_gn},
+            #{apiLoginVO.socialProvider},
+            #{apiLoginVO.id}
         )
         ]]>
     </insert>
