@@ -2,6 +2,7 @@ package com.bookplus.API.weather.vo;
 
 public class APIweatherVO {
 
+	private String type;
     private String baseDate; // 발표일자
     private String baseTime; // 발표시각
     private String category; // 자료구분코드
@@ -14,11 +15,19 @@ public class APIweatherVO {
 
     // Getter and Setter Methods
 
+    public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
     public String getBaseDate() {
         return baseDate;
     }
 
-    public void setBaseDate(String baseDate) {
+	public void setBaseDate(String baseDate) {
         this.baseDate = baseDate;
     }
 
@@ -89,7 +98,8 @@ public class APIweatherVO {
     @Override
     public String toString() {
         return "APIweatherVO{" +
-                "baseDate='" + baseDate + '\'' +
+        		"type='" + type + '\'' +
+                ", baseDate='" + baseDate + '\'' +
                 ", baseTime='" + baseTime + '\'' +
                 ", category='" + category + '\'' +
                 ", obsrValue='" + obsrValue + '\'' +

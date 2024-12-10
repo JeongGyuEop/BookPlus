@@ -3,6 +3,8 @@ package com.bookplus.API.service;
 import com.bookplus.API.DAO.APIDAO;
 import com.bookplus.API.weather.vo.APIweatherVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -15,29 +17,37 @@ public class APIServiceImpl implements APIService {
     private APIDAO APIDAO;
 
     @Override
-    public List<String> getRecommendedBooks(String type, String baseDate, String baseTime, int nx, int ny) {
-        // Step 1: 날씨 데이터 가져오기
+    public List<String> getRecommendBooks(String type, String baseDate, String baseTime, int nx, int ny) {
+        // 1. 날씨 데이터 가져오기
         APIweatherVO weather = getWeatherData(type, baseDate, baseTime, nx, ny);
 
-        // Step 2: 날씨 데이터에서 태그 생성
+        // 2. 날씨 데이터에서 태그 생성
         String tag = mapWeatherToTag(weather);
 
-        // Step 3: DAO를 통해 책 조회
+        // 3. DAO를 통해 책 조회
         return APIDAO.getBooksByTag(tag);
     }
 
     private APIweatherVO getWeatherData(String type, String baseDate, String baseTime, int nx, int ny) {
-        String url = String.format(
-            "https://apihub.kma.go.kr/api/typ02/openApi/VilageFcstInfoService_2.0/%s?authKey=%s&numOfRows=10&pageNo=1&base_date=%s&base_time=%s&nx=%d&ny=%d",
-            type, "YOUR_API_KEY", baseDate, baseTime, nx, ny
-        );
+        String url = "https://apihub.kma.go.kr/api/typ02/openApi/VilageFcstInfoService_2.0/"	+ type
+        															+ "getFcstVersion?authKey="	+ "Ke2_jY0YQoetv42NGIKHDQ"
+        															+ "&numOfRows="				+ "10"
+        															+ "&pageNo="				+ "1"
+        															+ "&base_date="				+ baseDate
+        															+ "&base_time="				+ baseTime
+        															+ "&nx="					+ nx
+        															+ "&ny="					+ ny;
 
-        RestTemplate restTemplate = new RestTemplate();
-        // JSON/XML 데이터 파싱 로직 추가
-        APIweatherVO weather = new APIweatherVO();
-        weather.setCategory("SKY");  // Mock 데이터
-        weather.setFcstValue("1");   // Mock 데이터
-        return weather;
+        // RestTemplate 호출
+        RestTemplate restTemplate = new RestTemplate(); // here!!
+        
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // 기본값 반환
+        APIweatherVO defaultWeather = new APIweatherVO();
+        return defaultWeather;
     }
 
     private String mapWeatherToTag(APIweatherVO weather) {
