@@ -17,11 +17,9 @@ public class MemberDAOImpl  implements MemberDAO{
 	private SqlSession sqlSession;	
 	
 	@Override
-	public MemberVO login(Map<String, String> loginMap) throws DataAccessException{
-		
+	public MemberVO login(Map<String, String> loginMap) throws DataAccessException {
 		MemberVO member=(MemberVO)sqlSession.selectOne("mapper.member.login",loginMap);
-		
-	   return member;
+	    return member;
 	}
 	
 	@Override
@@ -30,14 +28,17 @@ public class MemberDAOImpl  implements MemberDAO{
 	}
 
 	@Override
-	public String selectOverlappedID(String id) throws DataAccessException {
+	public String selectOverlappedID(String id) throws DataAccessException{
 		String result =  sqlSession.selectOne("mapper.member.selectOverlappedID",id);
 		return result;
 	}
 	
 	@Override
-	public MemberVO selectKakaoUser(String apiId) throws DataAccessException {
-	    return sqlSession.selectOne("mapper.member.selectKakaoUser", apiId);
+	public MemberVO selectAPIUser(String apiId, String platform) throws DataAccessException {
+		Map<String, String> paramMap = new HashMap<>();
+	    paramMap.put("apiId", apiId);
+	    paramMap.put("platform", platform);
+	    return sqlSession.selectOne("mapper.member.selectAPIUser", paramMap);
 	}
 
 
@@ -46,8 +47,34 @@ public class MemberDAOImpl  implements MemberDAO{
 	    sqlSession.insert("mapper.member.insertKakaoUser", kakaoUser);
 	}
 	
+	public String selectMemID(MemberVO memberVO) throws DataAccessException {
+		return sqlSession.selectOne("mapper.member.selectMemID",memberVO);
+	}
+	
+	@Override
+	public MemberVO checkMemInfo(Map<String, String> checkMem) throws DataAccessException {
+		return sqlSession.selectOne("mapper.member.checkMemInfo",checkMem);
+
+	}
+
+	@Override
+	public int removeMember(String mem_id) throws DataAccessException {
+		return  sqlSession.delete("mapper.member.removeMember",mem_id);
+	}
+
+	@Override
+	public int updatePass(String mem_id, String user_psw_confirm) throws DataAccessException {
+	    Map<String, String> newPass = new HashMap<>();
+	    newPass.put("mem_id", mem_id);
+	    newPass.put("user_psw_confirm", user_psw_confirm);
+		return sqlSession.update("mapper.member.updatePass", newPass);
+	}
+
 	
 }
+
+
+
 
 
 

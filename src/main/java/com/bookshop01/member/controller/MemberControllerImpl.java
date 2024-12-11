@@ -1,6 +1,6 @@
 package com.bookshop01.member.controller;
 
-import java.util.HashMap;
+import java.io.IOException;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -13,18 +13,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.bookshop01.api.vo.APILoginVO;
 import com.bookshop01.common.base.BaseController;
 import com.bookshop01.member.service.MemberService;
 import com.bookshop01.member.vo.MemberVO;
-
-
 
 
 @Controller("memberController")
@@ -37,7 +35,7 @@ public class MemberControllerImpl extends BaseController implements MemberContro
 	
 	
 	
-	//loginForm.jsp화면에서 아이디 비밀번호를 입력하고 로그인 버튼을 눌러 로그인요청을 했을때..호출되는 메소드 
+	//loginForm.jsp화면에서 아이디 비밀번호를 입력하고 로그인 버튼을 눌러 로그인요청을 했을때.. 호출되는 메소드 
 	//   /member/login.do
 	@Override
 	@RequestMapping(value="/login.do" ,method = RequestMethod.POST)
@@ -99,6 +97,7 @@ public class MemberControllerImpl extends BaseController implements MemberContro
 										//참고. 이때 session영역을 이용하여 미로그인 된 화면을 보여 준다.
 		return mav;
 	}
+	
 
 	//회원 가입 요청을 받았을떄...
 	@Override
@@ -129,7 +128,7 @@ public class MemberControllerImpl extends BaseController implements MemberContro
 		
 		String message = null;
 		HttpHeaders responseHeaders = new HttpHeaders();
-		responseHeaders.add("Content-Type", "text/html; charset=utf-8");
+		responseHeaders.add("Content-Type", "text/html; charset=utf-8");  //저장해서 보여줄 값도 아래에 작성 보여줄 수 있음.
 		try {
 			MemberVO memberVO = memberService.addMember(_memberVO);//새 회원 정보를 DB에 추가~ 
 		    
@@ -160,7 +159,9 @@ public class MemberControllerImpl extends BaseController implements MemberContro
 	}
 	
 	
-	//memberForm.jsp페이지에서  회원가입시 입력한 아이디가 DB에 존재 하는지 유무 요청 주소 /member/overlapped.do을 받았을때... 
+
+	//memberForm.jsp페이지에서  회원가입시 입력한 아이디가 DB에 존재 하는지 유무 요청 주소 /member/overlapped.do을 받았을때...
+	//  ResponseEntity 객체형태로 반환 (좀 더 자세한 정보를 담아서 반환) HttpStatus.OK (OK는 200을 반환?성공응답메세지 위에주석확인.)
 	@Override
 	@RequestMapping(value="/overlapped.do" ,method = RequestMethod.POST)
 	public ResponseEntity overlapped(@RequestParam("id") String id,
@@ -176,35 +177,42 @@ public class MemberControllerImpl extends BaseController implements MemberContro
 		return resEntity;
 	}
 	
-	
-	@RequestMapping(value = "/kakao/callback", method = RequestMethod.GET)
-	public ModelAndView kakaoCallback(@RequestParam("code") String code, HttpServletRequest request) {
-	    ModelAndView mav = new ModelAndView();
+	//==========
+	// API 로그인 했을 경우 호출되는 콜백 함수, OAuth 인증 과정에서 콜백 URL로 호출
+	@Override
+	@RequestMapping(value = "/{platform}/callback", method = RequestMethod.GET)
+	public void apiCallback(@PathVariable String platform, HttpServletRequest request, HttpServletResponse response) throws IOException {
 	    try {
-	    	// 카카오 로그인 처리
-	        String redirectUrl = memberService.handleKakaoLogin(code, request);
+	        String redirectUrl = memberService.handleLogin(platform, request);
+	        response.sendRedirect(redirectUrl);
+	        
+	    } catch (Exception e) {
+	        response.getWriter().write(platform + " 로그인 실패: " + e.getMessage());
+	    }
+	}
+	
+
+	//==========
+	// apiCallback에서 Access Token을 받은 후, 사용자 정보를 가져와 로그인 또는 회원가입 처리를 수행
+	@Override
+	@RequestMapping(value = "/{platform}/login", method = RequestMethod.GET)
+	public ModelAndView apiLogin(@PathVariable String platform, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	    ModelAndView mav = new ModelAndView();
+
+		try {
+	        String redirectUrl = memberService.processLogin(platform, request);
 	        
 	        if (redirectUrl.startsWith("redirect:")) {
 	            mav.setViewName(redirectUrl); // 리다이렉트 처리
 	        } else {
 	            mav.setViewName(redirectUrl); // Forward 처리
 	        }
+	        return mav;
 	    } catch (Exception e) {
-	        e.printStackTrace();
-	        mav.addObject("message", "카카오 로그인 실패");
-	        mav.setViewName("redirect:/errorPage.do");
+	        response.getWriter().write("사용자 정보 처리 실패: " + e.getMessage());
+	        return null;
 	    }
-	    return mav;
 	}
-
+	
 	
 }
-
-
-
-
-
-
-
-
-

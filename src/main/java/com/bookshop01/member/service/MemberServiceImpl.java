@@ -3,9 +3,7 @@ package com.bookshop01.member.service;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +17,8 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
-import com.bookshop01.api.vo.APILoginVO;
 import com.bookshop01.member.dao.MemberDAO;
 import com.bookshop01.member.vo.MemberVO;
 import com.google.gson.Gson;
@@ -32,21 +28,31 @@ import com.google.gson.JsonObject;
 @Service("memberService")
 @Transactional(propagation=Propagation.REQUIRED)
 public class MemberServiceImpl implements MemberService {
-	
 
-	private static final String KAKAO_TOKEN_URL = "https://kauth.kakao.com/oauth/token";
-	private static final String KAKAO_USER_INFO_URL = "https://kapi.kakao.com/v2/user/me";
-	private static final String CLIENT_ID = "f6d8eb0ebbe1cc122b97b3f7be2a2b1a"; // 카카오 개발자 센터에서 발급받은 REST API 키
-	private static final String REDIRECT_URI = "http://localhost:8090/BookPlus/member/kakao/callback"; // 설정한 리디렉션 URL
-	
 	@Autowired
 	private MemberDAO memberDAO;
 	
+	private static final Map<String, String> API_CONFIG = Map.of(
+        "kakao_token_url", "https://kauth.kakao.com/oauth/token",
+        "kakao_user_info_url", "https://kapi.kakao.com/v2/user/me",
+        "kakao_client_id", "f6d8eb0ebbe1cc122b97b3f7be2a2b1a",
+        "kakao_redirect_uri", "http://localhost:8090/BookPlus/member/kakao/callback",
+        "naver_token_url", "https://nid.naver.com/oauth2.0/token",
+        "naver_user_info_url", "https://openapi.naver.com/v1/nid/me",
+        "naver_client_id", "JyvgOzKzRCnvAIRqpVXo",
+        "naver_client_secret", "I9xmN7Uqi3",
+        "naver_redirect_uri", "http://localhost:8090/BookPlus/member/naver/callback"
+	);
+	
+	//==========
+	// 아이디, 패스워드를 사용하여 로그인을 진행하기 위해 DAO 호출
 	@Override
 	public MemberVO login(Map<String, String> loginMap) throws Exception{
 		return memberDAO.login(loginMap);
 	}
 	
+	//==========
+	// 회원 가입을 진행하고, 성공시 로그인을 진행하기 위해 DAO 호출
 	@Override
 	public MemberVO addMember(MemberVO memberVO) throws Exception{
 		memberDAO.insertNewMember(memberVO);
@@ -58,158 +64,182 @@ public class MemberServiceImpl implements MemberService {
         return memberDAO.login(loginMap); // 로그인 처리
 	}
 	
+	//==========
+	//
 	@Override
 	public String overlapped(String id) throws Exception{
 		return memberDAO.selectOverlappedID(id);
 	}
 	
+	//==========
+	// 기존 사용자에 대한 로그인을 처리하기 위해 handleKakaoLogin에서 호출되는 함수
 	private void setupSession(HttpServletRequest request, MemberVO memberVO) {
 	    HttpSession session = request.getSession();
 	    session.setAttribute("isLogOn", true);
 	    session.setAttribute("memberInfo", memberVO);
 	}
 
-	
+	//==========
+	// 플랫폼으로부터 반환된 인증 코드를 처리하여 Access Token을 요청하고 세션에 저장하는 역할
 	@Override
-    public String handleKakaoLogin(String code, HttpServletRequest request) {
-        // 1. 액세스 토큰 요청
-        String accessToken = getAccessToken(code);
+    public String handleLogin(String platform, HttpServletRequest request) {
+		
+		// OAuth 인증 과정에서 플랫폼에서 반환된 인증 코드와 상태 값을 요청에서 가져옴
+        String code = request.getParameter("code"); //사용자가 정상적으로 인증했음을 나타내는 고유 코드
+        String state = request.getParameter("state"); //CSRF(교차 사이트 요청 위조)를 방지하기 위한 값
 
-        // 2. 사용자 정보 가져오기
-        APILoginVO kakaoUser = getUserInfo(accessToken);
+        // Access Token 요청에 필요한 파라미터를 Map으로 구성
+        Map<String, String> params = new HashMap<>();
+        params.put("grant_type", "authorization_code");
+        params.put("code", code);
+        params.put("state", state);
+        params.put("client_id", API_CONFIG.get(platform + "_client_id"));
+        
+        // 네이버 API의 경우 추가적으로 클라이언트 Secret을 파라미터에 포함
+        if ("naver".equals(platform)) {
+            params.put("client_secret", API_CONFIG.get("naver_client_secret"));
+        }
+        params.put("redirect_uri", API_CONFIG.get(platform + "_redirect_uri"));
 
-        // 필수 필드 검증
-        validateKakaoUser(kakaoUser);
+        // Access Token 요청 URL 설정 및 요청 수행
+        String tokenUrl = API_CONFIG.get(platform + "_token_url");
+        String accessToken = fetchAccessToken(tokenUrl, params);
 
-        // 3. 사용자 존재 여부 확인
-        MemberVO memberVO = checkKakaoUser(kakaoUser.getId());
+        // Access Token을 세션에 저장하여 이후 사용자 정보 요청 시 활용
+        request.getSession().setAttribute("accessToken", accessToken);
+        return request.getContextPath() + "/member/" + platform + "/login";
+    }
 
-        if (memberVO != null) {
-            // 기존 사용자: 로그인 처리
-            setupSession(request, memberVO);
-            return "redirect:/main/main.do";
+	//==========
+	// Access Token을 사용하여 사용자 정보를 가져오고, 해당 정보를 처리하여 로그인 또는 회원가입 준비를 수행
+    @Override
+    public String processLogin(String platform, HttpServletRequest request) {
+        String accessToken = (String) request.getSession().getAttribute("accessToken");
+        if (accessToken == null) {
+            throw new RuntimeException("Access Token이 존재하지 않습니다.");
+        }
+
+        String userInfoUrl = API_CONFIG.get(platform + "_user_info_url");
+        Map<String, Object> userProfile = fetchUserInfo(userInfoUrl, accessToken, platform);
+        System.out.println("siuuuuu" + userProfile);
+        
+        if (userProfile == null) {
+            throw new RuntimeException(platform + " 사용자 정보 요청 실패");
         } else {
-            // 신규 사용자: 회원가입 세션 저장 및 리다이렉트 URL 반환
-            prepareSignupSession(kakaoUser, request);
-            return "/member/memberForm"; // 회원가입 폼으로 리다이렉트
+        	String id = null;
+        	if(platform.equals("kakao")) {
+        		id = userProfile.get("id").toString();
+        	} else {
+        		// userProfile에서 "response" 키의 값을 Map으로 가져오기
+        		Map<String, Object> response = (Map<String, Object>) userProfile.get("response");
 
+        		// response에서 "id" 키의 값을 안전하게 추출
+        		id = response != null ? response.getOrDefault("id", "").toString() : "";
+
+        	}
+        	MemberVO memberVO = checkAPIUser(id, platform);
+        	if (memberVO != null) {
+                // 기존 사용자: 로그인 처리
+                setupSession(request, memberVO);
+                return "redirect:/main/main.do";
+            } else {
+		        Map<String, Object> responseMap = extractUserProfile(platform, userProfile);
+		
+		        prepareSignupRequest(responseMap, request);
+		        
+		        return "/member/memberForm";
+            }
         }
     }
 
-	public String getAccessToken(String code) {
-	    RestTemplate restTemplate = new RestTemplate();
+    //==========
+    //Access Token을 요청하기 위해 호출되는 메소드(POST 요청)
+    public String fetchAccessToken(String tokenUrl, Map<String, String> params) {
 
-	    // 요청 헤더 설정
-	    HttpHeaders headers = new HttpHeaders();
-	    headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        RestTemplate restTemplate = new RestTemplate();// Spring의 HTTP 요청 클라이언트로, API 서버와의 통신을 담당
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        
+        // params는 일반 Map<String, String> 형태의 요청 파라미터를 MultiValueMap 형식으로 변환.
+        MultiValueMap<String, String> multiParams = new LinkedMultiValueMap<>();
+        params.forEach(multiParams::add);
 
-	    // 요청 파라미터 설정
-	    MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-	    params.add("grant_type", "authorization_code");
-	    params.add("client_id", CLIENT_ID);
-	    params.add("redirect_uri", REDIRECT_URI);
-	    params.add("code", code);
-	    params.add("scope", "account_email,gender,birthday,birthyear,phone_number");
-
-	    // 요청 엔티티 생성
-	    HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(params, headers);
-
-	    try {
-	        // POST 요청으로 액세스 토큰 가져오기
-	        ResponseEntity<String> response = restTemplate.exchange(
-	                KAKAO_TOKEN_URL, HttpMethod.POST, requestEntity, String.class);
-
-	        // JSON 응답 파싱
-	        Gson gson = new Gson();
-	        JsonObject jsonResponse = gson.fromJson(response.getBody(), JsonObject.class);
-
-	        // 액세스 토큰 반환
-	        return jsonResponse.get("access_token").getAsString();
-
-	    } catch (HttpClientErrorException e) {
-	        System.err.println("Request failed: " + e.getResponseBodyAsString());
-	        throw new RuntimeException("Failed to fetch access token", e);
-	    } catch (Exception e) {
-	        throw new RuntimeException("Unexpected error while fetching access token", e);
-	    }
-	}
-	
-	public APILoginVO getUserInfo(String accessToken) {
-	    RestTemplate restTemplate = new RestTemplate();
-
-	    // Authorization 헤더 설정
-	    HttpHeaders headers = new HttpHeaders();
-	    headers.set("Authorization", "Bearer " + accessToken);
-
-	    // HTTP 요청 엔티티 생성
-	    HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
-
-	    try {
-	        // 사용자 정보 요청 (GET)
-	        ResponseEntity<String> response = restTemplate.exchange(
-	            KAKAO_USER_INFO_URL, HttpMethod.GET, requestEntity, String.class
-	        );
-
-	        // 응답 확인
-	        if (response == null || response.getBody() == null) {
-	            throw new RuntimeException("Kakao API response is null");
-	        }
-
-	        // JSON 응답 파싱
-	        Gson gson = new Gson();
-	        JsonObject jsonResponse = gson.fromJson(response.getBody(), JsonObject.class);
-
-	        // id 확인
-	        if (!jsonResponse.has("id")) {
-	            throw new RuntimeException("ID field is missing in Kakao API response");
-	        }
-	        String id = jsonResponse.get("id").getAsString();
-
-	        // kakao_account 확인
-	        JsonObject kakaoAccount = jsonResponse.has("kakao_account") ? jsonResponse.getAsJsonObject("kakao_account") : null;
-
-	        if (kakaoAccount == null) {
-	            throw new RuntimeException("Kakao account is missing in response");
-	        }
-
-	        // 필요한 데이터 추출
-	        String email = kakaoAccount.has("email") ? kakaoAccount.get("email").getAsString() : null;
-	        String gender = kakaoAccount.has("gender") ? kakaoAccount.get("gender").getAsString() : null;
-	        String birthday = kakaoAccount.has("birthday") ? kakaoAccount.get("birthday").getAsString() : null;
-	        String birthyear = kakaoAccount.has("birthyear") ? kakaoAccount.get("birthyear").getAsString() : null;
-	        String phoneNumber = kakaoAccount.has("phone_number") ? kakaoAccount.get("phone_number").getAsString() : null;
-
-	        // KakaoVO 객체 생성
-	        APILoginVO kakaoUser = new APILoginVO();
-	        kakaoUser.setId(id);
-	        kakaoUser.setAccountEmail(email);
-	        kakaoUser.setGender(gender);
-	        kakaoUser.setBirthday(birthday);
-	        kakaoUser.setBirthyear(birthyear);
-	        kakaoUser.setPhoneNumber(phoneNumber);
-	        kakaoUser.setSocialProvider("kakao");
-	        
-
-	        return kakaoUser;
-
-	    } catch (Exception e) {
-	        throw new RuntimeException("Error while fetching user info from Kakao API", e);
-	    }
-	}
-
-	
-	private void validateKakaoUser(APILoginVO apiUser) {
-        if (apiUser.getAccountEmail() == null || 
-        	apiUser.getGender() == null || apiUser.getBirthday() == null || 
-        	apiUser.getBirthyear() == null || apiUser.getPhoneNumber() == null) {
-            throw new RuntimeException("필수 동의 항목이 누락되었습니다.");
+        HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(multiParams, headers);
+        try {
+        	//응답 본문을 JSON 문자열로 가져와 Gson 라이브러리를 사용하여 JSON 객체로 파싱
+            ResponseEntity<String> response = restTemplate.exchange(tokenUrl, HttpMethod.POST, requestEntity, String.class);
+            
+            JsonObject jsonResponse = new Gson().fromJson(response.getBody(), JsonObject.class);
+            
+            return jsonResponse.get("access_token").getAsString();// JSON 객체에서 access_token 키의 값을 추출하여 반환
+        } catch (Exception e) {
+            throw new RuntimeException("Access Token 요청 실패", e);
         }
     }
 
+    //==========
+    //
+    public Map<String, Object> fetchUserInfo(String userInfoUrl, String accessToken, String platform) {
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + accessToken);
 
-	private void prepareSignupSession(APILoginVO apiUser, HttpServletRequest request) {
+        HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
+        try {
+        	ResponseEntity<String> response = restTemplate.exchange(userInfoUrl, HttpMethod.GET, requestEntity, String.class);
+        	
+            Map<String, Object> userProfile = new Gson().fromJson(response.getBody(), Map.class);
+            System.out.println(userProfile);
+            
+            if("kakao".equals(platform)) {
+            	// id 값을 Long으로 변환하여 다시 저장 (필요한 경우)
+	                Double idDouble = (Double) userProfile.get("id");
+	                userProfile.put("id", idDouble.longValue());
+            }
+            
+            
+            return userProfile;
+            
+        } catch (Exception e) {
+            throw new RuntimeException("사용자 정보 요청 실패", e);
+        }
+    }
 
-        String accountEmail = apiUser.getAccountEmail();
+    private Map<String, Object> extractUserProfile(String platform, Map<String, Object> userProfile) {
+    	if ("kakao".equals(platform)) {
+            Map<String, Object> kakaoAccount = (Map<String, Object>) userProfile.get("kakao_account");
+            System.out.println(kakaoAccount);
+            return Map.of(
+                "id", userProfile.get("id").toString(),
+                "name", kakaoAccount.getOrDefault("name", "").toString(),
+                "email", kakaoAccount.getOrDefault("email", "").toString(),
+                "gender", kakaoAccount.getOrDefault("gender", "").toString(),
+                "birthday", kakaoAccount.getOrDefault("birthday", "").toString(),
+                "birthyear", kakaoAccount.getOrDefault("birthyear", "").toString(),
+                "phoneNumber", kakaoAccount.getOrDefault("phone_number", "").toString(),
+                "socialProvider", "kakao"
+            );
+        
+        } else if ("naver".equals(platform)) {
+            Map<String, Object> naverAccount = (Map<String, Object>) userProfile.get("response");
+            System.out.println(naverAccount);
+            return Map.of(
+                "id", naverAccount.getOrDefault("id", "").toString(),
+                "email", naverAccount.getOrDefault("email", "").toString(),
+                "name", naverAccount.getOrDefault("name", "").toString(),
+                "gender", naverAccount.getOrDefault("gender", "").toString(),
+                "phoneNumber", naverAccount.getOrDefault("mobile", "").toString(),
+                "birthday", naverAccount.getOrDefault("birthday", "").toString(),
+                "birthyear", naverAccount.getOrDefault("birthyear", "").toString(),
+                "socialProvider","naver"
+            );
+        }
+
+        throw new RuntimeException("지원하지 않는 플랫폼: " + platform);
+    }
+
+    private void prepareSignupRequest(Map<String, Object> userProfile, HttpServletRequest request) {
+    	String accountEmail = userProfile.get("email").toString();
         String email1 = "";
         String email2 = "";
         if (accountEmail != null && accountEmail.contains("@")) {
@@ -218,7 +248,10 @@ public class MemberServiceImpl implements MemberService {
             email2 = emailParts[1];
         }
         
-        String phoneNumber = apiUser.getPhoneNumber().replace("+82 ", "0");
+        String phoneNumber = userProfile.get("phoneNumber").toString();
+        if(phoneNumber.contains("+82 ")) { // 카카오
+        	phoneNumber = phoneNumber.replace("+82 ", "0");
+        } 
         String phone1 = "";
         String phone2 = "";
         String phone3 = "";
@@ -229,39 +262,47 @@ public class MemberServiceImpl implements MemberService {
             phone3 = phoneParts[2];
         }
 
-        request.setAttribute("id", apiUser.getId());
+        request.setAttribute("id", userProfile.get("id"));
+        request.setAttribute("name", userProfile.get("name"));
         request.setAttribute("email1", email1);
         request.setAttribute("email2", email2);
-        request.setAttribute("gender", apiUser.getGender());
-        request.setAttribute("birthday", apiUser.getBirthday());
-        request.setAttribute("birthyear", apiUser.getBirthyear());
+        request.setAttribute("gender", userProfile.get("gender"));
+        request.setAttribute("birthday", userProfile.get("birthday"));
+        request.setAttribute("birthyear", userProfile.get("birthyear"));
         request.setAttribute("phone1", phone1);
         request.setAttribute("phone2", phone2);
         request.setAttribute("phone3", phone3);        
-        request.setAttribute("socialProvider", apiUser.getSocialProvider());
+        request.setAttribute("socialProvider", userProfile.get("socialProvider"));
     }
 	
+	//==========
+	// 카카오 API사용하여 로그인한 회원의 id 값을 사용하여 조회하기 위해 DAO 호출하는 함수
 	@Override
-	public MemberVO checkKakaoUser(String apiId) {
-	    // DAO 호출: Kakao ID로 사용자 존재 여부 확인
-	    return memberDAO.selectKakaoUser(apiId);
+	public MemberVO checkAPIUser(String apiId, String platform) {
+	    // DAO 호출: ID로 사용자 존재 여부 확인
+	    return memberDAO.selectAPIUser(apiId, platform);
 	}
 	
+	
+	@Override
+	public String searchId(MemberVO memberVO) throws Exception{
+		return memberDAO.selectMemID(memberVO);
+	}
+	
+	@Override
+	public MemberVO checkMemInfo(Map<String, String> checkMem) throws Exception {
+		return memberDAO.checkMemInfo(checkMem);
+	}
+
+	@Override
+	public int removeMember(String mem_id) throws Exception{
+		return memberDAO.removeMember(mem_id);
+	}
+
+	@Override
+	public int updatePass(String mem_id, String user_psw_confirm) throws Exception {
+		return memberDAO.updatePass(mem_id,user_psw_confirm);	
+	}
+
+	
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

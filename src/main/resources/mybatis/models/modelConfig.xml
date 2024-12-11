@@ -10,6 +10,7 @@
     <typeAlias type="com.bookshop01.cart.vo.CartVO" alias="cartVO" />
     <typeAlias type="com.bookshop01.order.vo.OrderVO" alias="orderVO" />
     <typeAlias type="com.bookshop01.mypage.vo.MyPageVO" alias="mypageVO" />
+     <typeAlias type="com.bookshop01.news.vo.NewsVO" alias="newsVO"/>
     <typeAlias type="com.bookshop01.board.vo.Board" alias="Board" />
     <typeAlias type="com.bookshop01.board.vo.BoardReply" alias="BoardReply" />
   </typeAliases>

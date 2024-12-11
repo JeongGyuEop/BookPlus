@@ -5,7 +5,7 @@
 <%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles" %>    
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <c:set var="contextPath"  value="${pageContext.request.contextPath}"  />
-	
+<c:set var="member_id"  value="${sessionScope.memberInfo.member_id}"  />	
 <nav>
 <ul>
 <c:choose>
@@ -17,6 +17,7 @@
 				<li><a href="${contextPath}/admin/goods/adminGoodsMain.do">상품관리</a></li>
 				<li><a href="${contextPath}/admin/order/adminOrderMain.do">주문관리</a></li>
 				<li><a href="${contextPath}/admin/member/adminMemberMain.do">회원관리</a></li>
+				<li><a href="${contextPath}/news/newsList.do?member_id=${member_id}">게시판관리</a></li> 
 				<li><a href="#">배송관리</a></li>
 				<li><a href="#">게시판관리</a></li>
 			</ul>
@@ -76,12 +77,13 @@
 <div id="banner">
 	<a href="#"><img width="190" height="163" src="${contextPath}/resources/image/n-pay.jpg"> </a>
 </div>
-<DIV id="notice">
-	<H2>공지사항</H2>
-	<UL>
-	
-	<c:forEach  var="i" begin="1" end="5" step="1">
-		<li><a href="#">공지사항입니다.${ i}</a></li>
+<div id="notice">
+	<h2>공지사항<button type="button" style="float: right;" onclick="window.location.href='${contextPath}/news/newsList.do?member_id=${member_id }'">전체보기</button></h2>
+	<ul>
+	<c:forEach  var="notice" items="${sessionScope.newsList}" varStatus="status">
+	    <c:if test="${status.index < 3}">
+	        <li><a href="${contextPath}/news/newsView.do?news_idx=${notice.news_idx}&news_member_id=${notice.news_member_id}&news_title=${notice.news_title}">${notice.news_title}</a></li>
+	    </c:if>
 	</c:forEach>
 	</ul>
 </div>

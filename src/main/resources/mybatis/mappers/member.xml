@@ -36,10 +36,10 @@
         <result property="apiLoginVO" column="apiLoginVO" />
     </resultMap>    
     
-    <select id="selectKakaoUser" parameterType="String" resultMap="memberResult">
+    <select id="selectAPIUser" parameterType="map" resultMap="memberResult">
 	    SELECT *
 	    FROM T_SHOPPING_MEMBER 
-	    WHERE api_id = #{apiId}
+	    WHERE social_provider=#{platform} AND api_id = #{apiId} 
 	</select>
 	
 
@@ -117,4 +117,33 @@
         )
         ]]>
     </insert>
+    
+    	<select id="selectMemID" resultType="String"  parameterType="memberVO">
+	    <![CDATA[
+		select MEMBER_ID from t_shopping_member 
+		where member_name=#{member_name} and member_birth_y=#{member_birth_y} and member_birth_m=#{member_birth_m} and member_birth_d=#{member_birth_d} and member_birth_gn=#{member_birth_gn} 
+		and email1=#{email1} and email2=#{email2}	 
+		]]>
+	</select>
+	
+	
+	<select id="checkMemInfo" resultType="memberVO"  parameterType="java.util.Map"  >
+	    <![CDATA[
+		select * from t_shopping_member 
+		where MEMBER_ID=#{member_id} and MEMBER_NAME=#{member_name} and EMAIL1=#{email1} and EMAIL2 LIKE '%' || #{email2} || '%'
+		]]>
+	</select>
+  
+   <delete id="removeMember" parameterType="String">
+  		<![CDATA[
+  		delete from t_shopping_member  where MEMBER_ID=#{member_id}
+  		]]>
+  	</delete>
+  	
+  	<update id="updatePass" parameterType="java.util.Map">
+  		<![CDATA[
+  			update t_shopping_member SET MEMBER_PW = #{user_psw_confirm} where MEMBER_ID=#{mem_id}
+  		]]>
+  	</update>
+  	
 </mapper>
