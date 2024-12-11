@@ -12,6 +12,6 @@
 
     <!-- 추천 결과 페이지 정의 -->
     <definition name="recommendationPage" extends="baseLayout">
-        <put-attribute name="content" value="/WEB-INF/views/recommend/recommendation.jsp" />
+        <put-attribute name="content" value="/WEB-INF/views/API/weatherResult.jsp" />
     </definition>
 </tiles-definitions>
