@@ -13,6 +13,11 @@ public class APIweatherVO {
     private int nx; // 예보지점 X 좌표
     private int ny; // 예보지점 Y 좌표
 
+    
+    
+    
+    
+    
     // Getter and Setter Methods
 
     public String getType() {
