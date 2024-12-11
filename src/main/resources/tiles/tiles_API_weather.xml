@@ -7,11 +7,10 @@
     <definition name="baseLayout" template="/WEB-INF/views/layout/base.jsp">
         <put-attribute name="header" value="/WEB-INF/views/common/header.jsp" />
         <put-attribute name="footer" value="/WEB-INF/views/common/footer.jsp" />
-        <put-attribute name="content" value="" />
     </definition>
 
     <!-- 추천 결과 페이지 정의 -->
-    <definition name="recommendationPage" extends="baseLayout">
-        <put-attribute name="content" value="/WEB-INF/views/API/weatherResult.jsp" />
+    <definition name="weather/weather" extends="baseLayout">
+        <put-attribute name="body" value="/WEB-INF/views/API/weather/weather.jsp" />
     </definition>
 </tiles-definitions>
