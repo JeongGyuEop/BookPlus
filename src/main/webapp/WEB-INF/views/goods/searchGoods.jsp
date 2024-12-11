@@ -136,4 +136,154 @@
 			</c:forEach>
 			<li><a class="no_border" href="#">Next</a></li>
 		</ul>
+		
 	</div>
+	
+	
+	
+	
+	
+	<!--카카오 도서 실시간 검색 api를 이용한 기능 추가   -->
+	
+	<div class="search" style="text-align: center; margin: 20px;">
+		<h1
+			style="font-size: 24px; color: #444; margin-bottom: 20px; border-bottom: 1px solid #ccc; padding-bottom: 10px;">
+			도서 현황 <span style="color: #FF5733;">실시간 빠른 검색</span>
+		</h1>
+		<div
+			style="display: flex; justify-content: center; align-items: center; gap: 10px; margin-top: 20px;">
+			<input type="text" id="searchQuery"
+				placeholder="실시간 도서정보 확인가능"
+				style="width: 60%; padding: 10px; font-size: 16px; border: 2px solid #ccc; 
+				border-radius: 5px; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);">
+
+			<button id="searchButton"
+				style="padding: 10px 20px; font-size: 16px; background-color: #FF5733; color: white; 
+				border: none; border-radius: 5px; cursor: pointer; 
+				box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);">
+				검색
+			</button>
+		</div>
+	</div>
+
+	<p id="result"
+		style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: space-between; padding: 10px;"></p>
+
+	<script src="https://code.jquery.com/jquery-3.7.1.js"
+		integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" 
+		crossorigin="anonymous">
+	</script>
+
+	<script>
+		// 검색 버튼 클릭 이벤트
+		$("#searchButton").on("click", function() {
+			var query = $("#searchQuery").val(); // 입력 필드 값 가져오기
+
+			// 검색어가 비어 있는지 확인
+			if (!query) {
+				alert("검색어를 입력해주세요.");
+				return;
+			}
+
+			$.ajax({
+				method: "GET",
+				url: "https://dapi.kakao.com/v3/search/book?target=title",
+				data: { query: query, size: 12 },
+				headers: { Authorization: "KakaoAK 3ce47450eb78c196dbc94c071c4d5168" } //카카오 도서 실시간 검색 api 사용
+			})
+			.done(function(msg) {
+				// 결과 초기화
+				$("#result").empty();
+
+				// 결과가 없는 경우
+				if (msg.documents.length === 0) {
+					$("#result").append("<strong>결과가 없습니다.</strong>");
+					return;
+				}
+
+				// 결과 출력
+				for (var i = 0; i < msg.documents.length; i++) {
+					var title = msg.documents[i].title;
+					var thumbnail = msg.documents[i].thumbnail;
+					var authors = msg.documents[i].authors;
+					var status = msg.documents[i].status;
+					var price = msg.documents[i].price;
+					var sale_price = msg.documents[i].sale_price;
+					var contents = msg.documents[i].contents
+					var publisher = msg.documents[i].publisher;
+					var translators = msg.documents[i].translators
+
+					//책들이 나열되는 영역
+	                var card = $("<div></div>").css({
+	                    "width": "20%", 
+	                    "box-shadow": "0px 4px 6px rgba(0,0,0,0.1)",
+	                    "border-radius": "8px",
+	                    "padding": "10px",
+	                    "text-align": "center",
+	                    "background-color": "#fff",
+	                    "cursor": "pointer", 
+	                    "position": "relative",
+	                    "margin-bottom": "20px"
+	                });
+					
+	                card.append("<strong style='font-size:14px;'>" + title + "</strong><br>");
+	                
+	                if (thumbnail) {
+	                    card.append("<img src='" + thumbnail + "' alt='책 표지' style='width:100px; margin-top: 10px; margin-bottom: 10px;'><br>");
+	                } else {
+	                    card.append("<span style='display:block; width:100px; height:100px; margin-top:10px; background-color:#f0f0f0; line-height:100px; text-align:center; border:1px solid #ddd;'>이미지 없음</span><br>");
+	                }
+	               
+	                card.append("<span style='font-size:12px; color:gray;'>저자: " + authors + "</span><br>"); 
+	                
+	                card.append("<span style='font-size:12px; color:gray;'>출판사: " + publisher + "</span><br>");  
+	                
+	                if (translators && translators.length > 0) {
+	                    card.append("<span style='font-size:12px; color:gray;'>번역: " + translators + "</span><br>");
+	                } //만약 번역가의 데이터가 없다면 해당 값은 없는 값으로 보고 다음의 데이터를 받아옴
+	              
+	                card.append("<span style='font-size:12px; color:gray;'>정상판매가: " + price + "원</span><br>");
+	                
+	                if (sale_price === -1) { //sale_price의 -1값이 나온다면 0원으로 본다.
+	                    card.append("<span style='font-size:12px; color:gray;'>할인판매가: 0원</span><br>");
+	                } else {
+	                    card.append("<span style='font-size:12px; color:gray;'>할인판매가: " + sale_price + "원</span><br>");
+	                }
+	                if (status) {
+	                    card.append("<span style='font-size:12px; color:gray;'>" + status + "중</span><br>");
+	                } else {
+	                    card.append("<span style='font-size:12px; color:gray;'>재고 없음</span><br>");
+	                }
+	                
+				    if (!contents || contents.trim() === "") {
+				        contents = "책 소개가 없습니다";
+				    }
+				 // 숨겨진 컨텐츠 영역 추가
+	                var contentDiv = $("<div></div>").css({
+	                    "display": "none",
+	                    "margin-top": "10px",
+	                    "font-size": "12px",
+	                    "color": "#333",
+	                    "border-top": "1px solid #ccc",
+	                    "padding-top": "10px"
+	                }).text(contents);
+
+	                card.append(contentDiv);
+	                
+	                card.on("click", function () {
+	                    var contentElement = $(this).find("div"); // 숨겨진 컨텐츠 영역 선택
+	                    if (contentElement.css("display") === "none") {
+	                        contentElement.slideDown(); // 컨텐츠 표시
+	                    } else {
+	                        contentElement.slideUp(); // 컨텐츠 숨김
+	                    }
+	                });
+	                
+	                $("#result").append(card);
+	            }
+	        })
+	        .fail(function () {
+	            alert("API 요청 중 오류가 발생했습니다.");
+	        });
+	    });
+	</script>
