@@ -219,10 +219,10 @@
             currentPage = 1; //현재 페이지 초기화를 한다
             $("#result").empty(); //기존 결과 초기화를 한다
             if (totalData.length === 0) {
-                // 검색 결과가 없을 때 메시지 표시
+                //검색 결과가 없을 때 메시지 표시
                 $("#result").html("<div style='text-align:center; font-size:16px; color:gray;'>검색결과가 없습니다.</div>");
-                $("#pagination").empty(); // 페이징도 제거
-                return; // 함수 종료
+                $("#pagination").empty(); //페이징도 제거
+                return; //종료
             }
             renderPage(); //첫 페이지 데이터 렌더링
             renderPagination(); //페이지 번호 렌더링
@@ -269,16 +269,20 @@
                 card.append("<span style='display:block; width:100px; height:100px; margin-top:10px; background-color:#f0f0f0; line-height:100px; text-align:center; border:1px solid #ddd;'>이미지 없음</span><br>");
             }
             
-            //책의 저자
-            card.append("<span style='font-size:12px; color:gray;'>저자: " + book.authors + "</span><br>");
-            
+         	//책의 저자
+            card.append("<span style='font-size:12px; color:gray;'>저자: " + (book.authors && book.authors.length > 0 ? book.authors : "정보 없음") + "</span><br>");
+
             //책의 번역 -> 있다면 데이터를 불러들이고 null값이라면 다음 데이터들을 불러들인다.
             if (book.translators && book.translators.length > 0) {
                 card.append("<span style='font-size:12px; color:gray;'>번역: " + book.translators + "</span><br>");
             }
             
             //책의 출판사
-            card.append("<span style='font-size:12px; color:gray;'>출판사: " + book.publisher + "</span><br>");
+			card.append("<span style='font-size:12px; color:gray;'>출판사: " + (book.publisher || "정보 없음") + "</span><br>");
+
+        	//책의 출판날짜에서 날짜만 추출
+            const formattedDate = book.datetime.split("T")[0]; 
+            card.append("<span style='font-size:12px; color:gray;'>출판날짜: " + formattedDate + "</span><br>");
             
             //책의 정상판매가
             card.append("<span style='font-size:12px; color:gray;'>정상판매가: " + book.price + "원</span><br>");
@@ -296,7 +300,7 @@
             } else {
                 card.append("<span style='font-size:12px; color:gray;'>판매여부: 미정</span><br>");
             }
-
+         	
             //숨겨진 컨텐츠 영역 추가
             var contentDiv = $("<div></div>").css({
                 "display": "none",
