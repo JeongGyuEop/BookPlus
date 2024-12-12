@@ -15,6 +15,7 @@
 		<li><img width="775" height="145" src="${contextPath}/resources/image/main_banner03.jpg"></li> 
 	</ul>
 </div>
+
 <div class="main_book">
    <c:set  var="goods_count" value="0" />
 	<h3>베스트셀러</h3>
@@ -79,12 +80,6 @@
 	</c:forEach>
 </div>
 
-<div class="clear"></div>
-<div id="ad_sub_banner">
-	<img width="770" height="117" src="${contextPath}/resources/image/sub_banner02.jpg">
-</div>
-
-
 <div class="main_book" >
 <c:set  var="goods_count" value="0" />
 	<h3>스테디셀러</h3>
@@ -109,6 +104,3 @@
    </c:if>
 	</c:forEach>
 </div>
-
-   
-   

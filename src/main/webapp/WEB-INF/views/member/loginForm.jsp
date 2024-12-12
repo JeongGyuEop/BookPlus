@@ -46,6 +46,7 @@ function result(){
 		   <a href="${contextPath}/member/addMember.do">회원가입</a>    | 
 		   <a href="#">고객 센터</a>
 					   
-	</form>		
+	</form>	
+	</DIV>	
 </body>
 </html>
