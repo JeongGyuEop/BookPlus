@@ -1,6 +1,5 @@
 package com.bookplus.board.vo;
 
-
 //VO  도메인
 
 public class Board {
@@ -9,6 +8,41 @@ public class Board {
 	private String subject;
 	private String content;
 	private String writer;
+	private String place_name;
+	private String place_url;
+	private String road_address_name;
+	private String x;
+	private String y;
+	public String getPlace_name() {
+		return place_name;
+	}
+	public void setPlace_name(String place_name) {
+		this.place_name = place_name;
+	}
+	public String getPlace_url() {
+		return place_url;
+	}
+	public void setPlace_url(String place_url) {
+		this.place_url = place_url;
+	}
+	public String getRoad_address_name() {
+		return road_address_name;
+	}
+	public void setRoad_address_name(String road_address_name) {
+		this.road_address_name = road_address_name;
+	}
+	public String getX() {
+		return x;
+	}
+	public void setX(String x) {
+		this.x = x;
+	}
+	public String getY() {
+		return y;
+	}
+	public void setY(String y) {
+		this.y = y;
+	}
 	private String register_datetime;
 	
 	public String getId() {

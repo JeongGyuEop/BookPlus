@@ -10,12 +10,22 @@
             subject,
             content,
             writer,
-            password
+            password,
+           	place_name,
+           	road_address_name,
+           	place_url,
+           	x,
+           	y
         ) values(
             #{subject},
             #{content},
             #{writer},
-            #{password}
+            #{password},
+            #{place_name},
+            #{road_address_name},
+            #{place_url},
+            #{x},
+            #{y}
         )
     </insert>
 
@@ -25,7 +35,12 @@
             subject = #{subject},
             content = #{content},
             writer = #{writer},
-            password = #{password}
+            password = #{password},
+            place_name = #{place_name},
+            road_address_name = #{road_address_name},
+            place_url = #{place_url},
+            x = #{x},
+            y = #{y}
         where
             id = #{id}
     </update>
@@ -54,7 +69,11 @@
             subject,
             content,
             writer,
-            DATE_FORMAT(register_datetime, '%Y-%m-%d %H:%i:%s') as register_datetime
+            place_name,
+            place_url,
+            road_address_name,
+            x,
+            y
         from
             board
         where
@@ -107,21 +126,22 @@
             and reply_password = #{reply_password}
     </delete>
 
-    <delete id="deleteBoardReplyAll" parameterType="java.util.HashMap">
-        delete from board_reply
-        where
-            reply_id in (
-                select reply_id
-                from board_reply
-                where reply_id = #{reply_id}
-                and reply_password = #{reply_password}
-            ) or parent_id in (
-                select reply_id
-                from board_reply
-                where reply_id = #{reply_id}
-                and reply_password = #{reply_password}
-            )
-    </delete>
+<delete id="deleteBoardReplyAll" parameterType="java.util.HashMap">
+    delete from board_reply
+    where reply_id in (
+        select * from (
+            select reply_id
+            from board_reply
+            where reply_id = #{reply_id}
+            and reply_password = #{reply_password}
+            union
+            select reply_id
+            from board_reply
+            where parent_id = #{reply_id}
+        ) as temp_table
+    );
+</delete>
+
 
     <select id="selectBoardCnt" resultType="int" parameterType="java.util.HashMap">
         select count(id)

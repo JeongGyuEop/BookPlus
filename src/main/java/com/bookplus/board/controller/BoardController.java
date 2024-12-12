@@ -21,8 +21,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.bookplus.board.service.BoardService;
 
-
-
 @Controller
 public class BoardController{
 
@@ -106,29 +104,29 @@ public class BoardController{
 
 		if(Referer!=null){//URL로 직접 접근 불가
 			if(paramMap.get("id") != null){ //게시글 수정
-				if(Referer.indexOf("/board/view")>-1){
+				if(Referer.indexOf("/board/view.do")>-1){
 
 					//정보를 가져온다.
 					model.addAttribute("boardView", boardService.getContentView(paramMap));
-					return "boardEdit";
+					return "/board/edit";
 				}else{
-					return "redirect:/board/list.do";
+					return "redirect:/board/boardList.do";
 				}
 			}else{ //게시글 등록
-				if(Referer.indexOf("/board/list")>-1){
-					return "boardEdit";
+				if(Referer.indexOf("/board/boardList.do")>-1){
+					return "/board/edit";
 				}else{
-					return "redirect:/board/list";
+					return "redirect:/board/boardList.do";
 				}
 			}
 		}else{
-			return "redirect:/board/list";
+			return "redirect:/board/boardList.do";
 		}
 
 	}
 
 	//AJAX 호출 (게시글 등록, 수정)
-	@RequestMapping(value="/board/save", method=RequestMethod.POST)
+	@RequestMapping(value="/board/save", method=RequestMethod.POST, produces = "application/json")
 	@ResponseBody
 	public Object boardSave(@RequestParam Map<String, Object> paramMap) {
 
@@ -139,6 +137,7 @@ public class BoardController{
 		ShaPasswordEncoder encoder = new ShaPasswordEncoder(256);
 		String password = encoder.encodePassword(paramMap.get("password").toString(), null);
 		paramMap.put("password", password);
+		System.out.println(paramMap);
 
 		//정보입력
 		int result = boardService.regContent(paramMap);
@@ -154,6 +153,11 @@ public class BoardController{
 		return retVal;
 
 	}
+	
+	@RequestMapping("map/map")
+    public String showMapPage() {
+        return "map/map"; // Tiles definition 이름
+    }
 
 	//AJAX 호출 (게시글 삭제)
 	@RequestMapping(value="/board/del", method=RequestMethod.POST)
@@ -183,7 +187,7 @@ public class BoardController{
 	}
 
 	//AJAX 호출 (게시글 패스워드 확인)
-	@RequestMapping(value="/board/check", method=RequestMethod.POST)
+	@RequestMapping(value="/board/check", method= {RequestMethod.POST})
 	@ResponseBody
 	public Object boardCheck(@RequestParam Map<String, Object> paramMap) {
 
@@ -210,7 +214,7 @@ public class BoardController{
 	}
 
 	//AJAX 호출 (댓글 등록)
-	@RequestMapping(value="/board/reply/save", method=RequestMethod.POST)
+	@RequestMapping(value="/board/reply/save", method=RequestMethod.POST, produces = "application/json")
 	@ResponseBody
 	public Object boardReplySave(@RequestParam Map<String, Object> paramMap) {
 
@@ -257,6 +261,7 @@ public class BoardController{
 
 		if(result>0){
 			retVal.put("code", "OK");
+			retVal.put("message", "삭제에 성공했습니다.");
 		}else{
 			retVal.put("code", "FAIL");
 			retVal.put("message", "삭제에 실패했습니다. 패스워드를 확인해주세요.");

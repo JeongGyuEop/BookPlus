@@ -58,6 +58,15 @@
 			</ul>
 		</li>
 		<li>
+			<h3>커뮤니티</h3>
+			<ul>
+				<li><a href="${contextPath}/board/freeBoard.do">자유게시판</a></li>
+				<li><a href="#">반품/교환 신청 및 조회</a></li>
+				<li><a href="#">취소 주문 내역</a></li>
+				<li><a href="#">세금 계산서</a></li>
+			</ul>
+		</li>
+	<!-- 	<li>
 			<h3>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;음반</h3>
 			<ul>
 				<li><a href="#">가요</a></li>
@@ -67,7 +76,7 @@
 				<li><a href="#">재즈</a></li>
 				<li><a href="#">기타</a></li>
 			</ul>
-		</li>
+		</li> -->
 	 </c:otherwise>
 </c:choose>	
 </ul>
@@ -81,7 +90,7 @@
 	<UL>
 	
 	<c:forEach  var="i" begin="1" end="5" step="1">
-		<li><a href="#">공지사항입니다.${ i}</a></li>
+		<li><a href="${contextPath}/board/boardList.do }">공지사항입니다.${ i}</a></li>
 	</c:forEach>
 	</ul>
 </div>

@@ -10,7 +10,6 @@ import org.springframework.stereotype.Repository;
 import com.bookplus.board.vo.Board;
 import com.bookplus.board.vo.BoardReply;
 
-
 @Repository("boardDao")
 public class BoardDaoImpl implements BoardDao{
 	
@@ -23,6 +22,8 @@ public class BoardDaoImpl implements BoardDao{
     
 	@Override
 	public int regContent(Map<String, Object> paramMap) {
+		System.out.println("DAO params: " + paramMap); // 전달된 값 출력
+
 		return sqlSession.insert("mapper.board.insertContent", paramMap);
 	}
 	

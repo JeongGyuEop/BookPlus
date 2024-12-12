@@ -19,7 +19,6 @@ import com.bookplus.common.base.BaseController;
 import com.bookplus.goods.service.GoodsService;
 import com.bookplus.goods.vo.GoodsVO;
 
-
 //@Controller("mainController"): 해당 클래스를 컨트롤러로 지정하며, 빈의 이름을 "mainController"로 설정한다.
 //@EnableAspectJAutoProxy: AOP를 사용하기 위한 어노테이션으로, 이를 설정하면 자동으로 AOP 프록시를 생성하여 적용한다.
 @Controller("mainController")
@@ -34,7 +33,7 @@ public class MainController extends BaseController {
 
 	
 
-	// http://localhost:8090/bookplus/main/main.do 입력하여 메인화면 요청시
+	// http://localhost:8090/bookShop01/main/main.do 입력하여 메인화면 요청시
 	// 메인화면 중앙에 보여줄 베스트셀러, 신간, 스테디 셀러를 조회한후  Map에 저장하여  JSP로 전달합니다.
 	@RequestMapping(value= "/main/main.do" ,method={RequestMethod.POST,RequestMethod.GET})
 	public ModelAndView main(HttpServletRequest request, HttpServletResponse response) throws Exception{
@@ -80,13 +79,16 @@ public class MainController extends BaseController {
 		
 		return mav;
 		
-		
-		
-		
 	}
+	
+	@RequestMapping(value = "/map/directions.do" , method = RequestMethod.GET)
+	public String showDirections(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		
+		String viewName=(String)request.getAttribute("viewName");
+		
+		return viewName;
+	}
+	
+	
 }
-
-
-
-
 
