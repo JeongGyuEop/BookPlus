@@ -60,7 +60,7 @@ function execDaumPostcode() {
 	      }
 	    }
 	  }).open(); // 팝업 창 열기 (기본 동작으로 닫힘)
-	}
+}
 
 
 //아이디 중복 확인
@@ -110,25 +110,28 @@ function updateEmailDomain() {
 }
  
 // 선택 체크박스 미 클릭시 DB 등록 가능하게 설정  
-	// 제출 전에 체크박스 값 설정
-		function prepareFormData() {
-			const smsCheckbox = document.getElementById('smsstsCheckbox');
-			const emailCheckbox = document.getElementById('emailstsCheckbox');
+// 제출 전에 체크박스 값 설정
+function prepareFormData() {
+    const smsCheckbox = document.getElementById('smsstsCheckbox');
+    const smsHidden = document.getElementById('smsHidden');
+    const emailCheckbox = document.getElementById('emailstsCheckbox');
+    const emailHidden = document.getElementById('emailHidden');
 
-			// SMS 수신 동의 여부
-			if (smsCheckbox.checked) {
-				document.getElementById('smsHidden').disabled = true; // hidden input 비활성화
-			} else {
-				document.getElementById('smsHidden').disabled = false; // hidden input 활성화
-			} 
+    // SMS 수신 동의 여부
+    if (smsCheckbox.checked) {
+        smsHidden.disabled = true; // hidden input 비활성화
+    } else {
+        smsHidden.disabled = false; // hidden input 활성화
+    }
 
-			// 이메일 수신 동의 여부
-			if (emailCheckbox.checked) {
-				document.getElementById('emailHidden').disabled = true; // hidden input 비활성화
-			} else {
-				document.getElementById('emailHidden').disabled = false; // hidden input 활성화
-			}
-		}
+    // 이메일 수신 동의 여부
+    if (emailCheckbox.checked) {
+        emailHidden.disabled = true; // hidden input 비활성화
+    } else {
+        emailHidden.disabled = false; // hidden input 활성화
+    }
+}
+
 
 </script>
 </head>
@@ -181,10 +184,10 @@ function updateEmailDomain() {
 				        <c:choose>
 				            <c:when test="${not empty requestScope.gender}">
 				                <input type="radio" name="member_gender" value="female" 
-				                       <c:if test="${requestScope.gender == 'female'}">checked</c:if> disabled />여성
+				                       <c:if test="${requestScope.gender == '102'}">checked</c:if> disabled />여성
 				                <span style="padding-left:120px"></span>
 				                <input type="radio" name="member_gender" value="male" 
-				                       <c:if test="${requestScope.gender == 'male'}">checked</c:if> disabled />남성
+				                       <c:if test="${requestScope.gender == '101'}">checked</c:if> disabled />남성
 				                <input type="hidden" name="member_gender" value="${requestScope.gender}" />
 				            </c:when>
 				
@@ -333,10 +336,13 @@ function updateEmailDomain() {
 				                    <option value="019">019</option>
 				                </select> - 
 				                <input size="10px" type="text" name="hp2"> - <input size="10px" type="text" name="hp3"><br><br>
-				                <input type="checkbox" name="smssts_yn" value="Y" checked /> 쇼핑몰에서 발송하는 SMS 소식을 수신합니다.
-					 			<input type="hidden" id="smsHidden" name="smssts_yn" value="N" />
 				            </c:otherwise>
 				        </c:choose>
+				        <br><br>
+		                <!-- SMS 수신 동의 -->
+						<input type="checkbox" id="smsstsCheckbox" name="smssts_yn" value="Y" checked /> 쇼핑몰에서 발송하는 SMS 소식을 수신합니다.
+						<input type="hidden" id="smsHidden" name="smssts_yn" value="N" />
+
 				    </td>
 				</tr>
 				<tr class="dot_line">
@@ -368,7 +374,8 @@ function updateEmailDomain() {
 				            </c:otherwise>
 				        </c:choose>
 				        <br><br>
-				        <input type="checkbox" name="emailsts_yn" value="Y" checked /> 쇼핑몰에서 발송하는 e-mail을 수신합니다.
+				        <!-- 이메일 수신 동의 -->
+						<input type="checkbox" id="emailstsCheckbox" name="emailsts_yn" value="Y" checked /> 쇼핑몰에서 발송하는 이메일 소식을 수신합니다.
 						<input type="hidden" id="emailHidden" name="emailsts_yn" value="N" />
 				    </td>
 				</tr>

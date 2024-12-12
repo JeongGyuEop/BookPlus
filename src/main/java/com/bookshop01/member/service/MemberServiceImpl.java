@@ -261,13 +261,26 @@ public class MemberServiceImpl implements MemberService {
             phone2 = phoneParts[1];
             phone3 = phoneParts[2];
         }
+        
+        String accountGender = userProfile.get("gender").toString();
+        if(accountGender == "F" ||  accountGender == "female") {
+        	accountGender = "102";
+        }else {
+        	accountGender = "101";
+        }
+        
+        String accountBirthDay = userProfile.get("birthday").toString();
+        if(accountBirthDay.contains("-")) {
+        	accountBirthDay = accountBirthDay.replace("-", "");
+        }
+        System.out.println(accountBirthDay);
 
         request.setAttribute("id", userProfile.get("id"));
         request.setAttribute("name", userProfile.get("name"));
         request.setAttribute("email1", email1);
         request.setAttribute("email2", email2);
-        request.setAttribute("gender", userProfile.get("gender"));
-        request.setAttribute("birthday", userProfile.get("birthday"));
+        request.setAttribute("gender", accountGender);
+        request.setAttribute("birthday", accountBirthDay);
         request.setAttribute("birthyear", userProfile.get("birthyear"));
         request.setAttribute("phone1", phone1);
         request.setAttribute("phone2", phone2);
