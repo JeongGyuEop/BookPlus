@@ -158,13 +158,13 @@
 		</ul>
 		
 	</div>
-	
-	
-	
-	
-	
+
+
+
+
+
 	<!--카카오 도서 실시간 검색 api를 이용한 기능 추가   -->
-	
+
 	<div class="search" style="text-align: center; margin: 20px;">
 		<h1
 			style="font-size: 24px; color: #444; margin-bottom: 20px; border-bottom: 1px solid #ccc; padding-bottom: 10px;">
@@ -172,17 +172,12 @@
 		</h1>
 		<div
 			style="display: flex; justify-content: center; align-items: center; gap: 10px; margin-top: 20px;">
-			<input type="text" id="searchQuery"
-				placeholder="실시간 도서정보 확인가능"
-				style="width: 60%; padding: 10px; font-size: 16px; border: 2px solid #ccc; 
-				border-radius: 5px; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);">
+			<input type="text" id="searchQuery" placeholder="실시간 도서정보 확인가능"
+				style="width: 60%; padding: 10px; font-size: 16px; border: 2px solid #ccc; border-radius: 5px; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);">
 
 			<button id="searchButton"
-				style="padding: 10px 20px; font-size: 16px; background-color: #FF5733; color: white; 
-				border: none; border-radius: 5px; cursor: pointer; 
-				box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);">
-				검색
-			</button>
+				style="padding: 10px 20px; font-size: 16px; background-color: #FF5733; color: white; border: none; border-radius: 5px; cursor: pointer; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);">
+				검색</button>
 		</div>
 	</div>
 
@@ -190,16 +185,15 @@
 		style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: flex-start; padding: 10px;">
 	</p>
 	<!-- 페이징 네비게이션 영역 -->
-<div id="pagination" style="text-align: center; margin-top: 20px;"></div>
+	<div id="pagination" style="text-align: center; margin-top: 20px;"></div>
 
-<div style="text-align: center; margin-top: 20px;">
-</div>
+	<div style="text-align: center; margin-top: 20px;"></div>
 	<script src="https://code.jquery.com/jquery-3.7.1.js"
-		integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" 
+		integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
 		crossorigin="anonymous">
 	</script>
 
-<script>
+	<script>
     var currentPage = 1; //카카오 도서 검색 api에서 받아온 데이터들 중에서 그 api의 데이터들의 1페이지부터 받아온다.
     var itemsPerPage = 8; //한 페이지에 표시할 데이터 수
     var totalData = []; //전체 검색 데이터를 저장
@@ -224,6 +218,12 @@
             totalData = msg.documents; //검색 결과 데이터를 전역 변수에 저장
             currentPage = 1; //현재 페이지 초기화를 한다
             $("#result").empty(); //기존 결과 초기화를 한다
+            if (totalData.length === 0) {
+                // 검색 결과가 없을 때 메시지 표시
+                $("#result").html("<div style='text-align:center; font-size:16px; color:gray;'>검색결과가 없습니다.</div>");
+                $("#pagination").empty(); // 페이징도 제거
+                return; // 함수 종료
+            }
             renderPage(); //첫 페이지 데이터 렌더링
             renderPagination(); //페이지 번호 렌더링
         })
@@ -371,4 +371,3 @@
 
 
 </script>
-	
