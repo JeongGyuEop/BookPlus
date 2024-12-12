@@ -80,10 +80,17 @@ public class MainController extends BaseController {
 		
 		return mav;
 		
-		
-		
-		
 	}
+	
+	@RequestMapping(value = "/map/directions.do" , method = RequestMethod.GET)
+	public String showDirections(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		
+		String viewName=(String)request.getAttribute("viewName");
+		
+		return viewName;
+	}
+	
+	
 }
 
 

@@ -3,7 +3,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.spring</groupId>
-	<artifactId>mytest04</artifactId>
+	<artifactId>BookPlus</artifactId>
 	<name>spring_test04</name>
 	<packaging>war</packaging>
 	<version>1.0.0-BUILD-SNAPSHOT</version>
@@ -205,6 +205,11 @@
 		    <artifactId>json-lib</artifactId>
 		    <version>2.4</version>
 		    <classifier>jdk15</classifier>    
+		</dependency>
+		<dependency>
+		    <groupId>com.fasterxml.jackson.core</groupId>
+		    <artifactId>jackson-databind</artifactId>
+		    <version>2.15.2</version> <!-- 최신 버전 사용 -->
 		</dependency>
 		
 		

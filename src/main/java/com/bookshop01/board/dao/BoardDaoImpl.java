@@ -23,6 +23,8 @@ public class BoardDaoImpl implements BoardDao{
     
 	@Override
 	public int regContent(Map<String, Object> paramMap) {
+		System.out.println("DAO params: " + paramMap); // 전달된 값 출력
+
 		return sqlSession.insert("mapper.board.insertContent", paramMap);
 	}
 	

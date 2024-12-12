@@ -1,17 +1,19 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page session="false" %>
+<c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 <html>
     <head>
         <title>게시판</title>
         <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.3.js"></script>
         <script type="text/javascript">
-            $(document).ready(function(){
+           
+        $(document).ready(function(){
             	
             	var status = false; //수정과 대댓글을 동시에 적용 못하도록
             	
             	$("#list").click(function(){
-            		location.href = "/board/list";
+            		location.href = "${contextPath}/board/boardList.do";
             	});
             	
             	//댓글 저장
@@ -52,7 +54,7 @@
             		
             		//ajax 호출
             		$.ajax({
-            			url			:	"/board/reply/save",
+            			url			:	"${contextPath}/board/reply/save",
             			dataType	:	"json",
             			contentType :	"application/x-www-form-urlencoded; charset=UTF-8",
             			type 		:	"post",
@@ -64,6 +66,7 @@
             					alert(retVal.message);
             					return false;
             				}else{
+            					alert(retVal.message);
                 				reply_id = retVal.reply_id;
             				}
             				
@@ -130,7 +133,7 @@
             		
             		//ajax 호출
             		$.ajax({
-            			url			:	"/board/reply/del",
+            			url			:	"${contextPath}/board/reply/del",
             			dataType	:	"json",
             			contentType :	"application/x-www-form-urlencoded; charset=UTF-8",
             			type 		:	"post",
@@ -461,13 +464,13 @@
             		//입력받는 창 등록
             		 var replyEditor = 
             			'<tr id="reply_add" class="reply_reply">'+
-	            		'	<td width="820px">'+
+	            		'	<td width="400px">'+
 	            		'		<textarea name="reply_reply_content" rows="3" cols="50"></textarea>'+
 	            		'	</td>'+
-	            		'	<td width="100px">'+
+	            		'	<td width="70px">'+
 	            		'		<input type="text" name="reply_reply_writer" style="width:100%;" maxlength="10" placeholder="작성자"/>'+
 	            		'	</td>'+
-	            		'	<td width="100px">'+
+	            		'	<td width="50px">'+
 	            		'		<input type="password" name="reply_reply_password" style="width:100%;" maxlength="10" placeholder="패스워드"/>'+
 	            		'	</td>'+
 	            		'	<td align="center">'+
@@ -545,7 +548,7 @@
             		
             		//ajax 호출
             		$.ajax({
-            			url			:	"/board/reply/save",
+            			url			:	"${contextPath}/board/reply/save",
             			dataType	:	"json",
             			contentType :	"application/x-www-form-urlencoded; charset=UTF-8",
             			type 		:	"post",
@@ -568,13 +571,13 @@
             		
             		var reply = 
             			'<tr reply_type="sub">'+
-	            		'	<td width="820px"> → '+
+	            		'	<td width="400px"> → '+
 	            		reply_reply_content_val+
 	            		'	</td>'+
-	            		'	<td width="100px">'+
+	            		'	<td width="70px">'+
 	            		reply_reply_writer.val()+
 	            		'	</td>'+
-	            		'	<td width="100px">'+
+	            		'	<td width="50px">'+
 	            		'		<input type="password" id="reply_password_'+reply_id+'" style="width:100px;" maxlength="10" placeholder="패스워드"/>'+
 	            		'	</td>'+
 	            		'	<td align="center">'+
@@ -620,7 +623,7 @@
             		            		
             		//ajax 호출
             		$.ajax({
-            			url			:	"/board/check",
+            			url			:	"${contextPath}/board/check",
             			dataType	:	"json",
             			contentType :	"application/x-www-form-urlencoded; charset=UTF-8",
             			type 		:	"post",
@@ -631,7 +634,7 @@
             				if(retVal.code != "OK") {
             					alert(retVal.message);
             				}else{
-                				location.href = "/board/edit?id="+$("#board_id").val();
+                				location.href = "${contextPath}/board/edit.do?id="+$("#board_id").val();
             				}
             				
             			},
@@ -662,7 +665,7 @@
             		            		
             		//ajax 호출
             		$.ajax({
-            			url			:	"/board/del",
+            			url			:	"${contextPath}/board/del",
             			dataType	:	"json",
             			contentType :	"application/x-www-form-urlencoded; charset=UTF-8",
             			type 		:	"post",
@@ -674,7 +677,7 @@
             					alert(retVal.message);
             				}else{
             					alert("삭제 되었습니다.");
-                				location.href = "/board/list";
+                				location.href = "${contextPath}/board/boardList.do";
             				}
             				
             			},
@@ -701,10 +704,12 @@
     </style>
     <body>
     	<input type="hidden" id="board_id" name="board_id" value="${boardView.id}" />
+    	<input type="hidden" id="x" name="x" value="${boardView.x}" />
+    	<input type="hidden" id="y" name="y" value="${boardView.y}" />
     	<div align="center">
     		</br>
     		</br>
-   			<table border="1" width="1200px" >
+   			<table border="1" width="100%" >
    				<tr>
    					<td colspan="2" align="right">
    						<input type="password" id="password" name="password" style="width:200px;" maxlength="10" placeholder="패스워드"/>
@@ -713,7 +718,7 @@
    					</td>
    				</tr>
    				<tr>
-   					<td width="900px">
+   					<td width="600px">
 						제목: ${boardView.subject}
 					</td>
 					<td>
@@ -725,21 +730,32 @@
    						${boardView.content}
    					</td>
    				</tr>
+   				<tr>
+   					<td width="50%">
+						장소 : ${boardView.place_name}
+					</td>
+   					<td width="50%">
+						도로명 : ${boardView.road_address_name}
+					</td>
+   				</tr>
    			</table>
-   			<table border="1" width="1200px" id="reply_area">
+   			<!-- 지도  -->
+   			<jsp:include page="/WEB-INF/views/map/mettingPlace.jsp" />
+   			
+   			<table border="1" width="100%" id="reply_area">
    				<tr reply_type="all"  style="display:none"><!-- 뒤에 댓글 붙이기 쉽게 선언 -->
    					<td colspan="4"></td>
    				</tr>
 	   			<!-- 댓글이 들어갈 공간 -->
 	   			<c:forEach var="replyList" items="${replyList}" varStatus="status">
 					<tr reply_type="<c:if test="${replyList.depth == '0'}">main</c:if><c:if test="${replyList.depth == '1'}">sub</c:if>"><!-- 댓글의 depth 표시 -->
-			    		<td width="820px">
+			    		<td width="400px">
 			    			<c:if test="${replyList.depth == '1'}"> → </c:if>${replyList.reply_content}
 			    		</td>
-			    		<td width="100px">
+			    		<td width="70px">
 			    			${replyList.reply_writer}
 			    		</td>
-			    		<td width="100px">
+			    		<td width="50px">
 			    			<input type="password" id="reply_password_${replyList.reply_id}" style="width:100px;" maxlength="10" placeholder="패스워드"/>
 			    		</td>
 			    		<td align="center">
@@ -752,7 +768,7 @@
 			    	</tr>
 			    </c:forEach>
    			</table>
-   			<table border="1" width="1200px" bordercolor="#46AA46">
+   			<table border="1" width="100%" bordercolor="#46AA46">
    				<tr>
    					<td width="500px">
 						이름: <input type="text" id="reply_writer" name="reply_writer" style="width:170px;" maxlength="10" placeholder="작성자"/>
@@ -766,7 +782,7 @@
    					</td>
    				</tr>
    			</table>
-   			<table width="1200px">
+   			<table width="100%">
    				<tr>
    					<td align="right">
    						<button id="list" name="list">게시판</button>
