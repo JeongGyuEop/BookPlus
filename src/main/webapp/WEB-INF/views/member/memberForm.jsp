@@ -335,7 +335,7 @@ function prepareFormData() {
 				                    <option value="018">018</option>
 				                    <option value="019">019</option>
 				                </select> - 
-				                <input size="10px" type="text" name="hp2"> - <input size="10px" type="text" name="hp3"><br><br>
+				                <input size="10px" type="text" name="hp2"> - <input size="10px" type="text" name="hp3">
 				            </c:otherwise>
 				        </c:choose>
 				        <br><br>

@@ -23,86 +23,36 @@
       pageContext.setAttribute("crcn", "\r\n"); //개행문자
     //pageContext.setAttribute("crcn" , "\n"); //Ajax로 변경 시 개행 문자 
       pageContext.setAttribute("br", "<br/>"); //br 태그
-  /*    
-  	 참고. 도서 상품 목차 등에 개행문자(\r\n) 가 포함되어 있으면 웹페이지에서는 이를 <br>태그를 사용해 바꿔줘야 합니다.
-  	      즉, 테이블의 상품목차를 웹페이지에 표시하면서 개행 기능을 유지하려면 
-  	      개행문자(\r\n)를 <br>태그로 대체해서 표시해야 상품 목차를 등록할때의 형태로 웹페이지에 표시됩니다.
-  	      
-  	      <textArea>태그 내의 입력한 value값으로 데이터를 불러오기 떄문에 개행문자(엔터키처리한 \r\n문자)가 그대로 표기 되는 반면
-  	      홈쇼핑 사이트화면(웹브라우저에 보여지는 화면)에서는 textArea가 아닌 html태그 자체를 불러오기 때문에 <br>태그로 치환해주어야 합니다.
-  	      
-  	      글을 작성할떄(글쓰기할때) textArea태그에선 개행문자가 \n 입니다.
-  	      웹브라우저에는 html태그로 표현되는데 html태그에서 개행문자역할은 <br>태그 입니다. 안바꿔주면 그냥 한줄에 출력됩니다.
-  	      
-  	      
-  	//  "crcn"은 개행문자를 나타내는 이스케이프 시퀀스(escape sequence) 중 하나입니다. 
-  	//  "crcn"은 Carriage Return(CR)과 Line Feed(LF)의 조합을 나타내며, 
-  	//   일반적으로 텍스트 파일에서 한 줄의 끝을 나타내는 데 사용됩니다.
-
-  	//  Carriage Return은 문자열 커서를 문자열의 맨 앞으로 이동시키는 제어 문자이고, 
-  	//  Line Feed는 문자열 커서를 다음 줄로 이동시키는 제어 문자입니다. 
-  	//  두 문자를 조합한 "crcn"은 텍스트 파일에서 한 줄을 끝내고 다음 줄로 넘어가는 역할을 합니다.
-
-  	//  참고로, 다른 이스케이프 시퀀스로는 "\n" (Line Feed)과 "\r" (Carriage Return)이 있습니다. 
-  	//  이들은 각각 개행문자를 나타내는데 사용됩니다. 
-  	//  예를 들어, Unix 및 Linux 운영 체제에서는 일반적으로 "\n"을 사용하고, Windows 운영 체제에서는 "\r\n"을 사용합니다. 
-  	      
-  	      
-  */
 %>  
 <html>
 <head>
-<style>
-/*
-  #layer라는 ID선택자를 사용하여 div요소영역을 선택해 스타일을 지정하고 있습니다.
-  이 div요소 영역은 다른 요소들 위에 떠있는 배경 레이아웃을 나타내며,
-  z-index속성을 사용하여 다른 요소들과 겹치는 순서를 조정 하고 있습니다.
-  position: absolute 송석을 사용하여 요소를 절대적인 위치에 배치 하고 있으며
-  top과 left속성을 사용하여 왼쪽 상단 모서리를 기준으로 요소를 위치시키고 있습니다.
-  마지막으로 width속성을 사용하여 div요소 영역의 가로 길이를 100%로 설정하고 있습니다. 
-*/
-#layer {
-	z-index: 2;
-	position: absolute;
-	top: 0px;
-	left: 0px;
-	width: 100%;
-}
-
-/*
-	#popup라는 ID선택자를 사용하여 <div id="popup">팝업창 요소 영역을 스타일링하고 있습니다.
-    이 <div>요소는 position: fixed 속성을 사용하여 화면의 고정된 위치에 배치되며,
-    text-align : center 속성을 사용하여 텍스트를 <div>의 가운데로 정렬하고 있습니다.
-    left와 top속성을 사용하여  요소를 중앙에 배치하고 있으며,
-    width와 height속성을 사용하여 <div>요소영역의 크기를 지정하고 있습니다.
-    이 <div>요소의 배경색과 테두리 색상은 각각 background-color와 border속성을 사용하여 지정하고 있습니다.
-*/
-#popup {
-	z-index: 3;
-	position: fixed;
-	text-align: center;
-	left: 50%;
-	top: 45%;
-	width: 300px;
-	height: 200px;
-	background-color: #ccffff;
-	border: 3px solid #87cb42;
-}
-
-/*
-	#close라는 ID선택자를 사용하여 닫기 X 이미지 버튼을 보이는 <img>태그를 선택해 스타일링 하고 있습니다.
-	이 <img>요소는 float:right 속성을 사용하여 x이미지가 우측 상단으로 배치되며 
-	z-index속성을 사용하여 다른요소들보다 위에 위치하도록 조정하고 있습니다.
-*/
-#close {
-	z-index: 4;
-	float: right;
-}
-</style>
+	<style>
+		#layer {
+			z-index: 2;
+			position: absolute;
+			top: 0px;
+			left: 0px;
+			width: 100%;
+		}
+		#popup {
+			z-index: 3;
+			position: fixed;
+			text-align: center;
+			left: 50%;
+			top: 45%;
+			width: 300px;
+			height: 200px;
+			background-color: #ccffff;
+			border: 3px solid #87cb42;
+		}
+		#close {
+			z-index: 4;
+			float: right;
+		}
+	</style>
 <script type="text/javascript">
-    //장바구니 버튼을 클릭하면 호출되는 함수로~~
-    //도서 상품 번호를 매개변수로 전달 받아!
-    //
+
+    //장바구니 버튼을 클릭하면 호출되는 함수
 	function add_cart(goods_id) {
 		$.ajax({
 			type : "post",
@@ -156,7 +106,7 @@
 	}
 
 //구매하기 버튼을 누르면 호출되는 함수로 현재보고 있는 도서상품의 번호, 제목, 정가가격, 도서이미지명을 매개변수로 받아서 처리   
-function fn_order_each_goods(goods_id,goods_title,goods_sales_price,fileName){
+function fn_order_each_goods(goods_id,goods_title, goods_price, goods_sales_price,fileName){
 	
 	//id속성값이 isLogOn인 태그를 선택해서  _isLogOn변수에 저장
 	//<input type="hidden" name="isLogOn" id="isLogOn" value="${isLogOn}"/>
@@ -171,17 +121,8 @@ function fn_order_each_goods(goods_id,goods_title,goods_sales_price,fileName){
 	} 
 	
 	var total_price,final_total_price;
+	
 	//id속성값이 order_goods_qty인 <select>태그 내부의 선택한 <option> 구매수량의 정보를 가져오기 위해 <select>태그 선택해오기 
-	/*
-	도서 상품 구매 수량 선택하는 태그를 선택함 
-	     <select style="width: 60px;" id="order_goods_qty">
-    		<option value="1">1</option>
-			<option value="2">2</option>
-			<option>3</option>
-			<option>4</option>
-			<option>5</option>
-  		</select>
-	 */	
 	var order_goods_qty=document.getElementById("order_goods_qty");
 	
    	//<form></form>
@@ -210,6 +151,13 @@ function fn_order_each_goods(goods_id,goods_title,goods_sales_price,fileName){
     //<input name="goods_sales_price" value="매개변수 goods_sales_price로 전달받는 도서상품판매가격">
     i_goods_sales_price.value=goods_sales_price;
     
+    //<input>
+    var i_goods_price=document.createElement("input");
+	//<input name="goods_price">
+    i_goods_price.name="goods_price";
+    //<input name="goods_sales_price" value="매개변수 goods_sales_price로 전달받는 도서상품판매가격">
+    i_goods_price.value=goods_price;
+    
     
     
    	//<input>
@@ -231,6 +179,7 @@ function fn_order_each_goods(goods_id,goods_title,goods_sales_price,fileName){
     formObj.appendChild(i_goods_id);
     formObj.appendChild(i_goods_title);
     formObj.appendChild(i_goods_sales_price);
+    formObj.appendChild(i_goods_price);
     formObj.appendChild(i_fileName);
     formObj.appendChild(i_order_goods_qty);
 
@@ -283,7 +232,7 @@ function fn_order_each_goods(goods_id,goods_title,goods_sales_price,fileName){
 					   <fmt:formatNumber  value="${goods.goods_price*0.9}" type="number" var="discounted_price" />
 				         ${discounted_price}원(10%할인)</span></td>
 				</tr>
-				<tr>
+				<%-- <tr>
 					<td class="fixed">포인트적립</td>
 					<td class="active">${goods.goods_point}P(10%적립)</td>
 				</tr>
@@ -291,19 +240,10 @@ function fn_order_each_goods(goods_id,goods_title,goods_sales_price,fileName){
 					<td class="fixed">포인트 추가적립</td>
 					<td class="fixed">만원이상 구매시 1,000P, 5만원이상 구매시 2,000P추가적립 편의점 배송 이용시 300P 추가적립</td>
 				</tr>
-				<tr>
+				<tr> --%>
 					<td class="fixed">발행일</td>
 					<td class="fixed">
 					   <c:set var="pub_date" value="${goods.goods_published_date}" />
-					 <%-- 
-					   		바로 아래줄의 코드는  JSTL의 함수인 fn:split함수를 사용하여 
-					   		문자열 "2018-10-02"를 공백 문자를 기준으로 분리(split)한 결과를 반환하는 코드입니다.
-					   		실행결과는 [2018-10-02]배열과 같습니다.
-					   					 0      index
-					   		결과는 문자열 "2018-10-02"가 하나의 요소로 구성된 배열로 반환됩니다. 이는 공백문자가 없기때문입니다.
-					   		만약 문자열에 공백문자가 있다면, 해당 문자열은 공백 문자를 기준으로 분리되어 새로운 배열에 담아 배열자체를 반환 해 줍니다.
-					   		예를 들어 "2023 - 10 - 11 "  -> ["2023", "-", "10", "-", "11"] 분리된 문자열들이 새로운 배열에 저장되 배열을 반환해 줍니다.		   
-					   --%>
 					   <c:set var="arr" value="${fn:split(pub_date,' ')}" />
 					   <c:out value="${arr[0]}" />
 					</td>
@@ -325,12 +265,12 @@ function fn_order_each_goods(goods_id,goods_title,goods_sales_price,fileName){
 					<td class="fixed">
 						<strong>[당일배송]</strong> 당일배송 서비스 시작!<br> 
 						<strong>[휴일배송]</strong>
-						휴일에도 배송받는 Bookshop
+						휴일에도 배송받는 BookPlus
 					</td>
 				</tr>
 				<tr>
 					<td class="fixed">도착예정일</td>
-					<td class="fixed">지금 주문 시 내일 도착 예정</td>
+					<td class="fixed">지금 주문 시 내일 도착 예정!</td>
 				</tr>
 				<tr>
 					<td class="fixed">수량</td>
@@ -347,10 +287,10 @@ function fn_order_each_goods(goods_id,goods_title,goods_sales_price,fileName){
 			</tbody>
 		</table>
 		<ul>
-			<li><a class="buy" href="javascript:fn_order_each_goods('${goods.goods_id }','${goods.goods_title }','${goods.goods_sales_price}','${goods.goods_fileName}');">구매하기 </a></li>
+			<li><a class="buy" href="javascript:fn_order_each_goods('${goods.goods_id }','${goods.goods_title }','${goods.goods_price }', '${goods.goods_sales_price}','${goods.goods_fileName}');">구매하기 </a></li>
 			<li><a class="cart" href="javascript:add_cart('${goods.goods_id }')">장바구니</a></li>
-			
-			<li><a class="wish" href="#">위시리스트</a></li>
+			<!-- 
+			<li><a class="wish" href="#">위시리스트</a></li> -->
 		</ul>
 	</div>
 	<div class="clear"></div>

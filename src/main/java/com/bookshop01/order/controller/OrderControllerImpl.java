@@ -24,34 +24,6 @@ import com.bookshop01.order.service.OrderService;
 import com.bookshop01.order.vo.OrderVO;
 
 
-/*
-	상품주문(구매하기)은 로그인을 한상태에서만 가능합니다.
-	만약 로그인하지 않은 상태에서 구매하기를 클릭하면 alert('로그인 후 구매가능합니다'); 경고창을 띄워주고
-	로그인창으로 이동합니다.  그래서 로그인 과정을 수행한 후 주문페이지로 이동하도록 해야합니다.
-	
-	상품 주문을 처리 하는 과정은 아래와 같습니다.
-	1. 구매하기를 클릭하면 웹브라우저에서 전송된 주문 상품정보를 ArrayList배열에 저장해  Session에 저장한 후 
-	     주문 페이지로 이동합니다.
-    2. 주문페이지 에서  수령자와 배송지 정보를 입력받습니다. 
-             최종 주문시 컨트롤러에서 미리 Session에 저장된 주문 상품 목록을
-             가져와 전송된 수령자 정보와 배송지 정보를 합칩니다.
-    3. 주문정보를 합친 최종 ArrayList배열을 SQL문으로 전달하여 주문을 처리합니다.  
-    
-      
-    --------------------------------------------------------
-    
-    장바구니 상품 주문하기
-    설명 : 장바구니에 담긴 상품들을 한꺼번에 주문하는 기능을 구현 해 봅시다.
-              상품여러개를 주문하는 SQL문 역시 한개를 주문할때와 동일합니다.   
-      
-     장바구니에 담긴 상품들을을 선택한 후 상품을 주문하는 과정
-     1. 장바구니 페이지를 나타내기 전 장바구니에 추가된 상품정보를 미리 세션에 저장합니다. 
-     2. 장바구니 페이지에서 주문할 상품을 선택한 후 주문할 상품번호와 각 상품 주문 수량을 배열에 담아 컨트롤러에 전송합니다. 
-     3. 컨트롤러에서는 전송된 상품번호와 세션에 저장된 상품들의 상품번호를 비교해 같으면 상품 정보를 주문 목록의 OrderVO객체의 변수에 설정 합니다.
-     4. 전송된 각 상품별 주문 수량을  OrderVO객체의 변수에 설정합니다. 
-     5. 다시 OderVO객체를 myOrderList키를 이용해 세션에 저장한 ArrayList배열에 저장합니다.           
-*/
-
 //   /order/orderAllCartGoods.do
 
 //   /order/orderEachGoods.do
@@ -69,10 +41,10 @@ public class OrderControllerImpl extends BaseController implements OrderControll
 	public ModelAndView orderEachGoods(@ModelAttribute("orderVO") OrderVO _orderVO,
 			                           HttpServletRequest request, 
 			                           HttpServletResponse response)  throws Exception{
+		System.out.println(_orderVO);
 		
 		request.setCharacterEncoding("utf-8");
 		HttpSession session=request.getSession();
-		session=request.getSession();
 		
 		Boolean isLogOn=(Boolean)session.getAttribute("isLogOn"); //true 또는 false를 반환 받음.  true -> 로그인함
 																  //                         false -> 미로그인 
@@ -109,6 +81,7 @@ public class OrderControllerImpl extends BaseController implements OrderControll
 		//향후  tiles_order.xml파일에서 중앙화면의 주소가 결정됨 
 		String viewName=(String)request.getAttribute("viewName"); //  /order/orderEachGoods
 		ModelAndView mav = new ModelAndView(viewName);
+		
 		
 		// OrderVO객체(주문 정보)를 저장할 ArrayList배열 생성
 		List myOrderList=new ArrayList<OrderVO>();

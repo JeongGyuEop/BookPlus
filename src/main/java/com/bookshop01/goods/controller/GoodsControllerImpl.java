@@ -46,7 +46,6 @@ public class GoodsControllerImpl extends BaseController   implements GoodsContro
 	
 	
 	//   /goods/goodsDetail.do?goods_id=${item.goods_id }"
-	
 	@RequestMapping(value="/goodsDetail.do" ,method = RequestMethod.GET)
 									//main.jsp에서 상품 클릭시 전달한 상품번호(상품아이디) 얻기 
 	public ModelAndView goodsDetail(@RequestParam("goods_id") String goods_id, 

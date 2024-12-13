@@ -58,7 +58,7 @@
 				<li><a href="#">역사/인문학</a></li>
 			</ul>
 		</li>
-		<li>
+		<!-- <li>
 			<h3>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;음반</h3>
 			<ul>
 				<li><a href="#">가요</a></li>
@@ -68,15 +68,15 @@
 				<li><a href="#">재즈</a></li>
 				<li><a href="#">기타</a></li>
 			</ul>
-		</li>
+		</li> -->
 	 </c:otherwise>
 </c:choose>	
 </ul>
 </nav>
 <div class="clear"></div>
-<div id="banner">
+<%-- <div id="banner">
 	<a href="#"><img width="190" height="163" src="${contextPath}/resources/image/n-pay.jpg"> </a>
-</div>
+</div> --%>
 <div id="notice">
 	<h2>공지사항<button type="button" style="float: right;" onclick="window.location.href='${contextPath}/news/newsList.do?member_id=${member_id }'">전체보기</button></h2>
 	<ul>
@@ -89,7 +89,7 @@
 </div>
 
 
-<div id="banner">
+<%-- <div id="banner">
 	<a href="#"><img width="190" height="362" src="${contextPath}/resources/image/side_banner1.jpg"></a>
 </div>
 <div id="banner">
@@ -97,5 +97,5 @@
 </div>
 <div id="banner">
 	<a href="#"><img width="190" height="69" src="${contextPath}/resources/image/QnA_logo.jpg"></a>
-</div>
+</div> --%>
 </html>

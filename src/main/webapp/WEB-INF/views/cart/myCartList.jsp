@@ -79,15 +79,8 @@ function calcGoodsPrice(bookPrice,obj){
 //상품번호, 상품가격, 장바구니 목록에서 체크한 상품의 행 위치 index
 function modify_cart_qty(goods_id,bookPrice,index){
 	 
-	alert(goods_id);
-	
-	//alert(index);
-	
    //주문 수량을 입력하는 <input>태그들이 cart_goods_qty배열에 저장되어 있으므로 개수 알아내오기 
    var length=document.frm_order_all_cart.cart_goods_qty.length;
-   
-   alert("주문 수량을 입력하는 <input>태그 개수 : " + length);
-   
    var _cart_goods_qty=0;
    
    //장바구니 목록에 주문할 상품이 여러개 인경우 (주문 수량을 입력하는 <input>태그가 여러개인 경우)
@@ -103,38 +96,38 @@ function modify_cart_qty(goods_id,bookPrice,index){
 		
    //입력한 주문 수량이 문자열 이므로 계산을 위해 숫자로 변경해서 반환 받아 변수에 저장 
 	var cart_goods_qty=Number(_cart_goods_qty);
-	
-	
-   //입력한 주문 수량 정보를 DB에 수정 하기 위해 요청!
-	$.ajax({
-		type : "post",
-		async : false, //false인 경우 동기식으로 처리한다.
-		url : "${contextPath}/cart/modifyCartQty.do",
-		data : { 
-			//상품 번호 
-			goods_id:goods_id,
-			//상품번호에 해당하는 상품의 수량 
-			cart_goods_qty:cart_goods_qty
-		},
-		
-		success : function(data, textStatus) {
-			//alert(data);
-			if(data.trim()=='modify_success'){
-				alert("수량을 변경했습니다!!");	
-				location.reload();
-			}else{
-				alert("다시 시도해 주세요!!");	
+  	
+   if(cart_goods_qty >= 1){
+
+	   //입력한 주문 수량 정보를 DB에 수정 하기 위해 요청!
+		$.ajax({
+			type : "post",
+			async : false, //false인 경우 동기식으로 처리한다.
+			url : "${contextPath}/cart/modifyCartQty.do",
+			data : { 
+				//상품 번호 
+				goods_id:goods_id,
+				//상품번호에 해당하는 상품의 수량 
+				cart_goods_qty:cart_goods_qty
+			},
+			
+			success : function(data, textStatus) {
+				//alert(data);
+				if(data.trim()=='modify_success'){
+					alert("수량을 변경했습니다!!");	
+					location.reload();
+				}else{
+					alert("다시 시도해 주세요!!");	
+				}
+			},
+			error : function(data, textStatus) {
+				alert("수량을 변경하는 도중 에러가 발생했습니다."+data);
 			}
-			
-		},
-		error : function(data, textStatus) {
-			alert("에러가 발생했습니다."+data);
-		},
-		complete : function(data, textStatus) {
-			//alert("작업을완료 했습니다");
-			
-		}
-	}); //end ajax	
+		}); //end ajax	
+   } else {
+	   alert("수량은 1개 이상이어야 합니다. 다시 입력해 주세요.");
+   }
+	
 }
 
 function delete_cart_goods(cart_id){
@@ -309,19 +302,6 @@ function fn_order_all_cart_goods(){
 			   
  		 <form name="frm_order_all_cart" method="post" action="${contextPath}/order/orderAllCartGoods.do">	   
 	<%-- <form name="frm_order_all_cart"> --%>        		  
-<%--
-<c:forEach>태그의 
-varStatus="cnt"는 JSTL의 forEach 태그에서 현재 반복이 몇 번째인지를 추적하는 데 사용됩니다. 
-"cnt"는 "count"의 약어로, 현재 반복이 몇 번째인지를 나타내는 변수명입니다.
-예를 들어, 위의 코드에서 ${myGoodsList}는 반복할 목록을 나타내고, var="item"은 현재 반복되는 항목을 나타내는 변수명입니다. 
-varStatus="cnt"를 사용하면, 현재 반복이 몇 번째인지 추적할 수 있습니다. 
-따라서, cnt.index를 사용하여 현재 반복의 인덱스를 참조할 수 있고, cnt.count를 사용하여 현재까지의 반복 횟수를 참조할 수 있습니다.
-
-예를 들어, myList에 3개의 항목이 있고, forEach 루프가 실행되고 있을 때, 
-첫 번째 반복에서는 cnt.index가 0, cnt.count가 1이 됩니다. 
-두 번째 반복에서는 cnt.index가 1, cnt.count가 2가 됩니다. 
-이를 통해 개발자는 현재 반복이 몇 번째인지를 쉽게 파악할 수 있습니다.	
---%>
 		
           <%-- 장바구니테이블에 저장된 상품번호로  도서상품 테이블과 도서이미지정보 테이블에서 조회한 도서상품 갯수 만큼 반복해서 도서 상품 목록 표시    --%>
 	      <c:forEach var="item" items="${myGoodsList }" varStatus="cnt">
@@ -358,23 +338,22 @@ varStatus="cnt"를 사용하면, 현재 반복이 몇 번째인지 추적할 수
 					<td class="price"><span>${item.goods_price }원</span></td>
 					<td>
 					   <strong>
-					      <fmt:formatNumber  value="${item.goods_sales_price*0.9}" type="number" var="discounted_price" />
+					      <fmt:formatNumber  value="${item.goods_sales_price }" type="number" var="discounted_price" />
 				            ${discounted_price}원(10%할인)
 				         </strong>
 					</td>
 					<td>
 					
-${item.goods_id }  					
 					 <%-- 주문 수량을 입력하는 <input> --%>
-					   <input type="text" id="cart_goods_qty" name="cart_goods_qty" size=3 value="${cart_goods_qty}"><br>
+					   <input type="text" id="cart_goods_qty" name="cart_goods_qty" size=3 value="${cart_goods_qty}">
 					 <%-- 변경 버튼 --%>	
-						<a href="javascript:modify_cart_qty(${item.goods_id },${item.goods_sales_price*0.9 },${cnt.count-1 });" >
+						<a href="javascript:modify_cart_qty(${item.goods_id },${item.goods_sales_price},${cnt.count-1 });" >
 						    <img width=25 alt=""  src="${contextPath}/resources/image/btn_modify_qty.jpg">
 						</a>
 					</td>
 					<td>
 					   <strong id="total_sales_price">
-					    <fmt:formatNumber  value="${item.goods_sales_price*0.9*cart_goods_qty}" type="number" var="total_sales_price" />
+					    <fmt:formatNumber  value="${item.goods_sales_price * cart_goods_qty}" type="number" var="total_sales_price" />
 				         ${total_sales_price}원
 						</strong> 
 					</td>
@@ -382,19 +361,19 @@ ${item.goods_id }
 					    <a href="javascript:fn_order_each_goods('${item.goods_id }','${item.goods_title }','${item.goods_sales_price}','${item.goods_fileName}');">
 					       <img width="75" alt=""  src="${contextPath}/resources/image/btn_order.jpg">
 						</a><br>
-					 	<a href="#"> 
+					 	<%-- <a href="#"> 
 					 	   <img width="75" alt="" src="${contextPath}/resources/image/btn_order_later.jpg">
 						</a><br> 
 						<a href="#"> 
 						   <img width="75" alt=""src="${contextPath}/resources/image/btn_add_list.jpg">
-						</a><br> 
+						</a><br>  --%>
 						<a href="javascript:delete_cart_goods('${cart_id}');"> 
 						   <img width="75" alt=""src="${contextPath}/resources/image/btn_delete.jpg">
 					   </a>
 					</td>
 			</tr>
 			
-			<c:set  var="totalGoodsPrice" value="${totalGoodsPrice+item.goods_sales_price*0.9*cart_goods_qty }" />
+			<c:set  var="totalGoodsPrice" value="${totalGoodsPrice+item.goods_sales_price * cart_goods_qty }" />
 			<%-- 총 상품 수  --%>
 			<c:set  var="totalGoodsNum" value="${totalGoodsNum+1 }" /> 
 	   		</c:forEach>
@@ -411,7 +390,7 @@ ${item.goods_id }
 	<table  width=80%   class="list_view" style="background:#cacaff">
 	<tbody>
 	     <tr  align=center  class="fixed" >
-	       <td class="fixed">총 상품수 </td>
+	       <td class="fixed">상품명 </td>
 	       <td>구매 할 상품수</td>
 	       <td>총 상품금액</td>
 	       <td>  </td>
@@ -427,8 +406,8 @@ ${item.goods_id }
 			  <input id="h_totalGoodsNum"type="hidden" value="${totalGoodsNum}"  />
 			</td>
 			<td id="">
-			  <p id="p_buyGoods">${totalGoodsNum}개 </p>
-			  <input id="h_totalGoodsNum"type="hidden" value="${totalGoodsNum}"  />
+			  <p id="p_buyGoods">${cart_goods_qty}개 </p>
+			  <input id="h_totalGoodsNum"type="hidden" value="${cart_goods_qty}"  />
 			</td>
 			
 	       <td>
@@ -443,15 +422,13 @@ ${item.goods_id }
 	       </td>
 	       <td>
 	         <p id="p_totalDeliveryPrice">${totalDeliveryPrice }원  </p>
-	         <input id="h_totalDeliveryPrice"type="hidden" value="${totalDeliveryPrice}" />
+	         <input id="h_totalDeliveryPrice" type="hidden" value="${totalDeliveryPrice}" />
 	       </td>
 	       <td> 
 	         <img width="25" alt="" src="${contextPath}/resources/image/minus.jpg"> 
 	       </td>
 	       <td>  
-	         <p id="p_totalSalesPrice"> 
-				         ${totalDiscountedPrice}원
-	         </p>
+	         <p id="p_totalSalesPrice">${totalDiscountedPrice}원</p>
 	         <input id="h_totalSalesPrice"type="hidden" value="${totalSalesPrice}" />
 	       </td>
 	       <td>  
