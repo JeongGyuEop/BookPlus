@@ -102,4 +102,15 @@ public class BoardDaoImpl implements BoardDao{
 		}
 	}
 	
+	@Override
+	public List<Board> getLatestNotices(Map<String, Object> paramMap) {
+	    return sqlSession.selectList("mapper.board.selectContentList", paramMap);
+	}
+
+	@Override
+	public List<Board> getLatestNotices() {
+	    return sqlSession.selectList("mapper.board.selectContentList");
+	}
+	
+	
 }

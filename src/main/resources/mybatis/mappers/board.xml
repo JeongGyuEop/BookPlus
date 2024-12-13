@@ -158,4 +158,11 @@
             reply_id = #{reply_id}
     </update>
 
+	<select id="selectContentList" resultType="Board">
+	    SELECT id, subject
+	    FROM board
+	    ORDER BY register_datetime DESC
+	    LIMIT 3
+	</select>
+	
 </mapper>

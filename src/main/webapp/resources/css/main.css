@@ -92,6 +92,7 @@ aside #banner {
 #notice ul li {
 	background-position: left; padding: 0px 0px 0px 7px; line-height: 1.5em; background-image: url("../imgs/notice_li.gif"); background-repeat: no-repeat;
 }
+
 article {
 	margin: 20px 0px 0px 15px; width: 775px; float: right;
 }

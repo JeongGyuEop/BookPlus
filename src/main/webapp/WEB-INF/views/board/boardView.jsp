@@ -769,7 +769,9 @@
    			<table width="1200px">
    				<tr>
    					<td align="right">
+   					<a href="${contextPath}/BookPlus/board/boardList.do">
    						<button id="list" name="list">게시판</button>
+   					</a>	
    					</td>
    				</tr>
    			</table>

@@ -115,4 +115,9 @@ public class BoardServiceImpl implements BoardService {
 		return boardDao.updateReply(paramMap);
 	}
 
+	@Override
+	public List<Board> getLatestNotices() {
+	    return boardDao.getLatestNotices();
+	}
+
 }
