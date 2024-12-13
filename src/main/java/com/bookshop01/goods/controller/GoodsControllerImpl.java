@@ -67,9 +67,15 @@ public class GoodsControllerImpl extends BaseController   implements GoodsContro
 		
 		
 		GoodsVO goodsVO=(GoodsVO)goodsMap.get("goodsVO");
+		
+		System.out.println("goodsDetail---기존에본 상품아이디:" +goodsVO.getGoods_id() );
+		System.out.println("goodsDetail----추가로본 상품아이디:" +goods_id );
+		
 		//상품 상페페이지에서 조회한 상품 정보를 빠른메뉴(퀵메뉴)에 표시하기 위해 !!! 
 		//메소드 호출시!  조회된 도서상품 번호, 조회한 도서상품 정보!GoodsVO객체, 세션을  전달합니다.
 		addGoodsInQuick(goods_id,goodsVO,session); 
+		
+		System.out.println("-----"+session.getAttribute("quickGoodsListNum"));
 		
 		return mav;
 	}
@@ -89,7 +95,7 @@ public class GoodsControllerImpl extends BaseController   implements GoodsContro
 
 //session에 또한 최근 본 상품정보가 저장된(퀵메뉴에 보여질 상품정보가 저장된) ArrayList배열이 저장되어 있지 않으면?
 	//상품상세페이지 요청시 본 상품정보(두번쨰 매개변수 GoodsVO goodsVO로 받는 상품정보)를  ArrayList배열 생성후 추가시킵니다.
-	private void addGoodsInQuick(String goods_id,GoodsVO goodsVO,HttpSession session){
+private void addGoodsInQuick(String goods_id,GoodsVO goodsVO,HttpSession session){
 		
 		boolean already_existed=false;
 		 
@@ -100,6 +106,8 @@ public class GoodsControllerImpl extends BaseController   implements GoodsContro
 		 
 		//최근 본 상품이 있는 경우 
 		if(quickGoodsList!=null){
+			
+		
 			//최근 본 상품목록이 네개 미만인 경우
 			if(quickGoodsList.size() < 4){
 				
@@ -107,8 +115,14 @@ public class GoodsControllerImpl extends BaseController   implements GoodsContro
 					
 					GoodsVO _goodsBean=(GoodsVO)quickGoodsList.get(i);
 					
+					System.out.println("기존에본 상품아이디:" +_goodsBean.getGoods_id() );
+					System.out.println("추가로본 상품아이디:" +goods_id );
+					
+					
 					//상품 목록을 가져와 이미 존재하는 상품인지 비교 합니다.
-					if(goods_id.equals(_goodsBean.getGoods_id())){
+					if( goods_id != null &&   goods_id.equals(_goodsBean.getGoods_id())){
+						
+						System.out.println("여기ㄲ자ㅣ");
 						//이미 존재 할 경우 변수의 값을 true로 설정합니다.
 						already_existed=true;
 						break;
@@ -131,7 +145,7 @@ public class GoodsControllerImpl extends BaseController   implements GoodsContro
 		session.setAttribute("quickGoodsList",quickGoodsList);
 		//최근 본 상품목록에 저장된 상품 개수를 세션에 저장합니다.
 		session.setAttribute("quickGoodsListNum", quickGoodsList.size());
-	}
+	} 
 
 /*	
 참고.

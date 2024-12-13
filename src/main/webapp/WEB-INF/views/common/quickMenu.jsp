@@ -12,6 +12,25 @@
 	
 	
 	var SERVER_URL = "${contextPath}/thumbnails.do";//이변수는 FileDownLoadController에서 썸네일이미지를 만들고 가져오기 위한 URL을 설정합니다.
+	 
+	// 중복 제거 로직 추가
+    var uniqueGoodsIds = [];
+    window.onload = function () {
+        var hiddenGoodsIds = document.getElementsByName("h_goods_id");
+        var hiddenFileNames = document.getElementsByName("h_goods_fileName");
+
+        for (var i = 0; i < hiddenGoodsIds.length; i++) {
+            if (!uniqueGoodsIds.includes(hiddenGoodsIds[i].value)) {
+                uniqueGoodsIds.push(hiddenGoodsIds[i].value);
+            } else {
+                hiddenGoodsIds[i].parentElement.removeChild(hiddenGoodsIds[i]);
+                hiddenFileNames[i].parentElement.removeChild(hiddenFileNames[i]);
+            }
+        }
+
+        console.log("중복 제거된 상품 ID 목록: ", uniqueGoodsIds);
+    };
+
 
 	//다음 을 클릭하면 호출되는 함수로
 	//빠른 퀵 메뉴에서 <hidden>태그에 저장된 상품들의 정보를 가져와 이미지를 표시합니다. 
@@ -193,23 +212,27 @@
 사용자가 다음을 클릭하면 <hidden>태그의 상품정보를 자바스크립트 함수로 전달하여 이미지를 표시합니다.
  --%>
 	<div id="sticky">
-		<ul>
-			<li>
-				<a href="#"> 
-					<img width="24" height="24" src="${contextPath}/resources/image/facebook_icon.png"> 페이스북
-				</a>
-			</li>
-			<li>
-				<a href="#"> 
-					<img width="24" height="24" src="${contextPath}/resources/image/twitter_icon.png"> 트위터
-				</a>
-			</li>
-			<li>
-				<a href="#"> 
-					<img width="24" height="24" src="${contextPath}/resources/image/rss_icon.png"> RSS 피드
-				</a>
-			</li>
-		</ul>
+	<ul>
+    <li>
+        <!-- 페이스북: 페이스북 공식 홈페이지로 이동 -->
+        <a href="https://www.facebook.com" target="_blank">
+            <img width="24" height="24" src="${contextPath}/resources/image/facebook_icon.png"> 페이스북
+        </a>
+    </li>
+    <li>
+        <!-- 트위터: 트위터 공식 홈페이지로 이동 -->
+        <a href="https://www.twitter.com" target="_blank">
+            <img width="24" height="24" src="${contextPath}/resources/image/twitter_icon.png"> 트위터
+        </a>
+    </li>
+    <li>
+        <!-- RSS 피드: 원하는 RSS 피드 URL로 이동 -->
+        <a href="https://www.rss.com" target="_blank">
+            <img width="24" height="24" src="${contextPath}/resources/image/rss_icon.png"> RSS 피드
+        </a>
+    </li>
+</ul>
+	
 		<div class="recent">
 			<h3>최근 본 상품</h3>
 			<ul>
@@ -269,7 +292,6 @@
 	</div>
 </body>
 </html>
-
 
 
 
