@@ -1,6 +1,14 @@
 package com.bookplus.goods.controller;
 
 import java.util.ArrayList;
+
+
+import com.bookplus.common.base.BaseController;
+import com.bookplus.goods.service.GoodsService;
+import com.bookplus.goods.vo.GoodsVO;
+
+import net.sf.json.JSONObject;
+
 import java.util.List;
 import java.util.Map;
 
@@ -16,10 +24,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
-
-import com.bookplus.common.base.BaseController;
-import com.bookplus.goods.service.GoodsService;
-import com.bookplus.goods.vo.GoodsVO;
 
 import net.sf.json.JSONObject;
 
@@ -46,7 +50,6 @@ public class GoodsControllerImpl extends BaseController   implements GoodsContro
 	
 	
 	//   /goods/goodsDetail.do?goods_id=${item.goods_id }"
-	
 	@RequestMapping(value="/goodsDetail.do" ,method = RequestMethod.GET)
 									//main.jsp에서 상품 클릭시 전달한 상품번호(상품아이디) 얻기 
 	public ModelAndView goodsDetail(@RequestParam("goods_id") String goods_id, 
@@ -190,7 +193,7 @@ public class GoodsControllerImpl extends BaseController   implements GoodsContro
 	}
 	
 	
-	// 검색버튼 누르면 !~ http://localhost:8090/bookplus/goods/searchGoods.do 입력한 검색어 단어가 포함된 도서상품 검색 
+	// 검색버튼 누르면 !~ http://localhost:8090/bookshop01/goods/searchGoods.do 입력한 검색어 단어가 포함된 도서상품 검색 
 	@RequestMapping(value="/searchGoods.do" ,method = RequestMethod.GET)
 	public ModelAndView searchGoods(@RequestParam("searchWord") String searchWord,
 			                       HttpServletRequest request, HttpServletResponse response) throws Exception{
@@ -209,7 +212,4 @@ public class GoodsControllerImpl extends BaseController   implements GoodsContro
 	
 
 }
-
-
-
 

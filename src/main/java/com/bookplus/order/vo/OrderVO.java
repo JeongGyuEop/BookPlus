@@ -9,6 +9,8 @@ public class OrderVO {
 	private String member_id;  //주문자 아이디 
 	private int goods_id; //상품 번호
 	private String goods_title; //상품 이름
+	private int goods_price; // 상품 판매 가격
+	
 	private int goods_sales_price; // 상품 10% 세일 판매 가격
 	private int total_goods_price; 
 	private int cart_goods_qty; //장바구니에 담긴 제품 수
@@ -38,9 +40,51 @@ public class OrderVO {
 	private String goods_fileName;
 	private String orderer_hp;
 	
+	 @Override
+	    public String toString() {
+	        return "OrderVO{" +
+	                "order_seq_num=" + order_seq_num +
+	                ", order_id=" + order_id +
+	                ", member_id='" + member_id + '\'' +
+	                ", goods_id=" + goods_id +
+	                ", goods_title='" + goods_title + '\'' +
+	                ", goods_price=" + goods_price +
+	                ", goods_sales_price=" + goods_sales_price +
+	                ", total_goods_price=" + total_goods_price +
+	                ", cart_goods_qty=" + cart_goods_qty +
+	                ", order_goods_qty=" + order_goods_qty +
+	                ", orderer_name='" + orderer_name + '\'' +
+	                ", receiver_name='" + receiver_name + '\'' +
+	                ", receiver_hp1='" + receiver_hp1 + '\'' +
+	                ", receiver_hp2='" + receiver_hp2 + '\'' +
+	                ", receiver_hp3='" + receiver_hp3 + '\'' +
+	                ", receiver_tel1='" + receiver_tel1 + '\'' +
+	                ", receiver_tel2='" + receiver_tel2 + '\'' +
+	                ", receiver_tel3='" + receiver_tel3 + '\'' +
+	                ", delivery_address='" + delivery_address + '\'' +
+	                ", delivery_message='" + delivery_message + '\'' +
+	                ", delivery_method='" + delivery_method + '\'' +
+	                ", gift_wrapping='" + gift_wrapping + '\'' +
+	                ", pay_method='" + pay_method + '\'' +
+	                ", card_com_name='" + card_com_name + '\'' +
+	                ", card_pay_month='" + card_pay_month + '\'' +
+	                ", pay_orderer_hp_num='" + pay_orderer_hp_num + '\'' +
+	                ", pay_order_time='" + pay_order_time + '\'' +
+	                ", delivery_state='" + delivery_state + '\'' +
+	                ", final_total_price='" + final_total_price + '\'' +
+	                ", goods_qty=" + goods_qty +
+	                ", goods_fileName='" + goods_fileName + '\'' +
+	                ", orderer_hp='" + orderer_hp + '\'' +
+	                '}';
+	    }
 	
-	
-	
+	 public int getGoods_price() {
+		return goods_price;
+	}
+
+	public void setGoods_price(int goods_price) {
+		this.goods_price = goods_price;
+	}
 	
 	public int getOrder_seq_num() {
 		return order_seq_num;
@@ -72,9 +116,6 @@ public class OrderVO {
 	public void setGoods_title(String goods_title) {
 		this.goods_title = goods_title;
 	}
-	
-	
-	
 	
 	public int getGoods_sales_price() {
 		return goods_sales_price;

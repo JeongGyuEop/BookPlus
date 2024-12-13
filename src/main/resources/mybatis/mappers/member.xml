@@ -33,7 +33,15 @@
         <result property="jibunAddress" column="jibunAddress" />
         <result property="namujiAddress" column="namujiAddress" />
         <result property="joinDate" column="joinDate" />
+        <result property="apiLoginVO" column="apiLoginVO" />
     </resultMap>    
+    
+    <select id="selectAPIUser" parameterType="map" resultMap="memberResult">
+	    SELECT *
+	    FROM T_SHOPPING_MEMBER 
+	    WHERE social_provider=#{platform} AND api_id = #{apiId} 
+	</select>
+	
 
     <!-- 로그인 시 입력한 아이디, 비밀번호 값에 해당하는 정보를 테이블에서 조회 -->
     <select id="login" resultType="memberVO" parameterType="java.util.Map">
@@ -60,10 +68,6 @@
             member_pw,
             member_name,
             member_gender,
-            member_birth_y,
-            member_birth_m,
-            member_birth_d,
-            member_birth_gn,
             tel1,
             tel2,
             tel3,
@@ -77,17 +81,19 @@
             zipcode,
             roadAddress,
             jibunAddress,
-            namujiAddress
+            namujiAddress,
+            member_birth_y,
+            member_birth_m,
+            member_birth_d,
+            member_birth_gn,
+           	social_provider,
+           	api_id
         ) 
         VALUES(
             #{member_id},
             #{member_pw},
             #{member_name},
             #{member_gender},
-            #{member_birth_y},
-            #{member_birth_m},
-            #{member_birth_d},
-            #{member_birth_gn},
             #{tel1},
             #{tel2},
             #{tel3},
@@ -101,8 +107,43 @@
             #{zipcode},
             #{roadAddress},
             #{jibunAddress},
-            #{namujiAddress}
+            #{namujiAddress},
+            #{member_birth_y},
+            #{member_birth_m},
+            #{member_birth_d},
+            #{member_birth_gn},
+            #{apiLoginVO.socialProvider},
+            #{apiLoginVO.id}
         )
         ]]>
     </insert>
+    
+    	<select id="selectMemID" resultType="String"  parameterType="memberVO">
+	    <![CDATA[
+		select MEMBER_ID from t_shopping_member 
+		where member_name=#{member_name} and member_birth_y=#{member_birth_y} and member_birth_m=#{member_birth_m} and member_birth_d=#{member_birth_d} and member_birth_gn=#{member_birth_gn} 
+		and email1=#{email1} and email2=#{email2}	 
+		]]>
+	</select>
+	
+	
+	<select id="checkMemInfo" resultType="memberVO"  parameterType="java.util.Map"  >
+	    <![CDATA[
+		select * from t_shopping_member 
+		where MEMBER_ID=#{member_id} and MEMBER_NAME=#{member_name} and EMAIL1=#{email1} and EMAIL2 LIKE '%' || #{email2} || '%'
+		]]>
+	</select>
+  
+   <delete id="removeMember" parameterType="String">
+  		<![CDATA[
+  		delete from t_shopping_member  where MEMBER_ID=#{member_id}
+  		]]>
+  	</delete>
+  	
+  	<update id="updatePass" parameterType="java.util.Map">
+  		<![CDATA[
+  			update t_shopping_member SET MEMBER_PW = #{user_psw_confirm} where MEMBER_ID=#{mem_id}
+  		]]>
+  	</update>
+  	
 </mapper>

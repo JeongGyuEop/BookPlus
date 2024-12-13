@@ -2,6 +2,8 @@ package com.bookplus.member.vo;
 
 import org.springframework.stereotype.Component;
 
+import com.bookplus.API.vo.APILoginVO;
+
 @Component("memberVO")
 public class MemberVO {
 	private String member_id;
@@ -28,6 +30,7 @@ public class MemberVO {
 	private String namujiAddress;
 	private String joinDate;
 	private String del_yn;
+	private APILoginVO apiLoginVO;
 	
 	public String getMember_id() {
 		return member_id;
@@ -183,6 +186,44 @@ public class MemberVO {
 	public void setDel_yn(String del_yn) {
 		this.del_yn = del_yn;
 	}
+
+	public APILoginVO getAPILoginVO() {
+		return apiLoginVO;
+	}
+	public void setAPILoginVO(APILoginVO apiLoginVO) {
+		this.apiLoginVO = apiLoginVO;
+	}
 	
+	@Override
+	public String toString() {
+	    return "MemberVO{" +
+	            "member_id='" + member_id + '\'' +
+	            ", member_pw='" + member_pw + '\'' +
+	            ", member_name='" + member_name + '\'' +
+	            ", member_gender='" + member_gender + '\'' +
+	            ", member_birth_y='" + member_birth_y + '\'' +
+	            ", member_birth_m='" + member_birth_m + '\'' +
+	            ", member_birth_d='" + member_birth_d + '\'' +
+	            ", member_birth_gn='" + member_birth_gn + '\'' +
+	            ", tel1='" + tel1 + '\'' +
+	            ", tel2='" + tel2 + '\'' +
+	            ", tel3='" + tel3 + '\'' +
+	            ", hp1='" + hp1 + '\'' +
+	            ", hp2='" + hp2 + '\'' +
+	            ", hp3='" + hp3 + '\'' +
+	            ", smssts_yn='" + smssts_yn + '\'' +
+	            ", email1='" + email1 + '\'' +
+	            ", email2='" + email2 + '\'' +
+	            ", emailsts_yn='" + emailsts_yn + '\'' +
+	            ", zipcode='" + zipcode + '\'' +
+	            ", roadAddress='" + roadAddress + '\'' +
+	            ", jibunAddress='" + jibunAddress + '\'' +
+	            ", namujiAddress='" + namujiAddress + '\'' +
+	            ", joinDate='" + joinDate + '\'' +
+	            ", del_yn='" + del_yn + '\'' +
+	            ", apiLoginVO=" + apiLoginVO +
+	            '}';
+	}
+
 }
 

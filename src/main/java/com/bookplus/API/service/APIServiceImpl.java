@@ -1,7 +1,7 @@
 package com.bookplus.API.service;
 
 import com.bookplus.API.DAO.APIDAO;
-import com.bookplus.API.weather.vo.APIweatherVO;
+import com.bookplus.API.vo.APIweatherVO;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 

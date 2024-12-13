@@ -10,7 +10,7 @@
     <typeAlias type="com.bookplus.cart.vo.CartVO" alias="cartVO" />
     <typeAlias type="com.bookplus.order.vo.OrderVO" alias="orderVO" />
     <typeAlias type="com.bookplus.mypage.vo.MyPageVO" alias="mypageVO" />
-    <typeAlias type="com.bookplus.API.weather.vo.APIweatherVO" alias="weatherVO" />
+    <typeAlias type="com.bookplus.API.vo.APIweatherVO" alias="weatherVO" />
     <typeAlias type="com.bookplus.board.vo.Board" alias="Board" />
     <typeAlias type="com.bookplus.board.vo.BoardReply" alias="BoardReply" />
   </typeAliases>

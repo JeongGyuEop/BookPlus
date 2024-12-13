@@ -5,7 +5,7 @@
 <%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles" %>    
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <c:set var="contextPath"  value="${pageContext.request.contextPath}"  />
-	
+<c:set var="member_id"  value="${sessionScope.memberInfo.member_id}"  />	
 <nav>
 <ul>
 <c:choose>
@@ -17,6 +17,7 @@
 				<li><a href="${contextPath}/admin/goods/adminGoodsMain.do">상품관리</a></li>
 				<li><a href="${contextPath}/admin/order/adminOrderMain.do">주문관리</a></li>
 				<li><a href="${contextPath}/admin/member/adminMemberMain.do">회원관리</a></li>
+				<li><a href="${contextPath}/news/newsList.do?member_id=${member_id}">게시판관리</a></li> 
 				<li><a href="#">배송관리</a></li>
 				<li><a href="#">게시판관리</a></li>
 			</ul>
@@ -61,27 +62,18 @@
 			<h3>커뮤니티</h3>
 			<ul>
 				<li><a href="${contextPath}/board/boardList.do">자유게시판</a></li>
+				<li><a href="#">도서 검색</a></li>
+				<li><a href="#">날씨별 추천</a></li>
+				<li><a href="#">오늘의 운세</a></li>
 			</ul>
 		</li>
-	<!-- 	<li>
-			<h3>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;음반</h3>
-			<ul>
-				<li><a href="#">가요</a></li>
-				<li><a href="#">록</a></li>
-				<li><a href="#">클래식</a></li>
-				<li><a href="#">뉴에이지</a></li>
-				<li><a href="#">재즈</a></li>
-				<li><a href="#">기타</a></li>
-			</ul>
-		</li> -->
+
+
 	 </c:otherwise>
 </c:choose>	
 </ul>
 </nav>
 <div class="clear"></div>
-<div id="banner">
-	<a href="#"><img width="190" height="163" src="${contextPath}/resources/image/n-pay.jpg"> </a>
-</div>
 
 <div id="notice">
     <h2>게시판</h2>
@@ -92,13 +84,4 @@
     </ul>
 </div>
 
-<div id="banner">
-	<a href="#"><img width="190" height="362" src="${contextPath}/resources/image/side_banner1.jpg"></a>
-</div>
-<div id="banner">
-	<a href="#"><img width="190" height="104" src="${contextPath}/resources/image/call_center_logo.jpg"></a>
-</div>
-<div id="banner">
-	<a href="#"><img width="190" height="69" src="${contextPath}/resources/image/QnA_logo.jpg"></a>
-</div>
 </html>
