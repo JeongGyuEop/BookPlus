@@ -70,16 +70,23 @@ public class AdminGoodsControllerImpl extends BaseController  implements AdminGo
 		dateMap.put("endDate", endDate);
 		
 		Map<String,Object> condMap=new HashMap<String,Object>();
+		
 		if(section== null) {
 			section = "1";
 		}
-		condMap.put("section",section);
 		if(pageNum== null) {
 			pageNum = "1";
 		}
-		condMap.put("pageNum",pageNum);
+		// String을 Integer로 변환
+		int sectionInt = Integer.parseInt(section);
+		int pageNumInt = Integer.parseInt(pageNum);
+		
+		int pageSection = (sectionInt - 1) * 100 + (pageNumInt - 1) * 10;
+
 		condMap.put("beginDate",beginDate);
 		condMap.put("endDate", endDate);
+		condMap.put("pageSection", pageSection);
+		
 		List<GoodsVO> newGoodsList=adminGoodsService.listNewGoods(condMap);
 		mav.addObject("newGoodsList", newGoodsList);
 		

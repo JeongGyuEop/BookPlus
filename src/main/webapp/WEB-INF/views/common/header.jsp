@@ -149,7 +149,7 @@
 			   <li><a href="${contextPath}/member/memberForm.do">회원가입</a></li> 
 			 </c:otherwise>
 			</c:choose>
-			   <li><a href="${contextPath}/board/boardList.do">고객센터</a></li>
+			   <li><a href="${contextPath}/board/boardList.do">게시판</a></li>
 			  <%--세션에 isLogOn변수 값이 true이고 세션에 입력한 아이디(admin)로 조회된 MemberVO객체의 member_id변수값이 admin이라면?
 			  	   관리자 화면 추가 
 			   --%>

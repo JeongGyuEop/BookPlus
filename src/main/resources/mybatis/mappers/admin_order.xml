@@ -64,7 +64,7 @@
 
     <select id="selectNewOrderList" resultMap="orderResult" parameterType="java.util.HashMap">
         SELECT *
-        FROM T_SHOPPGING_ORDER
+        FROM T_SHOPPING_ORDER
         WHERE DATE_FORMAT(pay_order_time, '%Y-%m-%d') BETWEEN #{beginDate} AND #{endDate}
         <if test="search_type == 'orderer_id'">
             AND orderer_id = #{search_word}
@@ -76,11 +76,11 @@
             AND pay_orderer_hp_num = #{search_word}
         </if>
         ORDER BY pay_order_time DESC
-        LIMIT (#{section}-1)*100 + (#{pageNum}-1)*10, 10;
+        LIMIT #{pageSection}, 10;
     </select>
 
     <update id="updateDeliveryState" parameterType="java.util.Map">
-        UPDATE T_SHOPPGING_ORDER
+        UPDATE T_SHOPPING_ORDER
         <set>
             <if test="delivery_state != '' and delivery_state != null">
                 delivery_state = #{delivery_state}
@@ -92,7 +92,7 @@
     <select id="selectOrderDetail" resultMap="orderResult" parameterType="int">
         <![CDATA[
             SELECT *
-            FROM T_SHOPPGING_ORDER
+            FROM T_SHOPPING_ORDER
             WHERE order_id = #{order_id}
         ]]>
     </select>
@@ -100,7 +100,7 @@
     <select id="selectOrderer" resultMap="memberResult" parameterType="String">
         <![CDATA[
             SELECT *
-            FROM T_SHOPPGING_ORDER
+            FROM T_SHOPPING_ORDER
             WHERE member_id = #{member_id}
         ]]>
     </select>

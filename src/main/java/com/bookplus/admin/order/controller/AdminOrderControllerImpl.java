@@ -66,11 +66,17 @@ public class AdminOrderControllerImpl extends BaseController  implements AdminOr
 		if(section== null) {
 			section = "1";
 		}
-		condMap.put("section",section);
 		if(pageNum== null) {
 			pageNum = "1";
 		}
-		condMap.put("pageNum",pageNum);
+		
+		// String을 Integer로 변환
+		int sectionInt = Integer.parseInt(section);
+		int pageNumInt = Integer.parseInt(pageNum);
+		
+		int pageSection = (sectionInt - 1) * 100 + (pageNumInt - 1) * 10;
+
+		condMap.put("pageSection", pageSection);
 		condMap.put("beginDate",beginDate);
 		condMap.put("endDate", endDate);
 		List<OrderVO> newOrderList=adminOrderService.listNewOrder(condMap);

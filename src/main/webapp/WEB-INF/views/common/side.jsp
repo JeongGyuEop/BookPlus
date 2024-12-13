@@ -60,10 +60,7 @@
 		<li>
 			<h3>커뮤니티</h3>
 			<ul>
-				<li><a href="${contextPath}/board/freeBoard.do">자유게시판</a></li>
-				<li><a href="#">반품/교환 신청 및 조회</a></li>
-				<li><a href="#">취소 주문 내역</a></li>
-				<li><a href="#">세금 계산서</a></li>
+				<li><a href="${contextPath}/board/boardList.do">자유게시판</a></li>
 			</ul>
 		</li>
 	<!-- 	<li>
@@ -85,16 +82,15 @@
 <div id="banner">
 	<a href="#"><img width="190" height="163" src="${contextPath}/resources/image/n-pay.jpg"> </a>
 </div>
-<DIV id="notice">
-	<H2>공지사항</H2>
-	<UL>
-	
-	<c:forEach  var="i" begin="1" end="5" step="1">
-		<li><a href="${contextPath}/board/boardList.do }">공지사항입니다.${ i}</a></li>
-	</c:forEach>
-	</ul>
-</div>
 
+<div id="notice">
+    <h2>게시판</h2>
+    <ul>
+        <c:forEach var="notice" items="${noticeList}">
+            <li><a href="${contextPath}/board/view.do?id=${notice.id}">${notice.subject}</a></li>
+        </c:forEach>
+    </ul>
+</div>
 
 <div id="banner">
 	<a href="#"><img width="190" height="362" src="${contextPath}/resources/image/side_banner1.jpg"></a>

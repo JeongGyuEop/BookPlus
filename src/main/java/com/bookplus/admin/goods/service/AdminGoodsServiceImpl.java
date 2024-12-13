@@ -50,6 +50,7 @@ public class AdminGoodsServiceImpl implements AdminGoodsService {
 	
 	@Override
 	public List<GoodsVO> listNewGoods(Map condMap) throws Exception{
+		
 		return adminGoodsDAO.selectNewGoodsList(condMap);
 	}
 	

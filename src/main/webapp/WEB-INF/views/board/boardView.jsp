@@ -739,6 +739,7 @@
 					</td>
    				</tr>
    			</table>
+   			
    			<!-- 지도  -->
    			<jsp:include page="/WEB-INF/views/map/mettingPlace.jsp" />
    			
