@@ -138,6 +138,7 @@
 		   <c:choose>
 		   	<%-- 세션에  isLogOn변수 값이 true이고  세션에 조회된 memberVO객체가 저장되어 있으므로 로그인 된 화면을 보여주자. --%>
 		     <c:when test="${sessionScope.isLogOn==true and not empty sessionScope.memberInfo }">
+		       <li><p>반갑습니다. <b style="color: blue; font-size: 13px"> ${sessionScope.memberInfo.getMember_name()}</b> 님!</p></li>
 			   <li><a href="${contextPath}/member/logout.do">로그아웃</a></li>
 			   <li><a href="${contextPath}/mypage/myPageMain.do">마이페이지</a></li>
 			   <li><a href="${contextPath}/cart/myCartList.do">장바구니</a></li>
@@ -149,7 +150,7 @@
 			   <li><a href="${contextPath}/member/memberForm.do">회원가입</a></li> 
 			 </c:otherwise>
 			</c:choose>
-			   <li><a href="${contextPath}/board/boardList.do">고객센터</a></li>
+			   <li><a href="${contextPath}/board/boardList.do">게시판</a></li>
 			  <%--세션에 isLogOn변수 값이 true이고 세션에 입력한 아이디(admin)로 조회된 MemberVO객체의 member_id변수값이 admin이라면?
 			  	   관리자 화면 추가 
 			   --%>

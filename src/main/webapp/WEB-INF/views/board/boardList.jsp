@@ -2,6 +2,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ page session="false" %>
+<c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 <html>
     <head>
         <title>게시판</title>
@@ -65,12 +66,12 @@
             	
             	$("a[name='subject']").click(function(){
             		
-            		location.href = "/board/view?id="+$(this).attr("content_id");
+            		location.href = "${contextPath}/board/view.do?id="+$(this).attr("content_id");
             		
             	});
             	
             	$("#write").click(function(){
-            		location.href = "/board/edit";
+            		location.href = "${contextPath}/board/edit.do";
             	});
             	            	
             	$(document).on("click","button[name='page_move']",function(){
@@ -96,18 +97,18 @@
         </style>
     </head>
     <body>
-    	<form class="form-inline" id="frmSearch" action="/board/list">
+    	<form class="form-inline" id="frmSearch" action="${contextPath}/board/boardList.do">
 	    	<input type="hidden" id="startPage" name="startPage" value=""><!-- 페이징을 위한 hidden타입 추가 -->
 	        <input type="hidden" id="visiblePages" name="visiblePages" value=""><!-- 페이징을 위한 hidden타입 추가 -->
 	    	<div align="center">
-	    		<table width="1200px">
+	    		<table width="770px">
 	    			<tr>
 	    				<td align="right">
 	    					<button type="button" id="write" name="write">글 작성</button>
 	    				</td>
 	    			</tr>
 	    		</table>
-	    		<table border="1" width="1200px">
+	    		<table border="1" width="100%">
 	    			<tr>
 	    				<th width="50px">
 	    					No
