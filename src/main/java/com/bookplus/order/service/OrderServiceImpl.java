@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.annotation.Propagation;
 import com.bookplus.order.dao.OrderDAO;
 import com.bookplus.order.vo.OrderVO;
+import com.bookplus.order.vo.PaymentVO;
 
 
 @Service("orderService")
@@ -33,6 +34,9 @@ public class OrderServiceImpl implements OrderService {
 		//장바구니테이블에 상품을 추가하고 주문 했을 경우  주문한 상품을 삭제 합니다. 
 		orderDAO.removeGoodsFromCart(myOrderList);
 	}	
+	
+	
+	
 	
 	public OrderVO findMyOrder(String order_id) throws Exception{
 		return orderDAO.findMyOrder(order_id);

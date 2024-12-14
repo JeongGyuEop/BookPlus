@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.bookplus.order.vo.OrderVO;
+import com.bookplus.order.vo.PaymentVO;
 
 public interface OrderService {
 	public List<OrderVO> listMyOrderGoods(OrderVO orderVO) throws Exception;

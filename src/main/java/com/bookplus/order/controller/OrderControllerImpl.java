@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,6 +24,7 @@ import com.bookplus.goods.vo.GoodsVO;
 import com.bookplus.member.vo.MemberVO;
 import com.bookplus.order.service.OrderService;
 import com.bookplus.order.vo.OrderVO;
+import com.bookplus.order.vo.PaymentVO;
 
 
 //   /order/orderAllCartGoods.do
@@ -97,7 +100,6 @@ public class OrderControllerImpl extends BaseController implements OrderControll
 		session.setAttribute("orderer", memberInfo); //로그인한 주문자 정보
 		return mav;
 	}
-	
 	
 	// myCartList.jsp화면(장바구니 목록 화면)에서  주문할 상품을 체크박스를 클릭해 선택하고  
 	//각 상품의 주문 수량을 입력하여 주문하기 버튼을 클릭하여  
@@ -220,4 +222,28 @@ public class OrderControllerImpl extends BaseController implements OrderControll
 	}
 	
 
+	//==========
+	// KG이니시스 결제 이후 Ajax 요청되면
+	@RequestMapping(value="/paySuccess" ,method = RequestMethod.POST)
+    public ResponseEntity<Map<String, Object>> handlePaymentSuccess(@ModelAttribute("paymentVO") PaymentVO paymentVO) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            // OrderService에서 결제 검증, 주문 및 결제 데이터 저장까지 처리
+            boolean isProcessed = orderService.processOrder(paymentVO);
+
+            if (isProcessed) {
+                response.put("success", true);
+                response.put("message", "결제가 성공적으로 처리되었습니다.");
+                return ResponseEntity.ok(response);
+            } else {
+                response.put("success", false);
+                response.put("message", "결제 검증에 실패했습니다.");
+                return ResponseEntity.badRequest().body(response);
+            }
+        } catch (Exception e) {
+            response.put("success", false);
+            response.put("message", "결제 처리 중 오류가 발생했습니다: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
 }

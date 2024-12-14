@@ -67,49 +67,85 @@
 			init();
 		}
 	
-	    //==========
-	    // 아임포트르르 사용한 KG이니시스 api
 		function requestPay() {
-	        var buyerName = document.getElementById("order_name").value;
-	        var buyerEmail = document.getElementById("order_email").value;
-	        var buyerTel = document.getElementById("order_phone").value;
-	        var buyerAddr = document.getElementById("roadAddress").value + " " +
-	                        document.getElementById("jibunAddress").value + " " +
-	                        document.getElementById("namujiAddress").value;
-	        var buyerPostcode = document.getElementById("zipcode").value;
-	        var merchantUid = "ORD_" + document.getElementById("h_goods_id").value + "_" + new Date().getTime();
-	        var amount = document.getElementById("h_final_total_Price").value;
-	        var goodsName = document.getElementById("h_goods_title").value;
-	
-	        
-	        console.log(buyerName);
-	        console.log(buyerEmail);
-	        console.log(buyerTel);
-	        console.log(buyerAddr);
-	        console.log(buyerPostcode);
-	        console.log(merchantUid);
-	        console.log(amount);
-	        console.log(goodsName);
-	        
-	        IMP.request_pay({
-	            pg: "html5_inicis",
-	            pay_method: "card",
-	            merchant_uid: merchantUid,
-	            name: goodsName,
-	            amount: amount,
-	            buyer_email: buyerEmail,
-	            buyer_name: buyerName,
-	            buyer_tel: buyerTel,
-	            buyer_addr: buyerAddr,
-	            buyer_postcode: buyerPostcode
-	        }, function(rsp) {
-	            if (rsp.success) {
-	                alert("결제가 성공적으로 완료되었습니다.");
-	            } else {
-	                alert("결제 실패: " + rsp.error_msg);
-	            }
-	        });
-	    }
+		    var buyerName = document.getElementById("order_name").value;
+		    var buyerEmail = document.getElementById("order_email").value;
+		    var buyerTel = document.getElementById("order_phone").value;
+		    var buyerAddr = document.getElementById("roadAddress").value + " " +
+		                    document.getElementById("jibunAddress").value + " " +
+		                    document.getElementById("namujiAddress").value;
+		    var buyerPostcode = document.getElementById("zipcode").value;
+		    var merchantUid = "ORD_" + document.getElementById("h_goods_id").value + "_" + new Date().getTime();
+		    var amount = document.getElementById("h_final_total_Price").value;
+		    var goodsName = document.getElementById("h_goods_title").value;
+
+		    IMP.request_pay({
+		        pg: "html5_inicis",
+		        pay_method: "card",
+		        merchant_uid: merchantUid,
+		        name: goodsName,
+		        amount: amount,
+		        buyer_email: buyerEmail,
+		        buyer_name: buyerName,
+		        buyer_tel: buyerTel,
+		        buyer_addr: buyerAddr,
+		        buyer_postcode: buyerPostcode
+		    }, function(rsp) {
+		        if (rsp.success) {
+		            alert("결제가 성공적으로 완료되었습니다.");
+		            
+		            $.ajax({
+		                type: "POST",
+		                url: "/order/paySuccess", // 서버의 결제 성공 처리 API
+		                contentType: "application/json",
+		                data: JSON.stringify({
+		                	 // 기본 결제 정보
+		                    imp_uid: rsp.imp_uid, // 아임포트에서 생성한 결제 고유 ID
+		                    merchant_uid: rsp.merchant_uid, // 상점에서 생성한 고유 주문 번호
+		                    amount: rsp.paid_amount, // 실제 결제된 금액
+		                    pay_method: rsp.pay_method, // 결제 방식 (예: "card", "trans", "vbank" 등)
+		                    status: rsp.status, // 결제 상태 ("paid": 결제 성공, "failed": 결제 실패)
+
+		                    // 주문 관련 정보
+		                    order_id: rsp.merchant_uid, // 주문 고유 번호 (merchant_uid와 동일)
+		                    goods_id: document.getElementById("h_goods_id").value, // 상품 ID
+		                    goods_title: document.getElementById("h_goods_title").value, // 상품 제목
+		                    order_goods_qty: document.getElementById("h_order_goods_qty").value, // 주문 수량
+
+		                    // 배송 관련 정보
+		                    receiver_name: document.getElementById("receiver_name").value, // 수령인 이름
+		                    receiver_hp1: document.getElementById("hp1").value, // 수령인 전화번호 앞자리 (예: "010")
+		                    receiver_hp2: document.getElementById("hp2").value, // 수령인 전화번호 중간자리
+		                    receiver_hp3: document.getElementById("hp3").value, // 수령인 전화번호 뒷자리
+		                    delivery_address: document.getElementById("roadAddress").value + " " +
+		                                      document.getElementById("jibunAddress").value + " " +
+		                                      document.getElementById("namujiAddress").value, // 배송지 주소 (도로명 주소 + 지번 주소 + 나머지 주소)
+
+		                    // 추가 결제 정보
+		                    delivery_message: document.getElementById("delivery_message").value, // 배송 메시지 (예: "부재 시 경비실에 맡겨주세요.")
+		                    final_total_price: document.getElementById("h_final_total_Price").value // 최종 결제 금액 (총 상품 금액 + 배송비 - 할인 금액)
+		                
+		                }),
+		                success: function(response) {
+		                    if (response.success) {
+		                        alert("결제 정보가 성공적으로 저장되었습니다.");
+		                        window.location.href = "/order/complete"; // 주문 완료 페이지로 이동
+		                    } else {
+		                        alert("결제 정보 저장에 실패했습니다. 관리자에게 문의하세요.");
+		                    }
+		                },
+		                error: function(xhr, status, error) {
+		                    console.error("결제 정보 전송 중 오류 발생:", error);
+		                    alert("서버와 통신 중 오류가 발생했습니다. 관리자에게 문의하세요.");
+		                }
+		            });
+
+		        } else {
+		            alert("결제 실패: " + rsp.error_msg);
+		        }
+		    });
+		}
+
 		
 		//===========
 		// 우편번호 검색
