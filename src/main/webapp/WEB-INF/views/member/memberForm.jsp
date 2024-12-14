@@ -283,7 +283,6 @@ function prepareFormData() {
 				        </c:choose>
 				    </td>
 				</tr>
-				
 				<tr class="dot_line">
 				    <td class="fixed_join">휴대폰번호</td>
 				    <td>

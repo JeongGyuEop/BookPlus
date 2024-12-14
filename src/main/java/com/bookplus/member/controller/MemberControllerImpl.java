@@ -121,10 +121,6 @@ public class MemberControllerImpl extends BaseController implements MemberContro
 	        apiLoginVO.setSocialProvider(socialProvider);
 	        _memberVO.setAPILoginVO(apiLoginVO);
 	    }
-	    
-	    if ("없음".equals(_memberVO.getTel1())) {
-	        _memberVO.setTel1(null);
-	    }
 		
 		String message = null;
 		HttpHeaders responseHeaders = new HttpHeaders();

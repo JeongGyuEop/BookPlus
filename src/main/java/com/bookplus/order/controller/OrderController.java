@@ -12,7 +12,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.bookplus.order.vo.OrderVO;
 
 public interface OrderController {
-	public ModelAndView orderEachGoods(@ModelAttribute("orderVO") OrderVO _orderVO,HttpServletRequest request, HttpServletResponse response)  throws Exception;
+	public ModelAndView orderEachGoods(@RequestParam("goods_id") String goods_id, @RequestParam("orderGoodsQty") String orderGoodsQty,HttpServletRequest request, HttpServletResponse response)  throws Exception;
 	public ModelAndView orderAllCartGoods(@RequestParam  String[] cart_goods_qty,HttpServletRequest request, HttpServletResponse response)  throws Exception;
-	public ModelAndView payToOrderGoods(@RequestParam Map<String, String> orderMap,HttpServletRequest request, HttpServletResponse response)  throws Exception;
+//	public ModelAndView payToOrderGoods(@RequestParam Map<String, String> orderMap,HttpServletRequest request, HttpServletResponse response)  throws Exception;
 }

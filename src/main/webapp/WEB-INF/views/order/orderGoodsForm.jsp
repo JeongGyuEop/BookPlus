@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8" isELIgnored="false"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %> 
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 
 <c:set var="contextPath" value="${pageContext.request.contextPath}" />
@@ -16,6 +17,13 @@
 <c:set var="total_discount_price" value="0" />
 <!-- 총 배송비 -->
 <c:set var="total_delivery_price" value="0" />
+
+<c:set var="orderGoodsQty"  value="${orderGoodsQty}"  />
+<c:set var="memberInfo"  value="${memberInfo}"  />
+
+
+
+
 
 <!DOCTYPE html>
 <html>
@@ -120,10 +128,7 @@
 		                    delivery_address: document.getElementById("roadAddress").value + " " +
 		                                      document.getElementById("jibunAddress").value + " " +
 		                                      document.getElementById("namujiAddress").value, // 배송지 주소 (도로명 주소 + 지번 주소 + 나머지 주소)
-
-		                    // 추가 결제 정보
-		                    delivery_message: document.getElementById("delivery_message").value, // 배송 메시지 (예: "부재 시 경비실에 맡겨주세요.")
-		                    final_total_price: document.getElementById("h_final_total_Price").value // 최종 결제 금액 (총 상품 금액 + 배송비 - 할인 금액)
+		                    delivery_message: document.getElementById("delivery_message").value // 배송 메시지 (예: "부재 시 경비실에 맡겨주세요.")
 		                
 		                }),
 		                success: function(response) {
@@ -211,14 +216,6 @@
 	
 			//<form  name="form_order"> ...... </form>
 			var form_order = document.form_order;
-	
-			//로그인 한 주문자의 유선전화번호 중 지역번호를 option태그가 선택되도록 설정 하는 부분  	
-			//<input type="hidden" id="h_tel1" name="h_tel1" value="${sessionScope.orderer.tel1 }" />
-			var h_tel1 = form_order.h_tel1;
-			// 로그인한 회원(상품 주문하는 사람) 유선 전화번호 051 , 02  등등 중에 하나 얻기 
-			var tel1 = h_tel1.value;
-			// <select id="tel1" name="tel1">....</select>  유선전화번호     
-			select_tel1.value = tel1; //유선전화 번호 중  지역번호  051 , 02, 031 등등  ... 중에 하나 로 설정됨  (DB의 테이블에 저장되어 있는 값과 동일)
 	
 			//로그인 한 주문자의 휴대폰번호 중  앞 010, 011, 017, 018 중  option태그가 선택되도록 설정 하는 부분     (DB의 테이블에 저장되어 있는 값과 동일)
 			var h_hp1 = form_order.h_hp1;
@@ -329,9 +326,8 @@
 					<td colspan=2 class="fixed">주문상품</td>
 					<td>수량</td>
 					<td>정가</td>
-					<td>주문금액</td>
+					<td>할인 후 금액</td>
 					<td>배송비</td>
-					<!-- <td>예상적립금</td> -->
 					<td>주문금액합계</td>
 				</tr>
 
@@ -340,7 +336,7 @@
 				<%-- session영역에   (OrderVO객체(주문 정보)가 저장된  ArrayList배열) 크기 만큼 반복 !!
 	   	   참고. 장바구니에 상품을 담지 않고 로그인 후 바로 구매하기를 누르면 ArrayList배열에 저장된  OrderVO객체(주문상품정보)는 1개 이다.
 	    --%>
-				<c:forEach var="item" items="${sessionScope.myOrderList}">
+				<c:forEach var="item" items="${myOrderList}">
 					<tr>
 						<td class="goods_image" colspan="2">
 							<%-- 주문 상품 이미지를 클릭하면 주문하는 상품 번호를 전달하여  상세화면을 요청 합니다.  --%> <a
@@ -348,19 +344,12 @@
 
 								<%--주문 상품 이미지 표시--%> 
 								<img width="75" alt="" src="${contextPath}/thumbnails.do?goods_id=${item.goods_id}&fileName=${item.goods_fileName}">
-
-								<%-- 나중에  결제하기를 눌렀을때 요청하는 값들 (주문 한 상품 번호 , 주문 한 상품 이미지명, 주문 상품명, 주문 수량, 주문금액 합계)  --%>
-								<input type="hidden" id="h_goods_id" name="h_goods_id" value="${item.goods_id }" /> 
-								<input type="hidden" id="h_goods_fileName" name="h_goods_fileName" value="${item.goods_fileName }" /> 
-								<input type="hidden" id="h_goods_title" name="h_goods_title" value="${item.goods_title }" /> 
-								<input type="hidden" id="h_order_goods_qty" name="h_order_goods_qty" value="${item.order_goods_qty}" /> 
-								<input type="hidden" id="h_each_goods_price" name="h_each_goods_price" value="${item.goods_sales_price * item.order_goods_qty}" />
 						</a>
 
 						</td>
 						<%-- 수량  --%>
 						<td>
-							<h2>${item.order_goods_qty }개<h2>
+							<h2>${orderGoodsQty }개<h2>
 							<%-- <input type="hidden" id="h_order_goods_qty" name="h_order_goods_qty" value="${item.order_goods_qty}" /> --%>
 						</td>
 
@@ -368,31 +357,25 @@
 						<td class="price"><span>${item.goods_price}원</span></td>
 						
 						<%-- 주문금액 --%>
-						<td><h2>${item.goods_sales_price}원(10% 할인)</h2></td>
+						<td><fmt:formatNumber  value="${item.goods_price * (100 - item.goods_sales_price) / 100}" type="number" var="discounted_price" />
+						<h2>${discounted_price}원( ${ item.goods_sales_price} %할인)</h2></td>
 
 						<%-- 배송비 --%>
-						<td><h2>0원</h2></td>
-
-						<%-- 예상적립금 --%>
-						<%-- <td><h2>${1500 *item.order_goods_qty}원</h2></td> --%>
+						<td><h2>${item.goods_delivery_price }원</h2></td>
 
 						<%-- 주문금액 합계 --%>
 						<td>
-							<h2>${item.goods_sales_price * item.order_goods_qty}원</h2> 
+							<fmt:formatNumber  value="${(item.goods_price * (100 - item.goods_sales_price) / 100) * orderGoodsQty }" type="number" var="total_price" />
+							<h2>${total_price}원</h2> 
 							<%-- <input  type="hidden" id="h_each_goods_price"  name="h_each_goods_price" value="${item.goods_sales_price * item.order_goods_qty}" /> --%>
 						</td>
 					</tr>
-					<%-- 최종 결제 금액 ( 주문 금액 합계 금액을 누적) --%>
-					<c:set var="final_total_order_price"
-						value="${final_total_order_price+ item.goods_sales_price* item.order_goods_qty}" />
-
-					<%-- 총주문 금액 ( 주문 수량 누적 ) --%>
-					<c:set var="total_order_price"
-						value="${total_order_price+ item.goods_sales_price* item.order_goods_qty}" />
-
-					<%--  총 상품 수 ( 주문 수 누적 )--%>
-					<c:set var="total_order_goods_qty"
-						value="${total_order_goods_qty+item.order_goods_qty }" />
+					<!-- 누적합 계산 -->
+				    <c:set var="final_total_order_price" value="${final_total_order_price + (item.goods_price * (100 - item.goods_sales_price) / 100) * orderGoodsQty }" />
+				    <c:set var="total_order_goods_qty" value="${total_order_goods_qty + orderGoodsQty}" />
+				    <c:set var="total_order_price" value="${total_order_price + (item.goods_price * (100 - item.goods_sales_price) / 100) * orderGoodsQty }" />
+				    <c:set var="total_discount_price" value="${total_discount_price + (item.goods_price * (100 - item.goods_sales_price) / 100) * orderGoodsQty}" />
+				    <c:set var="total_delivery_price" value="${total_delivery_price + item.goods_delivery_price}" />
 				</c:forEach>
 			</tbody>
 		</table>
@@ -425,9 +408,9 @@
 					<tr class="dot_line">
 					    <td class="fixed_join">받으실 분</td>
 					    <td>
-					        <input id="receiver_name" name="receiver_name" type="text" size="40" value="${orderer.member_name }" readonly style="color: gray;"> 
-					        <input type="hidden" id="h_orderer_name" name="h_orderer_name" value="${orderer.member_name }" /> 
-					        <input type="hidden" id="h_receiver_name" name="h_receiver_name" value="${orderer.member_name }" />
+					        <input id="receiver_name" name="receiver_name" type="text" size="40" value="${memberInfo.member_name }" readonly style="color: gray;"> 
+					        <input type="hidden" id="h_orderer_name" name="h_orderer_name" value="${memberInfo.member_name }" /> 
+					        <input type="hidden" id="h_receiver_name" name="h_receiver_name" value="${memberInfo.member_name }" />
 					    </td>
 					</tr>
 					<tr class="dot_line">
@@ -442,33 +425,33 @@
 					            <option value="018">018</option>
 					            <option value="019">019</option>
 					        </select> 
-					        - <input size="10px" type="text" id="hp2" name="hp2" value="${orderer.hp2 }" readonly style="color: gray;"> 
-					        - <input size="10px" type="text" id="hp3" name="hp3" value="${orderer.hp3 }" readonly style="color: gray;"> 
+					        - <input size="10px" type="text" id="hp2" name="hp2" value="${memberInfo.hp2 }" readonly style="color: gray;"> 
+					        - <input size="10px" type="text" id="hp3" name="hp3" value="${memberInfo.hp3 }" readonly style="color: gray;"> 
 					        
-					        <input size="10px" type="hidden" id="h_hp1" name="h_hp1" value="${orderer.hp1 }" > 
-					        <input size="10px" type="hidden" id="h_hp2" name="h_hp2" value="${orderer.hp2 }" >
-					        <input size="10px" type="hidden" id="h_hp3" name="h_hp3" value="${orderer.hp3 }" >
+					        <input size="10px" type="hidden" id="h_hp1" name="h_hp1" value="${memberInfo.hp1 }" > 
+					        <input size="10px" type="hidden" id="h_hp2" name="h_hp2" value="${memberInfo.hp2 }" >
+					        <input size="10px" type="hidden" id="h_hp3" name="h_hp3" value="${memberInfo.hp3 }" >
 					    </td>
 					</tr>
 					<tr class="dot_line">
 					    <td class="fixed_join">주소</td>
 					    <td>
-					        <input type="text" id="zipcode" name="zipcode" size="10" value="${orderer.zipcode }" readonly style="color: gray;">
+					        <input type="text" id="zipcode" name="zipcode" size="10" value="${memberInfo.zipcode }" readonly style="color: gray;">
 					        <a href="javascript:execDaumPostcode()" style="display:none;" id="searchAddressButton">우편번호검색</a> 
 					        <br>
 					        <p>
 					            지번 주소:<br> 
-					            <input type="text" id="roadAddress" name="roadAddress" size="50" value="${orderer.roadAddress }" readonly style="color: gray;"><br>
+					            <input type="text" id="roadAddress" name="roadAddress" size="50" value="${memberInfo.roadAddress }" readonly style="color: gray;"><br>
 					            <br> 도로명 주소: 
-					            <input type="text" id="jibunAddress" name="jibunAddress" size="50" value="${orderer.jibunAddress }" readonly style="color: gray;"><br>
+					            <input type="text" id="jibunAddress" name="jibunAddress" size="50" value="${memberInfo.jibunAddress }" readonly style="color: gray;"><br>
 					            <br> 나머지 주소: 
-					            <input type="text" id="namujiAddress" name="namujiAddress" size="50" value="${orderer.namujiAddress }" readonly style="color: gray;">
+					            <input type="text" id="namujiAddress" name="namujiAddress" size="50" value="${memberInfo.namujiAddress }" readonly style="color: gray;">
 					            
 					            
-							     <input type="hidden" id="h_zipcode" name="h_zipcode" value="${orderer.zipcode }" >
-							     <input type="hidden" id="h_roadAddress" name="h_roadAddress" value="${orderer.roadAddress }" >
-							     <input type="hidden" id="h_jibunAddress" name="h_jibunAddress" value="${orderer.jibunAddress }" >
-							     <input type="hidden" id="h_namujiAddress" name="h_namujiAddress" value="${orderer.namujiAddress }" >
+							     <input type="hidden" id="h_zipcode" name="h_zipcode" value="${memberInfo.zipcode }" >
+							     <input type="hidden" id="h_roadAddress" name="h_roadAddress" value="${memberInfo.roadAddress }" >
+							     <input type="hidden" id="h_jibunAddress" name="h_jibunAddress" value="${memberInfo.jibunAddress }" >
+							     <input type="hidden" id="h_namujiAddress" name="h_namujiAddress" value="${memberInfo.namujiAddress }" >
 					        </p>
 					    </td>
 					    
@@ -498,16 +481,16 @@
 				<tbody>
 					<tr class="dot_line">
 						<td><h2>이름</h2></td>
-						<td><input type="text" id="order_name" value="${orderer.member_name}" size="15" /></td>
+						<td><input type="text" id="order_name" value="${memberInfo.member_name}" size="15" /></td>
 					</tr>
 					<tr class="dot_line">
 						<td><h2>핸드폰</h2></td>
-						<td><input type="text" id="order_phone" value="${orderer.hp1}-${orderer.hp2}-${orderer.hp3}" size="15" />
+						<td><input type="text" id="order_phone" value="${memberInfo.hp1}-${memberInfo.hp2}-${memberInfo.hp3}" size="15" />
 						</td>
 					</tr>
 					<tr class="dot_line">
 						<td><h2>이메일</h2></td>
-						<td><input type="text" id="order_email" value="${orderer.email1}@${orderer.email2}" size="15" /></td>
+						<td><input type="text" id="order_email" value="${memberInfo.email1}@${memberInfo.email2}" size="15" /></td>
 					</tr>
 				</tbody>
 			</table>
@@ -527,36 +510,43 @@
 					<td></td>
 					<td>최종 결제금액</td>
 				</tr>
-				<tr cellpadding=40 align=center>
-					<td id="">
-						<p id="p_totalNum">${total_order_goods_qty}개</p> 
-						<input id="h_total_order_goods_qty" type="hidden" value="${total_order_goods_qty}" />
-					</td>
-					<td>
-						<p id="p_totalPrice">${total_order_price}원</p> 
-						<input id="h_totalPrice" type="hidden" value="${total_order_price}" />
-					</td>
-					<td>
-						<img width="25" alt="" src="${pageContext.request.contextPath}/resources/image/plus.jpg"></td>
-					<td>
-						<p id="p_totalDelivery">${goods_delivery_price }원</p> 
-						<input id="h_totalDelivery" type="hidden" value="${goods_delivery_price}" />
-					</td>
-					<td>
-						<img width="25" alt="" src="${pageContext.request.contextPath}/resources/image/minus.jpg"></td>
-					<td>
-						<p id="p_totalSalesPrice">${total_discount_price }원</p> 
-						<input id="h_total_sales_price" type="hidden" value="${total_discount_price}" />
-					</td>
-					<td>
-						<img width="25" alt="" src="${pageContext.request.contextPath}/resources/image/equal.jpg"></td>
-					<td>
-						<p id="p_final_totalPrice">
-							<font size="12">${final_total_order_price}원 </font>
-						</p> 
-						<input id="h_final_total_Price" type="hidden" value="${final_total_order_price}" />
-					</td>
+				<tr cellpadding="40" align="center">
+				    <td>
+				        <p id="p_totalNum">${total_order_goods_qty}개</p>
+				        <input id="h_total_order_goods_qty" type="hidden" value="${total_order_goods_qty}" />
+				    </td>
+				    <td>
+				    	<fmt:formatNumber  value="${total_order_price}" type="number" var="total_order_price" />
+				        <p id="p_totalPrice">${total_order_price}원</p>
+				        <input id="h_totalPrice" type="hidden" value="${total_order_price}" />
+				    </td>
+				    <td>				    	
+				        <img width="25" alt="" src="${pageContext.request.contextPath}/resources/image/plus.jpg">
+				    </td>
+				    <td>
+				        <p id="p_totalDelivery">${total_delivery_price}원</p>
+				        <input id="h_totalDelivery" type="hidden" value="${total_delivery_price}" />
+				    </td>
+				    <td>
+				        <img width="25" alt="" src="${pageContext.request.contextPath}/resources/image/minus.jpg">
+				    </td>
+				    <td>
+				    	<fmt:formatNumber  value="${total_discount_price}" type="number" var="total_discount_price" />
+				        <p id="p_totalSalesPrice">${total_discount_price}원</p>
+				        <input id="h_total_sales_price" type="hidden" value="${total_discount_price}" />
+				    </td>
+				    <td>
+				        <img width="25" alt="" src="${pageContext.request.contextPath}/resources/image/equal.jpg">
+				    </td>
+				    <td>
+				    	<fmt:formatNumber  value="${final_total_order_price}" type="number" var="final_total_order_price" />
+				        <p id="p_final_totalPrice">
+				            <font size="12">${final_total_order_price}원</font>
+				        </p>
+				        <input id="h_final_total_Price" type="hidden" value="${final_total_order_price}" />
+				    </td>
 				</tr>
+
 			</tbody>
 		</table>
 		<div class="clear"></div>

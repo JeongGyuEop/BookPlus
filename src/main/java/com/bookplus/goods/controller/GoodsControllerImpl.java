@@ -64,6 +64,7 @@ public class GoodsControllerImpl extends BaseController   implements GoodsContro
 		
 		//도서 상품 정보를 조회한후  Map으로 반환 받습니다. 
 		Map goodsMap=goodsService.goodsDetail(goods_id); //상품 아이디 전달!
+		System.out.println(goodsMap);
 		
 		ModelAndView mav = new ModelAndView(viewName); //   /goods/goodsDetail  저장
 		mav.addObject("goodsMap", goodsMap);  //조회된 도서 상품 정보 저장 

@@ -106,101 +106,85 @@
 	}
 
 //구매하기 버튼을 누르면 호출되는 함수로 현재보고 있는 도서상품의 번호, 제목, 정가가격, 도서이미지명을 매개변수로 받아서 처리   
-function fn_order_each_goods(goods_id,goods_title, goods_price, goods_sales_price,fileName){
-	
-	//id속성값이 isLogOn인 태그를 선택해서  _isLogOn변수에 저장
-	//<input type="hidden" name="isLogOn" id="isLogOn" value="${isLogOn}"/>
-	var _isLogOn=document.getElementById("isLogOn");
-	
-	//<input type="hidden" name="isLogOn" id="isLogOn" value="${isLogOn}"/> 태그의 value속성에 적힌 값 얻어
-	//var isLogOn변수에 저장 
-	var isLogOn=_isLogOn.value;  //"false" 또는 "true"
-	
-	 if(isLogOn == "false" || isLogOn == '' ){
-		alert("로그인 후 주문이 가능합니다!!!");
-	} 
-	
-	var total_price,final_total_price;
-	
-	//id속성값이 order_goods_qty인 <select>태그 내부의 선택한 <option> 구매수량의 정보를 가져오기 위해 <select>태그 선택해오기 
-	var order_goods_qty=document.getElementById("order_goods_qty");
-	
-   	//<form></form>
-	var formObj=document.createElement("form");
-	
-	//<input>
-	var i_goods_id = document.createElement("input"); 
-	 //<input name="goods_id">
-    i_goods_id.name="goods_id";
-    //<input name="goods_id" value="매개변수 goods_id로 전달 받는 상품번호">
-    i_goods_id.value=goods_id;
-    
-    
-	//<input>
-    var i_goods_title = document.createElement("input");
-	//<input name="goods_title">
-    i_goods_title.name="goods_title";
-    //<input name="goods_title" vlaue="매개변수 goods_title로 전달받는 도서상품제목">
-    i_goods_title.value=goods_title;
-    
-   
-    //<input>
-    var i_goods_sales_price=document.createElement("input");
-	//<input name="goods_sales_price">
-    i_goods_sales_price.name="goods_sales_price";
-    //<input name="goods_sales_price" value="매개변수 goods_sales_price로 전달받는 도서상품판매가격">
-    i_goods_sales_price.value=goods_sales_price;
-    
-    //<input>
-    var i_goods_price=document.createElement("input");
-	//<input name="goods_price">
-    i_goods_price.name="goods_price";
-    //<input name="goods_sales_price" value="매개변수 goods_sales_price로 전달받는 도서상품판매가격">
-    i_goods_price.value=goods_price;
-    
-    
-    
-   	//<input>
-    var i_fileName=document.createElement("input");
-	//<input name="goods_fileName">
-    i_fileName.name="goods_fileName";
-	//<input name="goods_fileName" value="매개변수 fileName으로 전달받는 도서상품 이미지파일명">
-    i_fileName.value=fileName;
-    
-    
-    //<input>
-    var i_order_goods_qty=document.createElement("input");
-  	//<input name="order_goods_qty">
-    i_order_goods_qty.name="order_goods_qty";
-  	//<input name="order_goods_qty" value="select option태그에서 선택한 구매수량을 설정"> 
-    i_order_goods_qty.value = order_goods_qty.value;
-  
-    
-    formObj.appendChild(i_goods_id);
-    formObj.appendChild(i_goods_title);
-    formObj.appendChild(i_goods_sales_price);
-    formObj.appendChild(i_goods_price);
-    formObj.appendChild(i_fileName);
-    formObj.appendChild(i_order_goods_qty);
+// 구매하기 버튼에 대한 함수 수정
+/* function fn_order_each_goods(goods_id, goods_title, discounted_price, fileName) {
+    // 로그인 여부 확인
+    var isLogOn = document.getElementById("isLogOn").value; 
+    if (isLogOn === "false" || isLogOn === '') {
+        alert("로그인 후 주문이 가능합니다!!!");
+    }
 
+    // 선택된 수량 확인
+    var order_goods_qty = document.getElementById("order_goods_qty").value;
 
-    document.body.appendChild(formObj); 
+    // 폼 생성 및 데이터 추가
+    var formObj = document.createElement("form");
+    formObj.method = "post";
+    formObj.action = "${contextPath}/order/orderEachGoods.do";
+
+    // 폼 데이터 배열
+    var formData = [
+        { name: "goodsId", value: goods_id },
+        { name: "goodsTitle", value: goods_title },
+        { name: "goodsFinalPrice", value: discounted_price },
+        { name: "orderGoodsQty", value: order_goods_qty },
+        { name: "goodsFileName", value: fileName }
+        
+    ];
+
+    // 폼에 데이터 추가
+    formData.forEach(function(item) {
+        var input = document.createElement("input");
+        input.type = "hidden";
+        input.name = item.name;
+        input.value = item.value;
+        formObj.appendChild(input);
+    });
+
+    // 폼 제출
+    document.body.appendChild(formObj);
+    formObj.submit();
+    document.body.removeChild(formObj);
+} */
+function fn_order_each_goods(goods_id) {
+    // 로그인 여부 확인
+    var isLogOn = document.getElementById("isLogOn").value; 
+    if (isLogOn === "false" || isLogOn === '') {
+        alert("로그인 후 주문이 가능합니다!!!");
+    }
+
+    // 선택된 수량 확인
+    var order_goods_qty = document.getElementById("order_goods_qty").value;
+
+    // 폼 생성 및 데이터 추가
+    var formObj = document.createElement("form");
+    formObj.method = "post";
+    formObj.action = "${contextPath}/order/orderEachGoods.do";
+
+    // 폼 데이터 배열
+    var formData = [
+        { name: "goodsId", value: goods_id },
+        { name: "orderGoodsQty", value: order_goods_qty }
+    ];
+
+    console.log(goods_id);
+    console.log(order_goods_qty);
     
-    formObj.method="post";
-    formObj.action="${contextPath}/order/orderEachGoods.do";
-    /*
-    <body>
-	  	<form action="${contextPath}/order/orderEachGoods.do" method="post">
-	  		<input name="goods_id" value="매개변수 goods_id로 전달 받는 상품번호">
-	  		<input name="goods_title" vlaue="매개변수 goods_title로 전달받는 도서상품제목">
-	  		<input name="goods_sales_price" value="매개변수 goods_sales_price로 전달받는 도서상품판매가격">
-	  		<input name="goods_fileName" value="매개변수 fileName으로 전달받는 도서상품 이미지파일명">
-	  		<input name="order_goods_qty" value="select option태그에서 선택한 구매수량을 설정">
-	  	</form>  
-	 </body>  
-*/      
-    formObj.submit();//구매 요청!
-	}	
+    // 폼에 데이터 추가
+    formData.forEach(function(item) {
+        var input = document.createElement("input");
+        input.type = "hidden";
+        input.name = item.name;
+        input.value = item.value;
+        formObj.appendChild(input);
+    });
+
+    // 폼 제출
+    document.body.appendChild(formObj);
+    formObj.submit();
+    document.body.removeChild(formObj);
+}
+
 </script>
 </head>
 <body>
@@ -229,8 +213,8 @@ function fn_order_each_goods(goods_id,goods_title, goods_price, goods_sales_pric
 				<tr class="dot_line">
 					<td class="fixed">판매가</td>
 					<td class="active"><span >
-					   <fmt:formatNumber  value="${goods.goods_price*0.9}" type="number" var="discounted_price" />
-				         ${discounted_price}원(10%할인)</span></td>
+					   <fmt:formatNumber  value="${goods.goods_price * (100 - goods.goods_sales_price) / 100}" type="number" var="discounted_price" />
+				         ${discounted_price}원( ${ goods.goods_sales_price} %할인)</span></td>
 				</tr>
 				<%-- <tr>
 					<td class="fixed">포인트적립</td>
@@ -258,7 +242,7 @@ function fn_order_each_goods(goods_id,goods_title, goods_price, goods_sales_pric
 				</tr>
 				<tr>
 					<td class="fixed">배송료</td>
-					<td class="fixed"><strong>무료</strong></td>
+					<td class="fixed"><strong>${goods.goods_delivery_price }</strong></td>
 				</tr>
 				<tr>
 					<td class="fixed">배송안내</td>
@@ -287,7 +271,8 @@ function fn_order_each_goods(goods_id,goods_title, goods_price, goods_sales_pric
 			</tbody>
 		</table>
 		<ul>
-			<li><a class="buy" href="javascript:fn_order_each_goods('${goods.goods_id }','${goods.goods_title }','${goods.goods_price }', '${goods.goods_sales_price}','${goods.goods_fileName}');">구매하기 </a></li>
+<%-- 			<li><a class="buy" href="javascript:fn_order_each_goods('${goods.goods_id }','${goods.goods_title }','${discounted_price}','${goods.goods_fileName}');">구매하기 </a></li>--%>
+			<li><a class="buy" href="javascript:fn_order_each_goods('${goods.goods_id }');">구매하기 </a></li>
 			<li><a class="cart" href="javascript:add_cart('${goods.goods_id }')">장바구니</a></li>
 			<!-- 
 			<li><a class="wish" href="#">위시리스트</a></li> -->

@@ -14,9 +14,6 @@ public class MemberVO {
 	private String member_birth_m;
 	private String member_birth_d;
 	private String member_birth_gn;
-	private String tel1;
-	private String tel2;
-	private String tel3;
 	private String hp1;
 	private String hp2;
 	private String hp3;
@@ -83,24 +80,7 @@ public class MemberVO {
 	public void setMember_birth_gn(String member_birth_gn) {
 		this.member_birth_gn = member_birth_gn;
 	}
-	public String getTel1() {
-		return tel1;
-	}
-	public void setTel1(String tel1) {
-		this.tel1 = tel1;
-	}
-	public String getTel2() {
-		return tel2;
-	}
-	public void setTel2(String tel2) {
-		this.tel2 = tel2;
-	}
-	public String getTel3() {
-		return tel3;
-	}
-	public void setTel3(String tel3) {
-		this.tel3 = tel3;
-	}
+	
 	public String getHp1() {
 		return hp1;
 	}
@@ -205,9 +185,6 @@ public class MemberVO {
 	            ", member_birth_m='" + member_birth_m + '\'' +
 	            ", member_birth_d='" + member_birth_d + '\'' +
 	            ", member_birth_gn='" + member_birth_gn + '\'' +
-	            ", tel1='" + tel1 + '\'' +
-	            ", tel2='" + tel2 + '\'' +
-	            ", tel3='" + tel3 + '\'' +
 	            ", hp1='" + hp1 + '\'' +
 	            ", hp2='" + hp2 + '\'' +
 	            ", hp3='" + hp3 + '\'' +

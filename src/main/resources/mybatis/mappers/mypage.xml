@@ -20,9 +20,6 @@
         <result property="receiver_hp2" column="receiver_hp2" />
         <result property="receiver_hp3" column="receiver_hp3" />
         
-        <result property="receiver_tel1" column="receiver_tel1" />
-        <result property="receiver_tel2" column="receiver_tel2" />
-        <result property="receiver_tel3" column="receiver_tel3" />
         <result property="delivery_address" column="delivery_address" />
         <result property="delivery_message" column="delivery_message" />
         
@@ -89,15 +86,6 @@
             </if>
             <if test="member_birth_d != '' and member_birth_d != null">
                 member_birth_d = #{member_birth_d},
-            </if>
-            <if test="tel1 != '' and tel1 != null">
-                tel1 = #{tel1},
-            </if>
-            <if test="tel2 != '' and tel2 != null">
-                tel2 = #{tel2},
-            </if>
-            <if test="tel3 != '' and tel3 != null">
-                tel3 = #{tel3},
             </if>
             <if test="hp1 != '' and hp1 != null">
                 hp1 = #{hp1},
