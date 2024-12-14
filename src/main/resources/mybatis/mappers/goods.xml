@@ -7,22 +7,19 @@
 
     <resultMap id="goodsResult" type="goodsVO">
         <result property="goods_id" column="goods_id" />
+        <result property="goods_sort" column="goods_sort" />
         <result property="goods_title" column="goods_title" />
-        <result property="goods_writer" column="goods_writer" />
-        <result property="goods_price" column="goods_price" />
+        <result property="goods_writer" column="goods_writer" /> 
         <result property="goods_publisher" column="goods_publisher" />
-        <result property="goods_status" column="goods_status" />
-        <result property="goods_sales_price" column="goods_sales_price" />
+        <result property="goods_price" column="goods_price" />
+  		<result property="goods_sales_price" column="goods_sales_price" />
         <result property="goods_published_date" column="goods_published_date" />
         <result property="goods_total_page" column="goods_total_page" />
         <result property="goods_isbn" column="goods_isbn" />
         <result property="goods_delivery_price" column="goods_delivery_price" />
         <result property="goods_delivery_date" column="goods_delivery_date" />
+        <result property="goods_status" column="goods_status" />
         <result property="goods_fileName" column="fileName" />
-        <result property="goods_sort" column="goods_sort" />
-        <result property="goods_writer_intro" column="goods_writer_intro" />
-        <result property="goods_contents_order" column="goods_contents_order" />
-        <result property="goods_intro" column="goods_intro" />
     </resultMap>
 
     <resultMap id="imageResult" type="ImageFileVO">
@@ -36,7 +33,15 @@
     <!-- 상품 리스트를 조회 -->
     <select id="selectGoodsList" parameterType="String" resultMap="goodsResult">
         <![CDATA[
-        SELECT t.*
+        SELECT *
+		FROM T_SHOPPING_GOODS 
+		where goods_status = 'bestseller'
+		ORDER BY goods_creDate DESC
+		LIMIT 15;
+        ]]>
+    </select>
+	<!-- 
+		SELECT t.*
         FROM (
             SELECT g.*, d.fileName
             FROM T_SHOPPING_GOODS g
@@ -46,9 +51,7 @@
             ORDER BY g.goods_creDate DESC
         ) t
         LIMIT 15
-        ]]>
-    </select>
-
+	 -->
     <!-- 상품 상세 정보 조회 -->
     <select id="selectGoodsDetail" resultMap="goodsResult" parameterType="String">
         <![CDATA[
