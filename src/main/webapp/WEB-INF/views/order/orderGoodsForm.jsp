@@ -18,7 +18,6 @@
 <!-- 총 배송비 -->
 <c:set var="total_delivery_price" value="0" />
 
-<c:set var="orderGoodsQty"  value="${orderGoodsQty}"  />
 <c:set var="memberInfo"  value="${memberInfo}"  />
 
 
@@ -65,28 +64,39 @@
 	<script src="https://cdn.iamport.kr/v1/iamport.js"></script>
 	<script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.2.0.js"></script>
 
-	<script>
-	    var IMP = window.IMP;
-	    IMP.init("imp63260822"); // 아임포트 초기화
-	    
-		//==========
+	<script>//==========
 		// 페이지 로드될 때 호출되는 함수
 		window.onload = function() {
 			init();
 		}
 	
+	    
+		
 		function requestPay() {
-		    var buyerName = document.getElementById("order_name").value;
-		    var buyerEmail = document.getElementById("order_email").value;
-		    var buyerTel = document.getElementById("order_phone").value;
-		    var buyerAddr = document.getElementById("roadAddress").value + " " +
-		                    document.getElementById("jibunAddress").value + " " +
-		                    document.getElementById("namujiAddress").value;
-		    var buyerPostcode = document.getElementById("zipcode").value;
-		    var merchantUid = "ORD_" + document.getElementById("h_goods_id").value + "_" + new Date().getTime();
-		    var amount = document.getElementById("h_final_total_Price").value;
-		    var goodsName = document.getElementById("h_goods_title").value;
+			var IMP = window.IMP;
+	    	IMP.init("imp63260822"); // 아임포트 초기화
+	    
+	        var buyerName = document.getElementById("order_name").value;
+	        var buyerEmail = document.getElementById("order_email").value;
+	        var buyerTel = document.getElementById("order_phone").value;
+	        var buyerAddr = document.getElementById("roadAddress").value + " " +
+	                        document.getElementById("jibunAddress").value + " " +
+	                        document.getElementById("namujiAddress").value;
+	        var buyerPostcode = document.getElementById("zipcode").value;
+	        var merchantUid = "ORD_" + document.getElementById("h_goods_id").value + "_" + new Date().getTime();
+	        var amount = document.getElementById("h_final_total_Price").value;
+	        var goodsName = document.getElementById("h_goods_title").value;
 
+	        // 모든 변수 출력
+	        console.log("buyerName:", buyerName);
+	        console.log("buyerEmail:", buyerEmail);
+	        console.log("buyerTel:", buyerTel);
+	        console.log("buyerAddr:", buyerAddr);
+	        console.log("buyerPostcode:", buyerPostcode);
+	        console.log("merchantUid:", merchantUid);
+	        console.log("amount:", amount);
+	        console.log("goodsName:", goodsName);
+	        
 		    IMP.request_pay({
 		        pg: "html5_inicis",
 		        pay_method: "card",
@@ -323,7 +333,8 @@
 		<table class="list_view">
 			<tbody align=center>
 				<tr style="background: #33ff00">
-					<td colspan=2 class="fixed">주문상품</td>
+					<td colspan=3 class="fixed">주문상품</td>
+					<td>책 제목</td>
 					<td>수량</td>
 					<td>정가</td>
 					<td>할인 후 금액</td>
@@ -336,20 +347,23 @@
 				<%-- session영역에   (OrderVO객체(주문 정보)가 저장된  ArrayList배열) 크기 만큼 반복 !!
 	   	   참고. 장바구니에 상품을 담지 않고 로그인 후 바로 구매하기를 누르면 ArrayList배열에 저장된  OrderVO객체(주문상품정보)는 1개 이다.
 	    --%>
-				<c:forEach var="item" items="${myOrderList}">
+				<c:forEach var="item" items="${myOrderList}" varStatus="status">
 					<tr>
-						<td class="goods_image" colspan="2">
-							<%-- 주문 상품 이미지를 클릭하면 주문하는 상품 번호를 전달하여  상세화면을 요청 합니다.  --%> <a
-							href="${contextPath}/goods/goodsDetail.do?goods_id=${item.goods_id }">
-
+						<td class="goods_image" colspan="3">
+							<%-- 주문 상품 이미지를 클릭하면 주문하는 상품 번호를 전달하여  상세화면을 요청 합니다.  --%> 
+							<a href="${contextPath}/goods/goodsDetail.do?goods_id=${item.goods_id }">
 								<%--주문 상품 이미지 표시--%> 
 								<img width="75" alt="" src="${contextPath}/thumbnails.do?goods_id=${item.goods_id}&fileName=${item.goods_fileName}">
-						</a>
-
+							</a>
 						</td>
+						
+						<td>
+							<span>${item.goods_title}</span>
+						</td>
+						
 						<%-- 수량  --%>
 						<td>
-							<h2>${orderGoodsQty }개<h2>
+							<h2>${orderQtyList[status.index]}개<h2>
 							<%-- <input type="hidden" id="h_order_goods_qty" name="h_order_goods_qty" value="${item.order_goods_qty}" /> --%>
 						</td>
 
@@ -365,17 +379,25 @@
 
 						<%-- 주문금액 합계 --%>
 						<td>
-							<fmt:formatNumber  value="${(item.goods_price * (100 - item.goods_sales_price) / 100) * orderGoodsQty }" type="number" var="total_price" />
+							<fmt:formatNumber  value="${((item.goods_price * (100 - item.goods_sales_price) / 100) * orderQtyList[status.index]) + item.goods_delivery_price }" type="number" var="total_price" />
 							<h2>${total_price}원</h2> 
 							<%-- <input  type="hidden" id="h_each_goods_price"  name="h_each_goods_price" value="${item.goods_sales_price * item.order_goods_qty}" /> --%>
 						</td>
 					</tr>
 					<!-- 누적합 계산 -->
-				    <c:set var="final_total_order_price" value="${final_total_order_price + (item.goods_price * (100 - item.goods_sales_price) / 100) * orderGoodsQty }" />
-				    <c:set var="total_order_goods_qty" value="${total_order_goods_qty + orderGoodsQty}" />
-				    <c:set var="total_order_price" value="${total_order_price + (item.goods_price * (100 - item.goods_sales_price) / 100) * orderGoodsQty }" />
-				    <c:set var="total_discount_price" value="${total_discount_price + (item.goods_price * (100 - item.goods_sales_price) / 100) * orderGoodsQty}" />
+				    <c:set var="final_total_order_price" value="${final_total_order_price + (item.goods_price * (100 - item.goods_sales_price) / 100) * orderQtyList[status.index] + item.goods_delivery_price}" />
+				    <c:set var="total_order_goods_qty" value="${total_order_goods_qty + orderQtyList[status.index]}" />
+				    <c:set var="total_order_price" value="${total_order_price + (item.goods_price * orderQtyList[status.index] ) }" />
+				    <c:set var="total_discount_price" value="${total_discount_price + (item.goods_price * (item.goods_sales_price) / 100) * orderQtyList[status.index]}" />
 				    <c:set var="total_delivery_price" value="${total_delivery_price + item.goods_delivery_price}" />
+				    
+				    
+				    <fmt:formatNumber  value="${final_total_order_price}" type="number" var="final_total_order_price" />
+					<input type="hidden" id="h_goods_id" name="h_goods_id" value="${item.goods_id}">
+					<input type="hidden" id="h_goods_title" name="h_goods_title" value="${item.goods_title}">
+					<input type="hidden" id="h_order_goods_qty" name="h_order_goods_qty" value="${orderQtyList[status.index]}">
+					<input type="hidden" id="h_final_total_Price" value="${final_total_order_price}">
+					<input type="hidden" id="h_total_order_goods_qty" value="${total_order_goods_qty}">
 				</c:forEach>
 			</tbody>
 		</table>
@@ -539,7 +561,6 @@
 				        <img width="25" alt="" src="${pageContext.request.contextPath}/resources/image/equal.jpg">
 				    </td>
 				    <td>
-				    	<fmt:formatNumber  value="${final_total_order_price}" type="number" var="final_total_order_price" />
 				        <p id="p_final_totalPrice">
 				            <font size="12">${final_total_order_price}원</font>
 				        </p>

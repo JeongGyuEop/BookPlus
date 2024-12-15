@@ -66,7 +66,7 @@ public class OrderServiceImpl implements OrderService {
             // 결제 정보 생성
             PaymentVO paymentVO = new PaymentVO();
             paymentVO.setImpUid((String) requestData.get("imp_uid"));
-            paymentVO.setMerchantUid((String) requestData.get("merchant_uid"));
+            paymentVO.setMerchantUid((String) requestData.get("order_id"));
             paymentVO.setAmount(Integer.parseInt(requestData.get("amount").toString()));
             paymentVO.setPayMethod((String) requestData.get("pay_method"));
             paymentVO.setPaymentStatus((String) requestData.get("status"));

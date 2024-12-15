@@ -77,12 +77,17 @@ public class OrderControllerImpl extends BaseController implements OrderControll
 		
 		
 		List<GoodsVO> myOrderList=new ArrayList<>();
+	    List<Integer> orderQtyList = new ArrayList<>(); // 추가: 주문 수량 리스트
+
+		
 	    // goodsMap에서 GoodsVO 객체를 가져옴
 	    GoodsVO goodsVO = (GoodsVO) goodsMap.get("goodsVO");
 	    myOrderList.add(goodsVO);
 	    
+	    orderQtyList.add(Integer.parseInt(orderGoodsQty));
+	    
 		mav.addObject("myOrderList", myOrderList);
-		mav.addObject("orderGoodsQty", orderGoodsQty);  //상품 수량 저장
+		mav.addObject("orderQtyList", orderQtyList);  //상품 수량 저장
 		
 
 		//로그인 요청 당시 ~ 입력한 아이디, 비밀번호를 이용해 회원정보를 조회한 정보가 저장된 MemeberVO객체는 session에 저장되어 있었으므로
@@ -112,6 +117,8 @@ public class OrderControllerImpl extends BaseController implements OrderControll
 
 	    // 주문할 상품 정보를 저장할 리스트
 	    List<GoodsVO> myOrderList = new ArrayList<>();
+	    List<Integer> orderQtyList = new ArrayList<>(); // 추가: 주문 수량 리스트
+
 
 	    // 세션에서 로그인한 사용자 정보 가져오기
 	    MemberVO memberInfo = (MemberVO) session.getAttribute("memberInfo");
@@ -126,9 +133,9 @@ public class OrderControllerImpl extends BaseController implements OrderControll
 	        // myGoodsList에서 해당 상품 검색
 	        for (GoodsVO goodsVO : myGoodsList) {
 	            if (goodsVO.getGoods_id() == goodsIdFromRequest) {
-	                // 주문 수량 설정
-//	                goodsVO.setOrderGoodsQty(orderQty);
 	                myOrderList.add(goodsVO);
+	                orderQtyList.add(orderQty);     // 해당 상품의 수량 추가
+
 	                break; // 해당 상품 처리 완료 시 반복 종료
 	            }
 	        }
@@ -136,7 +143,9 @@ public class OrderControllerImpl extends BaseController implements OrderControll
 
 	    // 선택한 주문 항목을 세션에 저장
 	    mav.addObject("myOrderList", myOrderList);
-	    mav.addObject("memberInfo", memberInfo);
+	    mav.addObject("memberInfo", memberInfo);   
+	    mav.addObject("orderQtyList", orderQtyList); // 수량 리스트 추가
+
 
 	    return mav;
 	}

@@ -222,7 +222,6 @@ function fn_order_all_cart_goods(){
  
 
 	var length=checked_goods.length; //요약 : 주문용으로 선택한(체크한) 총 상품 개수를 가져옵니다. 
-	alert(length);
 	
 	//요약 : 여러 상품을 주문할 경우  하나의 상품에 대해 '상품번호:주문수량' 문자열로 만든 후 전체 상품 정보를 배열로 전송합니다. 
 	//장바구니 목록화면에서 구매할 상품을 체크하는  <input type="checkbox">태그가  여러개 라면?
@@ -287,6 +286,7 @@ function fn_order_all_cart_goods(){
 				<td>정가</td>
 				<td>판매가</td>
 				<td>수량</td>
+				<td>배송비</td>
 				<td>합계</td>
 				<td>주문</td>
 			</tr>
@@ -349,6 +349,8 @@ function fn_order_all_cart_goods(){
 						    <img width=25 alt=""  src="${contextPath}/resources/image/btn_modify_qty.jpg">
 						</a>
 					</td>
+					<%-- 배송비 --%>
+					<td><strong>${item.goods_delivery_price }원</strong></td>
 					<td>
 					   <strong id="total_sales_price">
 					    <fmt:formatNumber  value="${(item.goods_price * (100 - item.goods_sales_price) / 100 )* cart_goods_qty}" type="number" var="total_sales_price" />
@@ -367,7 +369,7 @@ function fn_order_all_cart_goods(){
 			
 			    <!-- 누적 합산 -->
 			    <c:set var="totalGoodsNum" value="${totalGoodsNum + 1}" />
-			    <c:set var="totalGoodsPrice" value="${totalGoodsPrice + ((item.goods_price * (100 - item.goods_sales_price) / 100 )* cart_goods_qty)}" />
+			    <c:set var="totalGoodsPrice" value="${totalGoodsPrice + ((item.goods_price )* cart_goods_qty)}" />
 			    <c:set var="totalDiscountedPrice" value="${totalDiscountedPrice + ((item.goods_price - (item.goods_price * (100 - item.goods_sales_price) / 100)) * myCartList[cnt.count - 1].cart_goods_qty)}" />
 			    <c:set var="totalDeliveryPrice" value="${totalDeliveryPrice + item.goods_delivery_price}" />
 
@@ -424,16 +426,16 @@ function fn_order_all_cart_goods(){
 	         <img width="25" alt="" src="${contextPath}/resources/image/minus.jpg"> 
 	       </td>
 	       <td>  	          
-	       	<fmt:formatNumber  value="${totalDiscountedPrice}" type="number" var="totalDiscountedPrice" />
-	         <p id="p_totalSalesPrice">${totalDiscountedPrice}원</p>
-	         <input id="h_totalSalesPrice"type="hidden" value="${totalSalesPrice}" />
+	       	<fmt:formatNumber  value="${totalDiscountedPrice}" type="number" var="totalDiscountedPrice2" />
+	         <p id="p_totalSalesPrice">${totalDiscountedPrice2}원</p>
+	         <input id="h_totalSalesPrice"type="hidden" value="${totalSalesPrice2}" />
 	       </td>
 	       <td>  
 	         <img width="25" alt="" src="${contextPath}/resources/image/equal.jpg">
 	       </td>
 	       <td>
 	          <p id="p_final_totalPrice">
-	          <fmt:formatNumber  value="${totalGoodsPrice+totalDeliveryPrice}" type="number" var="total_price" />
+	          <fmt:formatNumber  value="${totalGoodsPrice+totalDeliveryPrice-totalDiscountedPrice}" type="number" var="total_price" />
 	            ${total_price}원
 	          </p>
 	          <input id="h_final_totalPrice" type="hidden" value="${totalGoodsPrice+totalDeliveryPrice}" />
