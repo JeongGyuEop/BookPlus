@@ -60,5 +60,5 @@
 			</td>
 		</tr>
 	</table>
-</form>
-
+	</form>
+</body>

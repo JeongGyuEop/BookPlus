@@ -1,49 +1,65 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="mapper.mypage">
-    <!-- 리절트 맵 정의 -->
-    <resultMap id="orderGoodsResult" type="orderVO">
-        <result property="order_id" column="order_id" />
-        <result property="member_id" column="member_id" />
-        <result property="goods_id" column="goods_id" />
-        <result property="goods_title" column="goods_title" />
-        <result property="goods_sales_price" column="goods_sales_price" />
-        <result property="order_total_price" column="order_total_price" />
-        <result property="order_goods_qty" column="order_goods_qty" />
-        
-        <result property="orderer_name" column="orderer_name" />
-        <result property="receiver_name" column="receiver_name" />
-        <result property="receiver_hp1" column="receiver_hp1" />
-        <result property="receiver_hp2" column="receiver_hp2" />
-        <result property="receiver_hp3" column="receiver_hp3" />
-        
-        <result property="receiver_tel1" column="receiver_tel1" />
-        <result property="receiver_tel2" column="receiver_tel2" />
-        <result property="receiver_tel3" column="receiver_tel3" />
-        <result property="delivery_address" column="delivery_address" />
-        <result property="delivery_message" column="delivery_message" />
-        
-        <result property="delivery_method" column="delivery_method" />
-        <result property="gift_wrapping" column="gift_wrapping" />
-        <result property="pay_method" column="pay_method" />
-        <result property="card_com_name" column="card_com_name" />
-        <result property="card_pay_month" column="card_pay_month" />
-        
-        <result property="pay_orderer_hp_num" column="pay_orderer_hp_num" />
-        <result property="delivery_state" column="delivery_state" />
-        <result property="final_total_price" column="final_total_price" />
-        <result property="goods_qty" column="goods_qty" />
-        
-        <result property="goods_fileName" column="goods_fileName" />
-    </resultMap> 
 
-    <!-- 로그인한 회원의 아이디를 이용해 장바구니 테이블에 담아 구매한 상품 정보들을 최근에 주문한 일자를 기준으로 내림차순 정렬하여 조회 -->
+    <!-- OrderVO 변경 사항 반영:
+         goods_id → goods_isbn
+         goods_writer → goods_author (해당 필드가 order에서 사용되는지 확인 필요. 없으면 무시)
+         goods_price → goods_priceStandard
+         goods_sales_price → goods_priceSales
+         goods_fileName → goods_cover
+         여기서는 goods_author나 goods_priceStandard 등이 order테이블에 없는 경우, 
+         order에 필요한 필드만 반영합니다.
+    -->
+    <resultMap id="orderGoodsResult" type="OrderVO">
+        <result property="order_id" column="order_id"/>
+        <result property="member_id" column="member_id"/>
+        
+        <!-- goods_id -> goods_isbn 변경 -->
+        <result property="goods_isbn" column="goods_isbn"/>
+        
+        <result property="goods_title" column="goods_title"/>
+        
+        <!-- goods_sales_price -> goods_priceSales 변경 -->
+        <result property="goods_priceSales" column="goods_priceSales"/>
+        
+        <result property="total_goods_price" column="order_total_price"/>
+        <result property="order_goods_qty" column="order_goods_qty"/>
+        
+        <result property="orderer_name" column="orderer_name"/>
+        <result property="receiver_name" column="receiver_name"/>
+        <result property="receiver_hp1" column="receiver_hp1"/>
+        <result property="receiver_hp2" column="receiver_hp2"/>
+        <result property="receiver_hp3" column="receiver_hp3"/>
+        
+        <result property="receiver_tel1" column="receiver_tel1"/>
+        <result property="receiver_tel2" column="receiver_tel2"/>
+        <result property="receiver_tel3" column="receiver_tel3"/>
+        <result property="delivery_address" column="delivery_address"/>
+        <result property="delivery_message" column="delivery_message"/>
+        
+        <result property="delivery_method" column="delivery_method"/>
+        <result property="gift_wrapping" column="gift_wrapping"/>
+        <result property="pay_method" column="pay_method"/>
+        <result property="card_com_name" column="card_com_name"/>
+        <result property="card_pay_month" column="card_pay_month"/>
+        
+        <result property="pay_orderer_hp_num" column="pay_orderer_hp_num"/>
+        <result property="delivery_state" column="delivery_state"/>
+        <result property="final_total_price" column="final_total_price"/>
+        <result property="goods_qty" column="goods_qty"/>
+        
+        <!-- goods_fileName -> goods_cover 변경 -->
+        <result property="goods_cover" column="goods_cover"/>
+    </resultMap>
+
+    <!-- 로그인한 회원의 아이디로 주문 정보 조회 (goods_id -> goods_isbn, goods_fileName -> goods_cover 컬럼 반영) -->
     <select id="selectMyOrderGoodsList" resultMap="orderGoodsResult" parameterType="String">
         <![CDATA[
-        SELECT * 
+        SELECT *
         FROM T_SHOPPING_ORDER
         WHERE member_id = #{member_id}
         ORDER BY pay_order_time DESC
@@ -53,7 +69,7 @@
     <!-- 주문 정보 조회 -->
     <select id="selectMyOrderInfo" resultMap="orderGoodsResult" parameterType="String">
         <![CDATA[
-        SELECT * 
+        SELECT *
         FROM T_SHOPPING_ORDER
         WHERE order_id = #{order_id}
         ]]>
@@ -62,7 +78,7 @@
     <!-- 주문 내역 조회 (날짜 범위 지정) -->
     <select id="selectMyOrderHistoryList" resultMap="orderGoodsResult" parameterType="java.util.Map">
         <![CDATA[
-        SELECT * 
+        SELECT *
         FROM T_SHOPPING_ORDER
         WHERE member_id = #{member_id}
         AND DATE_FORMAT(pay_order_time, '%Y-%m-%d') BETWEEN #{beginDate} AND #{endDate}
@@ -70,67 +86,29 @@
         ]]>
     </select>
     
-    <!-- 회원 정보 업데이트 -->
+    <!-- 회원 정보 업데이트 (MemberVO 관련 필드는 변경사항 없음) -->
     <update id="updateMyInfo" parameterType="java.util.HashMap">
         UPDATE T_SHOPPING_MEMBER
         <set>
-            <if test="member_pw != '' and member_pw != null">
-                member_pw = #{member_pw},
-            </if>
-            <if test="member_gender != '' and member_gender != null">
-                member_gender = #{member_gender},
-            </if>
-            <if test="member_birth_y != '' and member_birth_y != null">
-                member_birth_y = #{member_birth_y},
-            </if>
-            <if test="member_birth_m != '' and member_birth_m != null">
-                member_birth_m = #{member_birth_m},
-            </if>
-            <if test="member_birth_d != '' and member_birth_d != null">
-                member_birth_d = #{member_birth_d},
-            </if>
-            <if test="tel1 != '' and tel1 != null">
-                tel1 = #{tel1},
-            </if>
-            <if test="tel2 != '' and tel2 != null">
-                tel2 = #{tel2},
-            </if>
-            <if test="tel3 != '' and tel3 != null">
-                tel3 = #{tel3},
-            </if>
-            <if test="hp1 != '' and hp1 != null">
-                hp1 = #{hp1},
-            </if>
-            <if test="hp2 != '' and hp2 != null">
-                hp2 = #{hp2},
-            </if>
-            <if test="hp3 != '' and hp3 != null">
-                hp3 = #{hp3},
-            </if>
-            <if test="smssts_yn != '' and smssts_yn != null">
-                smssts_yn = #{smssts_yn},
-            </if>
-            <if test="email1 != '' and email1 != null">
-                email1 = #{email1},
-            </if>
-            <if test="email2 != '' and email2 != null">
-                email2 = #{email2},
-            </if>
-            <if test="emailsts_yn != '' and emailsts_yn != null">
-                emailsts_yn = #{emailsts_yn},
-            </if>
-            <if test="zipcode != '' and zipcode != null">
-                zipcode = #{zipcode},
-            </if>
-            <if test="roadAddress != '' and roadAddress != null">
-                roadAddress = #{roadAddress},
-            </if>
-            <if test="jibunAddress != '' and jibunAddress != null">
-                jibunAddress = #{jibunAddress},
-            </if>
-            <if test="namujiAddress != '' and namujiAddress != null">
-                namujiAddress = #{namujiAddress}
-            </if>
+            <if test="member_pw != '' and member_pw != null">member_pw = #{member_pw},</if>
+            <if test="member_gender != '' and member_gender != null">member_gender = #{member_gender},</if>
+            <if test="member_birth_y != '' and member_birth_y != null">member_birth_y = #{member_birth_y},</if>
+            <if test="member_birth_m != '' and member_birth_m != null">member_birth_m = #{member_birth_m},</if>
+            <if test="member_birth_d != '' and member_birth_d != null">member_birth_d = #{member_birth_d},</if>
+            <if test="tel1 != '' and tel1 != null">tel1 = #{tel1},</if>
+            <if test="tel2 != '' and tel2 != null">tel2 = #{tel2},</if>
+            <if test="tel3 != '' and tel3 != null">tel3 = #{tel3},</if>
+            <if test="hp1 != '' and hp1 != null">hp1 = #{hp1},</if>
+            <if test="hp2 != '' and hp2 != null">hp2 = #{hp2},</if>
+            <if test="hp3 != '' and hp3 != null">hp3 = #{hp3},</if>
+            <if test="smssts_yn != '' and smssts_yn != null">smssts_yn = #{smssts_yn},</if>
+            <if test="email1 != '' and email1 != null">email1 = #{email1},</if>
+            <if test="email2 != '' and email2 != null">email2 = #{email2},</if>
+            <if test="emailsts_yn != '' and emailsts_yn != null">emailsts_yn = #{emailsts_yn},</if>
+            <if test="zipcode != '' and zipcode != null">zipcode = #{zipcode},</if>
+            <if test="roadAddress != '' and roadAddress != null">roadAddress = #{roadAddress},</if>
+            <if test="jibunAddress != '' and jibunAddress != null">jibunAddress = #{jibunAddress},</if>
+            <if test="namujiAddress != '' and namujiAddress != null">namujiAddress = #{namujiAddress}</if>
         </set>
         WHERE member_id = #{member_id}
     </update>
@@ -138,7 +116,7 @@
     <!-- 회원 상세 정보 조회 -->
     <select id="selectMyDetailInfo" resultType="memberVO" parameterType="String">
         <![CDATA[
-        SELECT * 
+        SELECT *
         FROM T_SHOPPING_MEMBER
         WHERE member_id = #{member_id}
         ]]>
@@ -146,8 +124,11 @@
     
     <!-- 주문 취소 처리 -->
     <update id="updateMyOrderCancel" parameterType="String">
+        <![CDATA[
         UPDATE T_SHOPPING_ORDER
         SET delivery_state = 'cancel_order'
         WHERE order_id = #{order_id}
+        ]]>
     </update>
+
 </mapper>

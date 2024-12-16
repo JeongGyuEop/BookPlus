@@ -17,31 +17,27 @@ request.setCharacterEncoding("UTF-8");
 			src="${contextPath}/resources/image/main_banner03.jpg"></li>
 	</ul>
 </div>
+
 <div class="main_book">
 	<c:set var="goods_count" value="0" />
 	<h3>베스트셀러</h3>
 
 	<!-- 조회된 베스트 셀러 15개를 메인화면 중앙에 표시 합니다.-->
 	<c:forEach var="item" items="${goodsMap.bestseller}">
-
 		<c:set var="goods_count" value="${goods_count+1}" />
-
 		<div class="book">
-
 			<!-- 이미지 클릭시 상품 상세페이지를 요청합니다. -->
-			<a
-				href="${contextPath}/goods/goodsDetail.do?goods_id=${item.goods_id}">
+			<a href="${contextPath}/goods/goodsDetail.do?goods_isbn=${item.goods_isbn}">
 				<img class="link" src="${contextPath}/resources/image/1px.gif">
 			</a>
-			<!-- 원본이미지를 썸네일 이미지로 보여 주기 위해  서버페이지 요청시  상품번호와 상품이미지명 전달  -->
+			<!-- 썸네일 이미지 요청시 goods_isbn과 goods_cover 전달 -->
 			<img width="121" height="154"
-				src="${contextPath}/thumbnails.do?goods_id=${item.goods_id}&fileName=${item.goods_fileName}">
+				src="${contextPath}/thumbnails.do?goods_isbn=${item.goods_isbn}&fileName=${item.goods_cover}">
 
 			<div class="title">${item.goods_title}</div>
 			<div class="price">
-				<fmt:formatNumber value="${item.goods_price}" type="number"
-					var="goods_price" />
-				${goods_price}원
+				<fmt:formatNumber value="${item.goods_priceStandard}" type="number" var="goods_priceStandard" />
+				${goods_priceStandard}원
 			</div>
 		</div>
 
@@ -53,28 +49,29 @@ request.setCharacterEncoding("UTF-8");
 		</c:if>
 	</c:forEach>
 </div>
+
 <div class="clear"></div>
 <div id="ad_sub_banner">
 	<img width="770" height="117"
 		src="${contextPath}/resources/image/sub_banner01.jpg">
 </div>
+
 <div class="main_book">
 	<c:set var="goods_count" value="0" />
 	<h3>새로 출판된 책</h3>
 	<c:forEach var="item" items="${goodsMap.newbook}">
 		<c:set var="goods_count" value="${goods_count+1}" />
 		<div class="book">
-			<a
-				href="${contextPath}/goods/goodsDetail.do?goods_id=${item.goods_id}">
+			<a href="${contextPath}/goods/goodsDetail.do?goods_isbn=${item.goods_isbn}">
 				<img class="link" src="${contextPath}/resources/image/1px.gif">
-			</a> <img width="121" height="154"
-				src="${contextPath}/thumbnails.do?goods_id=${item.goods_id}&fileName=${item.goods_fileName}">
+			</a>
+			<img width="121" height="154"
+				src="${contextPath}/thumbnails.do?goods_isbn=${item.goods_isbn}&fileName=${item.goods_cover}">
 
 			<div class="title">${item.goods_title}</div>
 			<div class="price">
-				<fmt:formatNumber value="${item.goods_price}" type="number"
-					var="goods_price" />
-				${goods_price}원
+				<fmt:formatNumber value="${item.goods_priceStandard}" type="number" var="goods_priceStandard" />
+				${goods_priceStandard}원
 			</div>
 		</div>
 		<c:if test="${goods_count==15}">
@@ -91,23 +88,21 @@ request.setCharacterEncoding("UTF-8");
 		src="${contextPath}/resources/image/sub_banner02.jpg">
 </div>
 
-
 <div class="main_book">
 	<c:set var="goods_count" value="0" />
 	<h3>스테디셀러</h3>
 	<c:forEach var="item" items="${goodsMap.steadyseller}">
 		<c:set var="goods_count" value="${goods_count+1}" />
 		<div class="book">
-			<a
-				href="${contextPath}/goods/goodsDetail.do?goods_id=${item.goods_id}">
+			<a href="${contextPath}/goods/goodsDetail.do?goods_isbn=${item.goods_isbn}">
 				<img class="link" src="${contextPath}/resources/image/1px.gif">
-			</a> <img width="121" height="154"
-				src="${contextPath}/thumbnails.do?goods_id=${item.goods_id}&fileName=${item.goods_fileName}">
+			</a>
+			<img width="121" height="154"
+				src="${contextPath}/thumbnails.do?goods_isbn=${item.goods_isbn}&fileName=${item.goods_cover}">
 			<div class="title">${item.goods_title }</div>
 			<div class="price">
-				<fmt:formatNumber value="${item.goods_price}" type="number"
-					var="goods_price" />
-				${goods_price}원
+				<fmt:formatNumber value="${item.goods_priceStandard}" type="number" var="goods_priceStandard" />
+				${goods_priceStandard}원
 			</div>
 		</div>
 		<c:if test="${goods_count==15}">
@@ -117,5 +112,3 @@ request.setCharacterEncoding("UTF-8");
 		</c:if>
 	</c:forEach>
 </div>
-
-

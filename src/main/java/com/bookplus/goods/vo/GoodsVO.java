@@ -94,8 +94,17 @@ public class GoodsVO {
 
 	@Override
 	public String toString() {
-		// TODO Auto-generated method stub
-		return super.toString();
+	    return "GoodsVO {" +
+	            "goods_title='" + goods_title + '\'' +
+	            ", goods_author='" + goods_author + '\'' +
+	            ", goods_pubDate=" + goods_pubDate +
+	            ", goods_isbn='" + goods_isbn + '\'' +
+	            ", goods_priceStandard=" + goods_priceStandard +
+	            ", goods_priceSales=" + goods_priceSales +
+	            ", goods_cover='" + goods_cover + '\'' +
+	            ", goods_categoryName='" + goods_categoryName + '\'' +
+	            ", goods_publisher='" + goods_publisher + '\'' +
+	            '}';
 	}
 
 }

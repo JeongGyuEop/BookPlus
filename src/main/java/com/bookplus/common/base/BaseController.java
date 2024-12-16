@@ -1,52 +1,51 @@
 package com.bookplus.common.base;
 
 import java.io.File;
-import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 
-import com.bookplus.goods.vo.ImageFileVO;
+import com.bookplus.goods.vo.GoodsVO;
 
 public abstract class BaseController  {
 	
-	protected List<ImageFileVO> upload(MultipartHttpServletRequest multipartRequest, HttpServletRequest request) throws Exception{
+	// 기존 ImageFileVO → GoodsVO 사용, 이미지명(goods_cover)만 저장
+	protected List<GoodsVO> upload(MultipartHttpServletRequest multipartRequest, HttpServletRequest request) throws Exception {
 	    String path = request.getSession().getServletContext().getRealPath("/resources/image/shopping/file_repo");
-		List<ImageFileVO> fileList= new ArrayList<ImageFileVO>();
+		List<GoodsVO> fileList = new ArrayList<GoodsVO>();
 		Iterator<String> fileNames = multipartRequest.getFileNames();
+		
 		while(fileNames.hasNext()){
-			ImageFileVO imageFileVO =new ImageFileVO();
+			GoodsVO goodsVO = new GoodsVO();  // ImageFileVO 대신 GoodsVO 사용
 			String fileName = fileNames.next();
-			imageFileVO.setFileType(fileName);
+			
 			MultipartFile mFile = multipartRequest.getFile(fileName);
-			String originalFileName=mFile.getOriginalFilename();
-			imageFileVO.setFileName(originalFileName);
-			fileList.add(imageFileVO);
+			String originalFileName = mFile.getOriginalFilename();
+			
+			// GoodsVO에 이미지 파일명만 저장
+			goodsVO.setGoods_cover(originalFileName);
+			fileList.add(goodsVO);
 			
 			File file = new File(path + "/" + fileName);
-			if (mFile.getSize() != 0) { // 파일이 비어있는지 확인
-			    if (!file.exists()) { // 해당 파일이 존재하지 않는 경우
-			        if (file.getParentFile().mkdirs()) { // 필요한 상위 디렉터리를 생성
-			            file.createNewFile(); // 새 파일 생성
+			if (mFile.getSize() != 0) { 
+			    if (!file.exists()) {
+			        if (file.getParentFile().mkdirs()) {
+			            file.createNewFile();
 			        }
 			    }
-			    mFile.transferTo(new File(path + "/" + "temp" + "/" + originalFileName)); // 임시 폴더에 multipartFile을 파일로 저장
+			    // temp 폴더에 실제 파일 저장
+			    mFile.transferTo(new File(path + "/" + "temp" + "/" + originalFileName));
 			}
 		}
 		return fileList;
@@ -62,17 +61,10 @@ public abstract class BaseController  {
 		}
 	}
 	
-	//페이지 이동 요청시  viewForm메소드 에서 처리 
-	// /member/loginForm.do  
-	// /member/memberForm.do
-	// /admin/goods/addNewGoodsForm.do
 	@RequestMapping(value="/*.do" ,method={RequestMethod.POST,RequestMethod.GET})
 	protected  ModelAndView viewForm(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		
-		//  /admin/goods/addNewGoodsForm
 		String viewName=(String)request.getAttribute("viewName");
 		System.out.println("BaseController : viewForm메소드 내부에서 처리  : " +  viewName);
-
 		ModelAndView mav = new ModelAndView(viewName);
 		return mav;
 	}
