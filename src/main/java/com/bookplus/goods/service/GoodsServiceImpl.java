@@ -66,7 +66,18 @@ public class GoodsServiceImpl implements GoodsService{
 		List goodsList=goodsDAO.selectGoodsBySearchWord(searchWord);
 		return goodsList;
 	}
-	
+
+	@Override
+	public boolean updateDatabase() {
+		
+		return false;
+	}
+
+	@Override
+	public boolean fetchBookDetails() {
+		
+		return false;
+	}
 	
 }
 

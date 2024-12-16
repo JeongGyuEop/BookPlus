@@ -19,4 +19,8 @@ public interface GoodsService {
 	
 	//검색어로 상품을 검색하는 메서드로, searchWord를 인자로 받아 List<GoodsVO> 형태로 반환합니다.
 	public List<GoodsVO> searchGoods(String searchWord) throws Exception;
+
+	public boolean updateDatabase();
+
+	public boolean fetchBookDetails();
 }
