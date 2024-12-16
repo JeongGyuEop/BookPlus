@@ -33,5 +33,9 @@ public interface BoardDao {
 	boolean checkReply(Map<String, Object> paramMap);
 	
 	boolean updateReply(Map<String, Object> paramMap);
+
+	String findMemberIdByName(String memberName);
+	
 	
 }
+

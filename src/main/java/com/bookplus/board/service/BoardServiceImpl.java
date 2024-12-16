@@ -114,5 +114,10 @@ public class BoardServiceImpl implements BoardService {
 	public boolean updateReply(Map<String, Object> paramMap) {
 		return boardDao.updateReply(paramMap);
 	}
+	@Override
+	public String getMemberIdByName(String memberName) {
+	    return boardDao.findMemberIdByName(memberName);
+	}
+
 
 }

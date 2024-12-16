@@ -339,25 +339,25 @@
 
         //"이전" 버튼 추가
         if (currentPage > 1) {
-            paginationHtml += "<span class='page-link prev' style='margin: 0 5px; cursor: pointer;' data-page='" + (currentPage - 1) + "'>이전</span>";
+            paginationHtml += "<button class='page-link prev' style='margin: 0 5px; cursor: pointer;' data-page='" + (currentPage - 1) + "'>이전</button>";
         } else {
-            paginationHtml += "<span class='page-link prev' style='margin: 0 5px; color: gray;' disabled>이전</span>";
+            paginationHtml += "<button class='page-link prev' style='margin: 0 5px; color: gray;' disabled>이전</button>";
         }
 
         //페이지 번호 추가
         for (var i = 1; i <= totalPages; i++) {
             if (i === currentPage) {
-                paginationHtml += "<span class='page-link' style='margin: 0 5px; font-weight: bold; color: red;' data-page='" + i + "'>" + i + "</span>";
+                paginationHtml += "<button class='page-link' style='margin: 0 5px; font-weight: bold; color: red;' data-page='" + i + "'>" + i + "</button>";
             } else {
-                paginationHtml += "<span class='page-link' style='margin: 0 5px; cursor: pointer;' data-page='" + i + "'>" + i + "</span>";
+                paginationHtml += "<button class='page-link' style='margin: 0 5px; cursor: pointer;' data-page='" + i + "'>" + i + "</button>";
             }
         }
 
         //"다음" 버튼 추가
         if (currentPage < totalPages) {
-            paginationHtml += "<span class='page-link next' style='margin: 0 5px; cursor: pointer;' data-page='" + (currentPage + 1) + "'>다음</span>";
+            paginationHtml += "<button class='page-link next' style='margin: 0 5px; cursor: pointer;' data-page='" + (currentPage + 1) + "'>다음</button>";
         } else {
-            paginationHtml += "<span class='page-link next' style='margin: 0 5px; color: gray;' disabled>다음</span>";
+            paginationHtml += "<button class='page-link next' style='margin: 0 5px; color: gray;' disabled>다음</button>";
         }
 
         $("#pagination").html(paginationHtml); //페이지 번호 및 버튼 추가
@@ -365,7 +365,8 @@
 
     //페이지 번호 및 "이전/다음" 버튼 클릭 이벤트
     $(document).on("click", ".page-link", function () {
-        var newPage = $(this).data("page"); //클릭한 버튼의 페이지 번호 가져오기
+    	
+    	var newPage = $(this).data("page"); //클릭한 버튼의 페이지 번호 가져오기
         if (newPage && newPage >= 1 && newPage <= Math.ceil(totalData.length / itemsPerPage)) {
             currentPage = newPage; //현재 페이지 업데이트
             renderPage(); //해당 페이지 데이터 렌더링

@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
-<%@ page session="false" %>
+<%@ page session="true" %>
 <c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 <html>
     <head>
@@ -100,11 +100,16 @@
     	<form class="form-inline" id="frmSearch" action="${contextPath}/board/boardList.do">
 	    	<input type="hidden" id="startPage" name="startPage" value=""><!-- 페이징을 위한 hidden타입 추가 -->
 	        <input type="hidden" id="visiblePages" name="visiblePages" value=""><!-- 페이징을 위한 hidden타입 추가 -->
+	    	
+	    	<h1>공지사항</h1>
 	    	<div align="center">
 	    		<table width="770px">
 	    			<tr>
 	    				<td align="right">
-	    					<button type="button" id="write" name="write">글 작성</button>
+		    				   <!-- 로그인 상태에서만 글 작성 버튼 표시 -->
+                             <c:if test="${not empty sessionScope.memberInfo}">
+                                <button type="button" id="write" name="write">글 작성</button>
+                            </c:if>
 	    				</td>
 	    			</tr>
 	    		</table>
@@ -136,9 +141,11 @@
 								<tr>
 						    		<td align="center">${boardList.id}</td>
 						    		<td>
-						    			<a name="subject" class="mouseOverHighlight" content_id="${boardList.id}">${boardList.subject}</a>
+						    			<a href="${contextPath}/board/view.do?id=${boardList.id}" 
+							           	   name="subject" class="mouseOverHighlight">${boardList.subject}
+							            </a>
 						    		</td>
-						    		<td align="center">${boardList.writer}</td>
+						    		<td align="center">${boardList.member_name}</td>
 						    		<td align="center">${boardList.register_datetime}</td>
 						    	</tr>
 						    </c:forEach>
