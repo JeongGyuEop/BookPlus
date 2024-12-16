@@ -1,11 +1,7 @@
 package com.bookplus.admin.goods.service;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import com.bookplus.goods.vo.GoodsVO;
 import com.bookplus.goods.vo.ImageFileVO;
@@ -22,5 +18,7 @@ public interface AdminGoodsService {
 	public void modifyOrderGoods(Map orderMap) throws Exception;
 	public void removeGoodsImage(int image_id) throws Exception;
 	public void addNewGoodsImage(List imageFileList) throws Exception;
+
+	
 	
 }

@@ -4,8 +4,13 @@
        "http://tiles.apache.org/dtds/tiles-config_2_0.dtd">
 <tiles-definitions>
     <definition name="/board/boardList" extends="baseLayout">
-       <put-attribute name="title" value="내 장바구니 정보" />
+       <put-attribute name="title" value="공지사항" />
        <put-attribute name="body" value="/WEB-INF/views/board/boardList.jsp" />
+    </definition>
+    
+     <definition name="/board/view" extends="baseLayout">
+       <put-attribute name="title" value="게시글 상세 보기" />
+       <put-attribute name="body" value="/WEB-INF/views/board/boardView.jsp" />
     </definition>
 </tiles-definitions>
 

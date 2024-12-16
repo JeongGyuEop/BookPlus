@@ -32,4 +32,7 @@ public interface BoardService {
 	
 	boolean updateReply(Map<String, Object> paramMap);
 	
+	public List<Board> getLatestNotices();
+
+	
 }

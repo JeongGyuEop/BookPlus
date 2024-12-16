@@ -99,6 +99,8 @@
     	<form class="form-inline" id="frmSearch" action="/board/list">
 	    	<input type="hidden" id="startPage" name="startPage" value=""><!-- 페이징을 위한 hidden타입 추가 -->
 	        <input type="hidden" id="visiblePages" name="visiblePages" value=""><!-- 페이징을 위한 hidden타입 추가 -->
+	    	
+	    	<h1>공지사항</h1>
 	    	<div align="center">
 	    		<table width="1200px">
 	    			<tr>
@@ -135,7 +137,9 @@
 								<tr>
 						    		<td align="center">${boardList.id}</td>
 						    		<td>
-						    			<a name="subject" class="mouseOverHighlight" content_id="${boardList.id}">${boardList.subject}</a>
+						    			<a href="${contextPath}/BookPlus/board/view.do?id=${boardList.id}" 
+							           	   name="subject" class="mouseOverHighlight">${boardList.subject}
+							            </a>
 						    		</td>
 						    		<td align="center">${boardList.writer}</td>
 						    		<td align="center">${boardList.register_datetime}</td>

@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -11,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.encoding.ShaPasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.bookplus.board.service.BoardService;
+import com.bookplus.board.vo.Board;
 
 
 
@@ -28,7 +30,8 @@ public class BoardController{
 
 	@Autowired
 	BoardService boardService;
-
+	
+	
 	//게시글 리스트 조회
 	@RequestMapping(value = "/board/boardList.do")
 	public String boardList(@RequestParam Map<String, Object> paramMap, Model model,
@@ -59,10 +62,10 @@ public class BoardController{
 		paramMap.put("start", startLimitPage);
 
 		//MYSQL
-		//paramMap.put("end", visiblePages);
+		paramMap.put("end", visiblePages);
 
 		//ORACLE
-		paramMap.put("end", startLimitPage+visiblePages);
+		//paramMap.put("end", startLimitPage+visiblePages);
 
 		//jsp 에서 보여줄 정보 추출
 		model.addAttribute("startPage", startPage+"");//현재 페이지      
@@ -91,6 +94,12 @@ public class BoardController{
 		//  /board/view 뷰 주소 얻기
 		String viewName=(String)request.getAttribute("viewName"); 
 			
+		System.out.println("ViewNameInterceptor에서 생성된 viewName: " + viewName);
+
+		if (viewName == null || viewName.isEmpty()) {
+	        viewName = "/board/boardView"; // 기본값 설정
+	    }
+		
 		return viewName;
 
 	}
@@ -126,6 +135,24 @@ public class BoardController{
 		}
 
 	}
+	
+	
+	@RequestMapping(value = "/board/latestNotices.do")
+	public String latestNotices(Model model) throws Exception {
+	    // 최신 공지사항 3개를 가져옴
+	    List<Board> latestNotices = boardService.getLatestNotices();
+
+	    System.out.println("Latest Notices: " + latestNotices);
+
+	    // 모델에 추가
+	    model.addAttribute("latestNotices", latestNotices);
+
+	    // JSP 파일 반환
+	    return "common/side"; // side.jsp 페이지
+	}
+
+	
+	
 
 	//AJAX 호출 (게시글 등록, 수정)
 	@RequestMapping(value="/board/save", method=RequestMethod.POST)
@@ -136,8 +163,8 @@ public class BoardController{
 		Map<String, Object> retVal = new HashMap<String, Object>();
 
 		//패스워드 암호화
-		ShaPasswordEncoder encoder = new ShaPasswordEncoder(256);
-		String password = encoder.encodePassword(paramMap.get("password").toString(), null);
+		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+		String password = encoder.encode(paramMap.get("password").toString());
 		paramMap.put("password", password);
 
 		//정보입력
@@ -164,8 +191,8 @@ public class BoardController{
 		Map<String, Object> retVal = new HashMap<String, Object>();
 
 		//패스워드 암호화
-		ShaPasswordEncoder encoder = new ShaPasswordEncoder(256);
-		String password = encoder.encodePassword(paramMap.get("password").toString(), null);
+		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+		String password = encoder.encode(paramMap.get("password").toString());
 		paramMap.put("password", password);
 
 		//정보입력
@@ -191,8 +218,8 @@ public class BoardController{
 		Map<String, Object> retVal = new HashMap<String, Object>();
 
 		//패스워드 암호화
-		ShaPasswordEncoder encoder = new ShaPasswordEncoder(256);
-		String password = encoder.encodePassword(paramMap.get("password").toString(), null);
+		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+		String password = encoder.encode(paramMap.get("password").toString());
 		paramMap.put("password", password);
 
 		//정보입력
@@ -218,9 +245,9 @@ public class BoardController{
 		Map<String, Object> retVal = new HashMap<String, Object>();
 
 		//패스워드 암호화
-		ShaPasswordEncoder encoder = new ShaPasswordEncoder(256);
-		String password = encoder.encodePassword(paramMap.get("reply_password").toString(), null);
-		paramMap.put("reply_password", password);
+		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+		String password = encoder.encode(paramMap.get("password").toString());
+		paramMap.put("password", password);
 
 		//정보입력
 		int result = boardService.regReply(paramMap);
@@ -248,9 +275,9 @@ public class BoardController{
 		Map<String, Object> retVal = new HashMap<String, Object>();
 
 		//패스워드 암호화
-		ShaPasswordEncoder encoder = new ShaPasswordEncoder(256);
-		String password = encoder.encodePassword(paramMap.get("reply_password").toString(), null);
-		paramMap.put("reply_password", password);
+		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+		String password = encoder.encode(paramMap.get("password").toString());
+		paramMap.put("password", password);
 
 		//정보입력
 		int result = boardService.delReply(paramMap);
@@ -275,9 +302,9 @@ public class BoardController{
 		Map<String, Object> retVal = new HashMap<String, Object>();
 
 		//패스워드 암호화
-		ShaPasswordEncoder encoder = new ShaPasswordEncoder(256);
-		String password = encoder.encodePassword(paramMap.get("reply_password").toString(), null);
-		paramMap.put("reply_password", password);
+		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+		String password = encoder.encode(paramMap.get("password").toString());
+		paramMap.put("password", password);
 
 		//정보입력
 		boolean check = boardService.checkReply(paramMap);
@@ -303,9 +330,9 @@ public class BoardController{
 		Map<String, Object> retVal = new HashMap<String, Object>();
 
 		//패스워드 암호화
-		ShaPasswordEncoder encoder = new ShaPasswordEncoder(256);
-		String password = encoder.encodePassword(paramMap.get("reply_password").toString(), null);
-		paramMap.put("reply_password", password);
+		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+		String password = encoder.encode(paramMap.get("password").toString());
+		paramMap.put("password", password);
 
 		System.out.println(paramMap);
 

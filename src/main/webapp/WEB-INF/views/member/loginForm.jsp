@@ -1,7 +1,12 @@
+<%@page import="java.net.URLEncoder"%>
 <%@ page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8"
 	 isELIgnored="false" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ page import="java.net.URLEncoder" %>
+<%@ page import="java.security.SecureRandom" %>
+<%@ page import="java.math.BigInteger" %>
+
 <c:set var="contextPath"  value="${pageContext.request.contextPath}"  />
 <!DOCTYPE html >
 <html>
@@ -21,8 +26,9 @@ function result(){
 </c:if>
 </head>
 <body>
+ 
 	<H3>회원 로그인 창</H3>
-	<DIV id="detail_table">
+	<DIV id="detail_table"></DIV>
 	<form action="${contextPath}/member/login.do" method="post">
 		<TABLE>
 			<TBODY>
@@ -39,6 +45,12 @@ function result(){
 		<br><br>
 		<INPUT	type="submit" value="로그인"> 
 		<INPUT type="button" value="초기화">
+		<br><br>
+		
+	<!-- 네이버 로그인 -->
+		<a href="https://nid.naver.com/oauth2.0/authorize?&client_id=JyvgOzKzRCnvAIRqpVXo&response_type=code&redirect_uri=http://localhost:8090/BookPlus/member/NaverCallback.do&state=YOUR_STATE">
+			<img height="40" width="100" src="http://static.nid.naver.com/oauth/small_g_in.PNG"/>
+		</a><br>
 		
 		<Br><br>
 		   <a href="#">아이디 찾기</a>  | 
