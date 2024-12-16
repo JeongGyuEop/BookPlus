@@ -187,12 +187,11 @@
             reply_id = #{reply_id}
     </update>
     
-	<select id="findMemberIdByName" parameterType="String" resultType="String">
+<!-- 	<select id="findMemberIdByName" parameterType="String" resultType="String">
 	    SELECT member_id
 	    FROM T_SHOPPING_MEMBER
 	    WHERE member_name = #{memberName}
-	</select>
-
+	</select> -->
 
 	
 </mapper>

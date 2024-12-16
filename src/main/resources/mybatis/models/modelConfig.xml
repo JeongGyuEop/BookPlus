@@ -13,6 +13,7 @@
     <typeAlias type="com.bookplus.API.vo.APIweatherVO" alias="weatherVO" />
     <typeAlias type="com.bookplus.board.vo.Board" alias="Board" />
     <typeAlias type="com.bookplus.board.vo.BoardReply" alias="BoardReply" />
+
   </typeAliases>
 </configuration>
 

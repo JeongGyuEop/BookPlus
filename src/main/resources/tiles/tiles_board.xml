@@ -4,7 +4,7 @@
        "http://tiles.apache.org/dtds/tiles-config_2_0.dtd">
 <tiles-definitions>
     <definition name="/board/boardList" extends="baseLayout">
-       <put-attribute name="title" value="내 장바구니 정보" />
+       <put-attribute name="title" value="공지사항" />
        <put-attribute name="body" value="/WEB-INF/views/board/boardList.jsp" />
     </definition>
     
@@ -19,8 +19,7 @@
     </definition>
  
     <definition name="map/map" template="/WEB-INF/views/map/map.jsp" />
-    
-    
+ 
 </tiles-definitions>
 
 

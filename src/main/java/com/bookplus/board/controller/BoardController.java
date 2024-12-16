@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.encoding.ShaPasswordEncoder;
+//import org.springframework.security.authentication.encoding.ShaPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,7 +29,8 @@ public class BoardController{
 
 	@Autowired
 	BoardService boardService;
-
+	
+	
 	//게시글 리스트 조회
 	@RequestMapping(value = "/board/boardList.do")
 	public String boardList(@RequestParam Map<String, Object> paramMap, Model model,
@@ -60,12 +61,10 @@ public class BoardController{
 		paramMap.put("start", startLimitPage);
 
 		//MYSQL
-		//paramMap.put("end", visiblePages);
+		paramMap.put("end", visiblePages);
 
 		//ORACLE
-		paramMap.put("end", startLimitPage+visiblePages);
-		
-		
+		//paramMap.put("end", startLimitPage+visiblePages);
 		//jsp 에서 보여줄 정보 추출
 		model.addAttribute("startPage", startPage+"");//현재 페이지      
 		model.addAttribute("totalCnt", totalCnt);//전체 게시물수
@@ -101,6 +100,12 @@ public class BoardController{
 		//  /board/view 뷰 주소 얻기
 		String viewName=(String)request.getAttribute("viewName"); 
 			
+		System.out.println("ViewNameInterceptor에서 생성된 viewName: " + viewName);
+
+		if (viewName == null || viewName.isEmpty()) {
+	        viewName = "/board/boardView"; // 기본값 설정
+	    }
+		
 		return viewName;
 
 	}
@@ -116,7 +121,7 @@ public class BoardController{
 		 
 	    // 작성자 이름 전달
 	    if (membervo != null) {
-	        model.addAttribute("userID", membervo.getMember_id()); // 사용자 이름
+	        model.addAttribute("userId", membervo.getMember_id()); // 사용자 이름
 	        model.addAttribute("userName", membervo.getMember_name()); // 사용자 이름
 	    }
 		 
@@ -127,7 +132,7 @@ public class BoardController{
 		if(Referer!=null){//URL로 직접 접근 불가
 			if(paramMap.get("id") != null){ //게시글 수정
 				if(Referer.indexOf("/board/view.do")>-1){
-
+					System.out.println( boardService.getContentView(paramMap).toString());
 					//정보를 가져온다.
 					model.addAttribute("boardView", boardService.getContentView(paramMap));
 					return "/board/edit";
@@ -156,25 +161,17 @@ public class BoardController{
 		Map<String, Object> retVal = new HashMap<String, Object>();
 
 		//패스워드 암호화
-		ShaPasswordEncoder encoder = new ShaPasswordEncoder(256);
-		String password = encoder.encodePassword(paramMap.get("password").toString(), null);
-		paramMap.put("password", password);
+//		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+//		String password = encoder.encode(paramMap.get("password").toString());
+//		paramMap.put("password", password);
 		System.out.println(paramMap);
 
 		// 작성자 이름 (member_name) 가져오기
-	    String memberName = (String) paramMap.get("writer");
-	    System.out.println("유저이름2"+memberName);
-	    
-		 // member_name에 해당하는 member_id 조회
-	    String memberId = boardService.getMemberIdByName(memberName);
-	    if (memberId == null) {
-	        retVal.put("code", "FAIL");
-	        retVal.put("message", "유효하지 않은 작성자 이름입니다.");
-	        return retVal;
-	    }
+	    String userId = (String) paramMap.get("userId");
+	    System.out.println(userId);
 
 	    // writer를 member_id로 설정
-	    paramMap.put("writer", memberId);
+	    paramMap.put("writer", userId);
 
 		
 		//정보입력
@@ -206,9 +203,9 @@ public class BoardController{
 		Map<String, Object> retVal = new HashMap<String, Object>();
 
 		//패스워드 암호화
-		ShaPasswordEncoder encoder = new ShaPasswordEncoder(256);
-		String password = encoder.encodePassword(paramMap.get("password").toString(), null);
-		paramMap.put("password", password);
+//		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+//		String password = encoder.encode(paramMap.get("password").toString());
+//		paramMap.put("password", password);
 
 		//정보입력
 		int result = boardService.delBoard(paramMap);
@@ -233,9 +230,9 @@ public class BoardController{
 		Map<String, Object> retVal = new HashMap<String, Object>();
 
 		//패스워드 암호화
-		ShaPasswordEncoder encoder = new ShaPasswordEncoder(256);
-		String password = encoder.encodePassword(paramMap.get("password").toString(), null);
-		paramMap.put("password", password);
+//		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+//		String password = encoder.encode(paramMap.get("password").toString());
+//		paramMap.put("password", password);
 
 		//정보입력
 		int result = boardService.getBoardCheck(paramMap);
@@ -260,9 +257,9 @@ public class BoardController{
 		Map<String, Object> retVal = new HashMap<String, Object>();
 
 		//패스워드 암호화
-		ShaPasswordEncoder encoder = new ShaPasswordEncoder(256);
-		String password = encoder.encodePassword(paramMap.get("reply_password").toString(), null);
-		paramMap.put("reply_password", password);
+//		ShaPasswordEncoder encoder = new ShaPasswordEncoder(256);
+//		String password = encoder.encodePassword(paramMap.get("reply_password").toString(), null);
+//		paramMap.put("reply_password", password);
 
 		// 세션에서 로그인한 사용자 정보 가져오기
 	    MemberVO member = (MemberVO) session.getAttribute("memberInfo");
@@ -274,7 +271,6 @@ public class BoardController{
 
 	    // reply_writer에 로그인한 사용자의 ID 설정
 	    paramMap.put("reply_writer", member.getMember_id());
-		
 		
 		//정보입력
 		int result = boardService.regReply(paramMap);
@@ -302,9 +298,9 @@ public class BoardController{
 		Map<String, Object> retVal = new HashMap<String, Object>();
 
 		//패스워드 암호화
-		ShaPasswordEncoder encoder = new ShaPasswordEncoder(256);
-		String password = encoder.encodePassword(paramMap.get("reply_password").toString(), null);
-		paramMap.put("reply_password", password);
+//		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+//		String password = encoder.encode(paramMap.get("password").toString());
+//		paramMap.put("password", password);
 
 		//정보입력
 		int result = boardService.delReply(paramMap);
@@ -330,9 +326,9 @@ public class BoardController{
 		Map<String, Object> retVal = new HashMap<String, Object>();
 
 		//패스워드 암호화
-		ShaPasswordEncoder encoder = new ShaPasswordEncoder(256);
-		String password = encoder.encodePassword(paramMap.get("reply_password").toString(), null);
-		paramMap.put("reply_password", password);
+//		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+//		String password = encoder.encode(paramMap.get("password").toString());
+//		paramMap.put("password", password);
 
 		//정보입력
 		boolean check = boardService.checkReply(paramMap);
@@ -358,9 +354,9 @@ public class BoardController{
 		Map<String, Object> retVal = new HashMap<String, Object>();
 
 		//패스워드 암호화
-		ShaPasswordEncoder encoder = new ShaPasswordEncoder(256);
-		String password = encoder.encodePassword(paramMap.get("reply_password").toString(), null);
-		paramMap.put("reply_password", password);
+//		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+//		String password = encoder.encode(paramMap.get("password").toString());
+//		paramMap.put("password", password);
 
 		System.out.println(paramMap);
 

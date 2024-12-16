@@ -107,6 +107,5 @@ public class BoardDaoImpl implements BoardDao{
 	public String findMemberIdByName(String memberName) {
 	    return sqlSession.selectOne("mapper.board.findMemberIdByName", memberName);
 	}
-	
-	
+
 }

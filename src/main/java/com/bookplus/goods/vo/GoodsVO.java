@@ -11,11 +11,11 @@ public class GoodsVO {
 	private String goods_publisher;
 	private String goods_sort;
 	private int    goods_sales_price;
-	private int    goods_point;
+	private int    goods_point;     // ?
 	private Date    goods_published_date;
 	private int    goods_total_page;
 	private String goods_isbn;
-	private String goods_delivery_price;
+	private int goods_delivery_price;
 	private Date goods_delivery_date;
 	private String goods_fileName;
 	private String goods_status;
@@ -135,11 +135,20 @@ public class GoodsVO {
 		this.goods_isbn = goods_isbn;
 	}
 
-	public String getGoods_delivery_price() {
+//	public String getGoods_delivery_price() {
+//		return goods_delivery_price;
+//	}
+//
+//	public void setGoods_delivery_price(String goods_delivery_price) {
+
+
+	public int getGoods_delivery_price() {
 		return goods_delivery_price;
 	}
 
-	public void setGoods_delivery_price(String goods_delivery_price) {
+
+
+	public void setGoods_delivery_price(int goods_delivery_price) {
 		this.goods_delivery_price = goods_delivery_price;
 	}
 
