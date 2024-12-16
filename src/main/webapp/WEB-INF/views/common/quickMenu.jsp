@@ -12,25 +12,6 @@
 	
 	
 	var SERVER_URL = "${contextPath}/thumbnails.do";//이변수는 FileDownLoadController에서 썸네일이미지를 만들고 가져오기 위한 URL을 설정합니다.
-	 
-	// 중복 제거 로직 추가
-    var uniqueGoodsIds = [];
-    window.onload = function () {
-        var hiddenGoodsIds = document.getElementsByName("h_goods_id");
-        var hiddenFileNames = document.getElementsByName("h_goods_fileName");
-
-        for (var i = 0; i < hiddenGoodsIds.length; i++) {
-            if (!uniqueGoodsIds.includes(hiddenGoodsIds[i].value)) {
-                uniqueGoodsIds.push(hiddenGoodsIds[i].value);
-            } else {
-                hiddenGoodsIds[i].parentElement.removeChild(hiddenGoodsIds[i]);
-                hiddenFileNames[i].parentElement.removeChild(hiddenFileNames[i]);
-            }
-        }
-
-        console.log("중복 제거된 상품 ID 목록: ", uniqueGoodsIds);
-    };
-
 
 	//다음 을 클릭하면 호출되는 함수로
 	//빠른 퀵 메뉴에서 <hidden>태그에 저장된 상품들의 정보를 가져와 이미지를 표시합니다. 
