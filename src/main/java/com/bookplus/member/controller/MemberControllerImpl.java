@@ -48,14 +48,14 @@ public class MemberControllerImpl extends BaseController implements MemberContro
 		 //로그인 요청을 위해 입력한 아이디와 비밀번호가 DB에 저장되어 있는지 확인을 위해
 		 //입력한 아이디와 비밀번호로 회원을 조회 해옴
 		 //조회가 되면 로그인 처리 하고 조회가 되지 않으면 로그인 처리 하면 안됨
-		 memberVO=memberService.login(loginMap);
+		 memberVO = memberService.login(loginMap);
 		 
 		 //조회가 되고!! 조회한 회원의 아이디가 존재하면?
 		if(memberVO!= null && memberVO.getMember_id()!=null){
 			
 			//조회한 회원 정보를 가져와 isLogOn 속성을 true로 설정하고 
 			//memberInfo속성으로  조회된 회원 정보를  session에  저장합니다. 
-			HttpSession session=request.getSession();
+			HttpSession session = request.getSession();
 			session.setAttribute("isLogOn", true);
 			session.setAttribute("memberInfo",memberVO);
 			

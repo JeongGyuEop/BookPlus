@@ -58,10 +58,10 @@ public class MyPageControllerImpl extends BaseController  implements MyPageContr
 		
 		//로그인한 상품 구매자의 정보를 session에서 얻는다.
 		memberVO=(MemberVO)session.getAttribute("memberInfo"); 
-		String member_id=memberVO.getMember_id();
+		String member_id = memberVO.getMember_id();
 		
 		//로그인한 회원 ID를 이용해 주문한 상품을 조회 합니다. 
-		List<OrderVO> myOrderList=myPageService.listMyOrderGoods(member_id);
+		List<OrderVO> myOrderList = myPageService.listMyOrderGoods(member_id);
 		
 		//주문 취소시 결과 메세지를 JSP로 전달하기 위해 저장 
 		mav.addObject("message", message);

@@ -4,7 +4,7 @@
     %>
 <%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles" %>    
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-
+<% String contextPath = request.getContextPath(); %>
 
 <c:set var="contextPath"  value="${pageContext.request.contextPath}" />
 
@@ -166,6 +166,7 @@
 			<input name="searchWord" class="main_input" type="text" value="" onKeyUp="keywordSearch()"> 
 			<input type="submit" name="search" class="btn1"  value="검 색" >
 		</form>
+		<a href="<%=contextPath%>/API/weather/weather">오늘 날씨에 꼭 맞는 책은?</a>
 	</div>
    <div id="suggest">
         <div id="suggestList"></div>
