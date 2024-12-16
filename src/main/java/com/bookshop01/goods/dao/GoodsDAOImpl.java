@@ -57,7 +57,22 @@ public class GoodsDAOImpl  implements GoodsDAO{
 		return imageList;
 	}
 	
+	
+	 // Goods 정보를 삽입
+    @Override
+    public void insertGoods(GoodsVO goodsVO) throws Exception {
+        sqlSession.insert("mapper.goods.insertGoods", goodsVO);
+    }
+
+    // Image 정보를 삽입
+    @Override
+    public void insertImageFile(ImageFileVO imageFileVO) throws Exception {
+        sqlSession.insert("mapper.goods.insertNewGoodsImage", imageFileVO);
+    }
+
 }
+
+
 
 
 

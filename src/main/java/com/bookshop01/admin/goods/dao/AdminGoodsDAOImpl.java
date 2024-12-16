@@ -101,11 +101,6 @@ public class AdminGoodsDAOImpl  implements AdminGoodsDAO{
 		}
 		
 	}
-
-
-
-
-
 	
-
 }
+

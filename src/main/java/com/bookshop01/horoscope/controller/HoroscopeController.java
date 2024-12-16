@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 
 import com.bookshop01.horoscope.service.HoroscopeService;  // URL 쿼리 파라미터를 메서드 파라미터로 바인딩하는 어노테이션입니다.
-import com.bookshop01.horoscope.service.TranslationService;
 
   // HoroscopeService 클래스를 사용하여 실제 운세 데이터를 가져오는 서비스 클래스입니다.
 
@@ -19,11 +18,8 @@ import com.bookshop01.horoscope.service.TranslationService;
 
 	    @Autowired  // 스프링이 HoroscopeService 객체를 자동으로 주입해주도록 합니다.
 	    private HoroscopeService horoscopeService;  // HoroscopeService 객체를 선언합니다. 이 객체는 실제 운세 데이터를 가져오는 역할을 합니다.
-	
-		 @Autowired 
-		 private TranslationService translationService; // 번역 서비스 주입
-		
-		 
+
+	    
 	    @GetMapping("/view.do")
 	    @ResponseBody  // 응답 데이터를 직접 반환 (뷰 이름이 아닌 데이터만 반환)
 	    public String viewHoroscope(@RequestParam String sign) {

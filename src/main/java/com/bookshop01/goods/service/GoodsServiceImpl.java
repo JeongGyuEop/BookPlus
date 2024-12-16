@@ -68,8 +68,28 @@ public class GoodsServiceImpl implements GoodsService{
 	}
 	
 	
-}
+	
+	//API
+	@Override
+	@Transactional
+	public int saveGoods(GoodsVO goodsVO) throws Exception {
+	    // 상품 정보 저장
+	    goodsDAO.insertGoods(goodsVO);
 
+	    // 자동 생성된 goods_id 반환
+	    return goodsVO.getGoods_id();
+	}
+	
+		
+	@Override
+	public void saveImageFiles(List<ImageFileVO> imageFiles, int goodsId) throws Exception {
+	    for (ImageFileVO imageFileVO : imageFiles) {
+	        imageFileVO.setGoods_id(goodsId);  // 이미지의 goods_id 설정
+	        goodsDAO.insertImageFile(imageFileVO);  // 이미지 파일 DB에 저장
+	    }
+	}
+	
+}
 
 
 
