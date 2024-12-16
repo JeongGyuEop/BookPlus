@@ -5,8 +5,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class OrderVO {
     private int orderSeqNum;       // 주문 상품 일련번호
-    private int orderId;           // 주문 번호
-    private String memberId;       // 주문자 아이디
+    private long orderId;           // 주문 번호
+    private String orderMemberId;       // 주문자 아이디
+    private String orderMemberName;       // 주문자 아이디
     private int goodsId;           // 상품 번호
     private String goodsTitle;     // 상품 이름
     private int orderGoodsQty;     // 주문 수량
@@ -31,23 +32,31 @@ public class OrderVO {
         this.orderSeqNum = orderSeqNum;
     }
 
-    public int getOrderId() {
+    public long getOrderId() {
         return orderId;
     }
 
-    public void setOrderId(int orderId) {
+    public void setOrderId(long orderId) {
         this.orderId = orderId;
     }
 
-    public String getMemberId() {
-        return memberId;
-    }
+    public String getOrderMemberId() {
+		return orderMemberId;
+	}
 
-    public void setMemberId(String memberId) {
-        this.memberId = memberId;
-    }
+	public void setOrderMemberId(String orderMemberId) {
+		this.orderMemberId = orderMemberId;
+	}
 
-    public int getGoodsId() {
+	public String getOrderMemberName() {
+		return orderMemberName;
+	}
+
+	public void setOrderMemberName(String orderMemberName) {
+		this.orderMemberName = orderMemberName;
+	}
+
+	public int getGoodsId() {
         return goodsId;
     }
 

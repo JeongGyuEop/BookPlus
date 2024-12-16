@@ -3,6 +3,9 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %> 
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%
+	String contextPath = request.getContextPath();
+%>
 
 <c:set var="contextPath" value="${pageContext.request.contextPath}" />
 <!-- 주문자 휴대폰 번호 -->
@@ -83,7 +86,7 @@
 	                        document.getElementById("jibunAddress").value + " " +
 	                        document.getElementById("namujiAddress").value;
 	        var buyerPostcode = document.getElementById("zipcode").value;
-	        var merchantUid = "ORD_" + document.getElementById("h_goods_id").value + "_" + new Date().getTime();
+	        var merchantUid = new Date().getTime();
 	        var amount = document.getElementById("h_final_total_Price").value;
 	        var goodsName = document.getElementById("h_goods_title").value;
 
@@ -111,13 +114,14 @@
 		    }, function(rsp) {
 		        if (rsp.success) {
 		            alert("결제가 성공적으로 완료되었습니다.");
+		            var contextPath = '<%=request.getContextPath()%>'; // JSP에서 contextPath 가져오기
 		            
 		            $.ajax({
 		                type: "POST",
-		                url: "/order/paySuccess", // 서버의 결제 성공 처리 API
+		                url: contextPath + "/order/paySuccess", // 서버의 결제 성공 처리 API
 		                contentType: "application/json",
 		                data: JSON.stringify({
-		                	 // 기본 결제 정보
+		                	// 기본 결제 정보
 		                    imp_uid: rsp.imp_uid, // 아임포트에서 생성한 결제 고유 ID
 		                    merchant_uid: rsp.merchant_uid, // 상점에서 생성한 고유 주문 번호
 		                    amount: rsp.paid_amount, // 실제 결제된 금액
@@ -126,6 +130,8 @@
 
 		                    // 주문 관련 정보
 		                    order_id: rsp.merchant_uid, // 주문 고유 번호 (merchant_uid와 동일)
+		                	order_member_id: document.getElementById("order_member_id").value,
+		                	order_member_name: document.getElementById("order_member_name").value,
 		                    goods_id: document.getElementById("h_goods_id").value, // 상품 ID
 		                    goods_title: document.getElementById("h_goods_title").value, // 상품 제목
 		                    order_goods_qty: document.getElementById("h_order_goods_qty").value, // 주문 수량
@@ -396,7 +402,6 @@
 					<input type="hidden" id="h_goods_id" name="h_goods_id" value="${item.goods_id}">
 					<input type="hidden" id="h_goods_title" name="h_goods_title" value="${item.goods_title}">
 					<input type="hidden" id="h_order_goods_qty" name="h_order_goods_qty" value="${orderQtyList[status.index]}">
-					<input type="hidden" id="h_final_total_Price" value="${final_total_order_price}">
 					<input type="hidden" id="h_total_order_goods_qty" value="${total_order_goods_qty}">
 				</c:forEach>
 			</tbody>
@@ -503,7 +508,9 @@
 				<tbody>
 					<tr class="dot_line">
 						<td><h2>이름</h2></td>
-						<td><input type="text" id="order_name" value="${memberInfo.member_name}" size="15" /></td>
+						<td><input type="text" id="order_name" value="${memberInfo.member_name}" size="15" />
+							<input type="hidden" id="order_member_id" value="${memberInfo.member_id}" />
+							<input type="hidden" id="order_member_name" value="${memberInfo.member_name}" /></td>
 					</tr>
 					<tr class="dot_line">
 						<td><h2>핸드폰</h2></td>

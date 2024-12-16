@@ -6,7 +6,7 @@ public class PaymentVO {
     private int amount;            // 결제 금액
     private String payMethod;      // 결제 방식
     private String paymentStatus;  // 결제 상태
-    private int orderId;           // 주문 번호 (외래 키)
+    private long orderId;           // 주문 번호 (외래 키)
 
     // Getters and Setters
     public String getImpUid() {
@@ -49,11 +49,11 @@ public class PaymentVO {
         this.paymentStatus = paymentStatus;
     }
 
-    public int getOrderId() {
+    public long getOrderId() {
         return orderId;
     }
 
-    public void setOrderId(int orderId) {
+    public void setOrderId(long orderId) {
         this.orderId = orderId;
     }
 }

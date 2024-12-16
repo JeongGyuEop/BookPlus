@@ -8,7 +8,8 @@
     <resultMap id="orderResult" type="OrderVO">
         <result property="orderSeqNum" column="order_seq_num" />
         <result property="orderId" column="order_id" />
-        <result property="memberId" column="member_id" />
+        <result property="orderMemberId" column="order_member_id" />
+        <result property="orderMemberName" column="order_member_name" />
         <result property="goodsId" column="goods_id" />
         <result property="goodsTitle" column="goods_title" />
         <result property="orderGoodsQty" column="order_goods_qty" />
@@ -36,15 +37,15 @@
     <insert id="insertOrder" parameterType="OrderVO">
     	<![CDATA[
 		    INSERT INTO T_SHOPPING_ORDER (
-		        order_id, goods_id, goods_title, order_goods_qty,
+		        order_id, order_member_id, order_member_name, goods_id, goods_title, order_goods_qty,
 		        receiver_name, receiver_hp1, receiver_hp2, receiver_hp3,
 		        delivery_address, delivery_message, total_price, pay_method,
 		        payment_status, order_date
 		    ) VALUES (
-		        #{orderId}, #{goodsId}, #{goodsTitle}, #{orderGoodsQty},
+		        #{orderId}, #{orderMemberId}, #{orderMemberName}, #{goodsId}, #{goodsTitle}, #{orderGoodsQty},
 		        #{receiverName}, #{receiverHp1}, #{receiverHp2}, #{receiverHp3},
 		        #{deliveryAddress}, #{deliveryMessage}, #{totalPrice}, #{payMethod},
-		        #{paymentStatus}, NOW(),
+		        #{paymentStatus}, NOW()
 		    )
 	    ]]>
 	</insert>

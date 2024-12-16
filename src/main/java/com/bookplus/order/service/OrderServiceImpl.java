@@ -49,7 +49,9 @@ public class OrderServiceImpl implements OrderService {
         try {
             // 주문 정보 생성
             OrderVO orderVO = new OrderVO();
-            orderVO.setOrderId(Integer.parseInt(requestData.get("order_id").toString()));
+            orderVO.setOrderId(Long.parseLong(requestData.get("order_id").toString()));
+            orderVO.setOrderMemberId((String) requestData.get("order_member_id"));
+            orderVO.setOrderMemberName((String) requestData.get("order_member_name"));
             orderVO.setGoodsId(Integer.parseInt(requestData.get("goods_id").toString()));
             orderVO.setGoodsTitle((String) requestData.get("goods_title"));
             orderVO.setOrderGoodsQty(Integer.parseInt(requestData.get("order_goods_qty").toString()));
