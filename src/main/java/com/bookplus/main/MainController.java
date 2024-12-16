@@ -9,7 +9,6 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -79,6 +78,5 @@ public class MainController extends BaseController {
 				"흐름3. 그 후 tiles_main.xml 파일에 작성한 <definition name=/main/main ...> 태그의 name속성값 /main/main이 ModelAndView에 저장 했던 /main/main과 일치하면 해당 뷰템플릿을 메인화면으로 보여줍니다.");
 
 		return mav;
-
 	}
 }

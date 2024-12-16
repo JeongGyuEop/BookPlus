@@ -23,169 +23,140 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.bookplus.goods.dao.GoodsDAO;
 import com.bookplus.goods.vo.GoodsVO;
-import com.bookplus.goods.vo.ImageFileVO;
 
 @Service("goodsService")
 @Transactional(propagation = Propagation.REQUIRED)
 public class GoodsServiceImpl implements GoodsService {
-	
-    @Autowired
-    private GoodsDAO goodsDAO;
 
-    public Map<String, List<GoodsVO>> listGoods() throws Exception {
+	@Autowired
+	private GoodsDAO goodsDAO;
 
-        Map<String, List<GoodsVO>> goodsMap = new HashMap<String, List<GoodsVO>>();
+	public Map<String, List<GoodsVO>> listGoods() throws Exception {
 
-        List<GoodsVO> goodsList = goodsDAO.selectGoodsList("bestseller");
-        goodsMap.put("bestseller", goodsList);
+		Map<String, List<GoodsVO>> goodsMap = new HashMap<String, List<GoodsVO>>();
 
-        goodsList = goodsDAO.selectGoodsList("newbook");
-        goodsMap.put("newbook", goodsList);
+		List<GoodsVO> goodsList = goodsDAO.selectGoodsList("bestseller");
+		goodsMap.put("bestseller", goodsList);
 
-        goodsList = goodsDAO.selectGoodsList("steadyseller");
-        goodsMap.put("steadyseller", goodsList);
+		goodsList = goodsDAO.selectGoodsList("newbook");
+		goodsMap.put("newbook", goodsList);
 
-        return goodsMap;
-    }
+		goodsList = goodsDAO.selectGoodsList("steadyseller");
+		goodsMap.put("steadyseller", goodsList);
 
-    public Map goodsDetail(String _goods_id) throws Exception {
+		return goodsMap;
+	}
 
-        Map goodsMap = new HashMap();
+	public Map goodsDetail(String _goods_id) throws Exception {
 
-        GoodsVO goodsVO = goodsDAO.selectGoodsDetail(_goods_id);
+		Map goodsMap = new HashMap();
 
-        goodsMap.put("goodsVO", goodsVO);
+		GoodsVO goodsVO = goodsDAO.selectGoodsDetail(_goods_id);
 
-        List<ImageFileVO> imageList = goodsDAO.selectGoodsDetailImage(_goods_id);
+		goodsMap.put("goodsVO", goodsVO);
 
-        goodsMap.put("imageList", imageList);
+		List<GoodsVO> imageList = goodsDAO.selectGoodsDetailImage(_goods_id);
 
-        return goodsMap;
-    }
+		goodsMap.put("imageList", imageList);
 
-    public List<String> keywordSearch(String keyword) throws Exception {
+		return goodsMap;
+	}
 
-        List<String> list = goodsDAO.selectKeywordSearch(keyword);
-        return list;
-    }
+	public List<String> keywordSearch(String keyword) throws Exception {
 
-    public List<GoodsVO> searchGoods(String searchWord) throws Exception {
-        List goodsList = goodsDAO.selectGoodsBySearchWord(searchWord);
-        return goodsList;
-    }
+		List<String> list = goodsDAO.selectKeywordSearch(keyword);
+		return list;
+	}
 
-    @Override
-    @Transactional
-    public int saveGoods(GoodsVO goodsVO) throws Exception {
-        goodsDAO.insertGoods(goodsVO);
+	public List<GoodsVO> searchGoods(String searchWord) throws Exception {
+		List goodsList = goodsDAO.selectGoodsBySearchWord(searchWord);
+		return goodsList;
+	}
 
-        return goodsVO.getGoods_id();
-    }
+	/*
+	 * @Override
+	 * 
+	 * @Transactional public int saveGoods(GoodsVO goodsVO) throws Exception {
+	 * goodsDAO.insertGoods(goodsVO);
+	 * 
+	 * return goodsVO.getGoods_isbn(); }
+	 * 책 id return 하는 메서드
+	 */
 
-    @Override
-    public void saveImageFiles(List<ImageFileVO> imageFiles, int goodsId) throws Exception {
-        for (ImageFileVO imageFileVO : imageFiles) {
-            imageFileVO.setGoods_id(goodsId);
-            goodsDAO.insertImageFile(imageFileVO);
-        }
-    }
+	/*
+	 * @Override public void saveImageFiles(List<ImageFileVO> imageFiles, int
+	 * goodsId) throws Exception { for (GoodsVO goodsImage : goodsImages) {
+	 * GoodsVO.setGoods_id(goodsId); goodsDAO.insertImageFile(GoodsVO); } }
+	 * 이미지 파일 저장하기
+	 */
 
-    // @GetMapping("/fetchAndSave") 대신 사용
-    @RequestMapping(value = "/fetchAndSave", method = RequestMethod.GET)
-    @ResponseBody
-    public String fetchAndSaveGoods() {
+	private String fetchApiData(String apiUrl) throws IOException {
+		URL url = new URL(apiUrl);
+		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+		connection.setRequestMethod("GET");
 
-        String apiUrl = "https://www.aladin.co.kr/ttb/api/ItemSearch.aspx?ttbkey=ttbsmilesna171505001&Query=IT&SearchTarget=Book&Output=js";
+		BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+		StringBuilder response = new StringBuilder();
+		String line;
 
-        try {
-            String jsonResponse = fetchApiData(apiUrl);
+		while ((line = reader.readLine()) != null) {
+			response.append(line);
+		}
 
-            List<GoodsVO> goodsList = parseJsonData(jsonResponse);
-            JSONArray items = new JSONObject(jsonResponse).getJSONArray("item");
+		reader.close();
+		return response.toString();
+	}
 
-            for (int i = 0; i < goodsList.size(); i++) {
-                GoodsVO goodsVO = goodsList.get(i);
+	private List<GoodsVO> parseJsonData(String jsonData) {
+		List<GoodsVO> goodsList = new ArrayList<>();
+		JSONObject jsonObject = new JSONObject(jsonData);
+		JSONArray items = jsonObject.getJSONArray("item");
 
-                saveGoods(goodsVO);
+		for (int i = 0; i < items.length(); i++) {
+			JSONObject item = items.getJSONObject(i);
+			GoodsVO goodsVO = new GoodsVO();
 
-                int goodsId = goodsVO.getGoods_id();
+			goodsVO.setGoods_title(item.getString("goods_title"));
+			goodsVO.setGoods_author(item.getString("goods_author"));
+			goodsVO.setGoods_pubDate(java.sql.Date.valueOf(item.getString("goods_pubDate")));
+			goodsVO.setGoods_isbn(item.getString("goods_isbn"));
+			goodsVO.setGoods_priceStandard(item.optInt("goods_priceStandard", 0));
+			goodsVO.setGoods_priceSales(item.getInt("goods_priceSales"));
+			goodsVO.setGoods_categoryName(item.getString("goods_categoryName"));
+			goodsVO.setGoods_publisher(item.getString("goods_publisher"));
 
-                if (goodsId == 0) {
-                    throw new Exception("상품 저장 실패: goods_id가 생성되지 않았습니다.");
-                }
+			goodsList.add(goodsVO);
+		}
 
-                // 이미지 처리 관련 주석된 부분
-            }
+		return goodsList;
+	}
 
-            return "데이터 저장 성공";
-        } catch (Exception e) {
-            e.printStackTrace();
-            return "데이터 저장 실패: " + e.getMessage();
-        }
-    }
+	private List<GoodsVO> createImageFiles(String fileName) {
+		List<GoodsVO> imageFiles = new ArrayList<>();
 
-    private String fetchApiData(String apiUrl) throws IOException {
-        URL url = new URL(apiUrl);
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        connection.setRequestMethod("GET");
+		GoodsVO imageFileVO = new GoodsVO();
+		imageFileVO.setGoods_cover(fileName);
 
-        BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-        StringBuilder response = new StringBuilder();
-        String line;
+		imageFiles.add(imageFileVO);
 
-        while ((line = reader.readLine()) != null) {
-            response.append(line);
-        }
+		return imageFiles;
+	}
 
-        reader.close();
-        return response.toString();
-    }
+	@Override
+	public List<GoodsVO> fetchBookDetails() {
+		List<GoodsVO> goodsList = new ArrayList<GoodsVO>();
+		// 작업 공간
+		// 1. API 주소 요청
+		// 2. 받아온 xml을 파싱
+		// 3. 파싱 정보를 vo에 저장
+		return goodsList;
+	}
 
-    private List<GoodsVO> parseJsonData(String jsonData) {
-        List<GoodsVO> goodsList = new ArrayList<>();
-        JSONObject jsonObject = new JSONObject(jsonData);
-        JSONArray items = jsonObject.getJSONArray("item");
+	@Override
+	public boolean updateDatabase(List<GoodsVO> fetchBookDetails) {
+		// 작업 공간
+		// 1. List에 담겨서 온 vo정보를 dao에 넘김
+		return false;
+	}
 
-        for (int i = 0; i < items.length(); i++) {
-            JSONObject item = items.getJSONObject(i);
-            GoodsVO goodsVO = new GoodsVO();
-
-            goodsVO.setGoods_sort(item.getString("categoryName"));
-            goodsVO.setGoods_title(item.getString("title"));
-            goodsVO.setGoods_writer(item.getString("author"));
-            goodsVO.setGoods_publisher(item.getString("publisher"));
-            goodsVO.setGoods_price(item.optInt("priceStandard", 0));
-            goodsVO.setGoods_sales_price(item.getInt("priceSales"));
-            goodsVO.setGoods_published_date(java.sql.Date.valueOf(item.getString("pubDate")));
-            goodsVO.setGoods_isbn(item.getString("isbn13"));
-            goodsVO.setGoods_delivery_price(item.getInt("mileage"));
-
-            goodsList.add(goodsVO);
-        }
-
-        return goodsList;
-    }
-
-    private List<ImageFileVO> createImageFiles(String fileName) {
-        List<ImageFileVO> imageFiles = new ArrayList<>();
-
-        ImageFileVO imageFileVO = new ImageFileVO();
-        imageFileVO.setFileName(fileName);
-        imageFileVO.setReg_id("admin");
-        imageFileVO.setFileType("main");
-
-        imageFiles.add(imageFileVO);
-
-        return imageFiles;
-    }
-
-    @Override
-    public boolean updateDatabase() {
-        return false;
-    }
-
-    @Override
-    public boolean fetchBookDetails() {
-        return false;
-    }
 }

@@ -109,7 +109,7 @@ public class GoodsControllerImpl extends BaseController implements GoodsControll
 					GoodsVO _goodsBean = (GoodsVO) quickGoodsList.get(i);
 
 					// 상품 목록을 가져와 이미 존재하는 상품인지 비교 합니다.
-					if (goods_id.equals(_goodsBean.getGoods_id())) {
+					if (goods_id.equals(_goodsBean.getGoods_isbn())) {
 						// 이미 존재 할 경우 변수의 값을 true로 설정합니다.
 						already_existed = true;
 						break;
@@ -134,6 +134,8 @@ public class GoodsControllerImpl extends BaseController implements GoodsControll
 		session.setAttribute("quickGoodsListNum", quickGoodsList.size());
 	}
 
+	// 모두 재정렬 해줘야 됨
+	
 	/*
 	 * 참고.
 	 * 
@@ -215,15 +217,21 @@ public class GoodsControllerImpl extends BaseController implements GoodsControll
         Map<String, Object> response = new HashMap();
         try {
             // DB 갱신 로직 실행
-        	boolean fetchBookDetails = goodsService.fetchBookDetails();
-            boolean isUpdated = goodsService.updateDatabase();
+        	List<GoodsVO> fetchBookDetails = goodsService.fetchBookDetails();
+            boolean isUpdated = goodsService.updateDatabase(fetchBookDetails);
             
-            response.put("updated", isUpdated);
-            response.put("message", isUpdated ? "DB 갱신 성공" : "갱신된 내용이 없습니다.");
-            return ResponseEntity.ok(response);
+            if(isUpdated) {
+                response.put("updated", isUpdated);
+                response.put("message", "DB 갱신 성공");
+                return ResponseEntity.ok(response);
+            } else {
+                response.put("updated", isUpdated);
+                response.put("message", "DB 갱신 실패");
+                return ResponseEntity.ok(response);
+            }
         } catch (Exception e) {
             response.put("updated", false);
-            response.put("message", "DB 갱신 중 오류가 발생했습니다.");
+            response.put("message", "DB 갱신 중 오류 발생");
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }

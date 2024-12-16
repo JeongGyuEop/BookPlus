@@ -9,10 +9,9 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
 
 import com.bookplus.goods.vo.GoodsVO;
-import com.bookplus.goods.vo.ImageFileVO;
 
 @Repository("goodsDAO")
-public class GoodsDAOImpl  implements GoodsDAO{
+public class GoodsDAOImpl implements GoodsDAO{
 	@Autowired
 	private SqlSession sqlSession;
 
@@ -50,9 +49,9 @@ public class GoodsDAOImpl  implements GoodsDAO{
 	
 	//상품 아이디로 상세피이지 화면에 보여질 도서상품 하나의 이미지 정보 여러개를 조회!!!
 	@Override
-	public List<ImageFileVO> selectGoodsDetailImage(String goods_id) throws DataAccessException{
+	public List<GoodsVO> selectGoodsDetailImage(String goods_id) throws DataAccessException{
 		
-		List<ImageFileVO> imageList=(ArrayList)sqlSession.selectList("mapper.goods.selectGoodsDetailImage",goods_id);
+		List<GoodsVO> imageList=(ArrayList)sqlSession.selectList("mapper.goods.selectGoodsDetailImage",goods_id);
 		
 		return imageList;
 	}
@@ -66,8 +65,10 @@ public class GoodsDAOImpl  implements GoodsDAO{
 
     // Image 정보를 삽입
     @Override
-    public void insertImageFile(ImageFileVO imageFileVO) throws Exception {
-        sqlSession.insert("mapper.goods.insertNewGoodsImage", imageFileVO);
+    public void insertImageFile(GoodsVO goodsVO) throws Exception {
+        sqlSession.insert("mapper.goods.insertNewGoodsImage", goodsVO);
     }
 
+    // @Override 작업해서 DB와 연결 
+    
 }
