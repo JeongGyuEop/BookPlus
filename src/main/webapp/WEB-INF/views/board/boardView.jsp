@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ page session="false" %>
+<%@ page session="true" %>
 <c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 <html>
     <head>
@@ -80,13 +80,13 @@
             		
             		var reply = 
             			'<tr reply_type="main">'+
-	            		'	<td width="820px">'+
+	            		'	<td width="400px">'+
 	            		reply_content+
 	            		'	</td>'+
-	            		'	<td width="100px">'+
+	            		'	<td width="70px">'+
 	            		$("#reply_writer").val()+
 	            		'	</td>'+
-	            		'	<td width="100px">'+
+	            		'	<td width="50px">'+
 	            		'		<input type="password" id="reply_password_'+reply_id+'" style="width:100px;" maxlength="10" placeholder="패스워드"/>'+
 	            		'	</td>'+
 	            		'	<td align="center">'+
@@ -199,7 +199,7 @@
                      
                     //ajax 호출
                     $.ajax({
-                        url         :   "/board/reply/check",
+                        url         :   "${contextPath}/board/reply/check",
                         dataType    :   "json",
                         contentType :   "application/x-www-form-urlencoded; charset=UTF-8",
                         type        :   "post",
@@ -241,13 +241,13 @@
                         //입력받는 창 등록
                         var replyEditor = 
                            '<tr id="reply_add" class="reply_modify">'+
-                           '   <td width="820px">'+
+                           '   <td width="400px">'+
                            '       <textarea name="reply_modify_content_'+reply_id+'" id="reply_modify_content_'+reply_id+'" rows="3" cols="50">'+txt_reply_content+'</textarea>'+ //기존 내용 넣기
                            '   </td>'+
-                           '   <td width="100px">'+
-                           '       <input type="text" name="reply_modify_writer_'+reply_id+'" id="reply_modify_writer_'+reply_id+'" style="width:100%;" maxlength="10" placeholder="작성자" value="'+txt_reply_writer+'"/>'+ //기존 작성자 넣기
+                           '   <td width="70px">'+
+                           '       <input type="text" name="reply_modify_writer_'+reply_id+'" id="reply_modify_writer_'+reply_id+'" style="width:100%;" maxlength="10" placeholder="작성자" value="'+txt_reply_writer+'" readonly/>'+ //기존 작성자 넣기
                            '   </td>'+
-                           '   <td width="100px">'+
+                           '   <td width="50px">'+
                            '       <input type="password" name="reply_modify_password_'+reply_id+'" id="reply_modify_password_'+reply_id+'" style="width:100%;" maxlength="10" placeholder="패스워드"/>'+
                            '   </td>'+
                            '   <td align="center">'+
@@ -279,13 +279,13 @@
                     if(r_type=="main"){
                         reply = 
                             '<tr reply_type="main">'+
-                            '   <td width="820px">'+
+                            '   <td width="400px">'+
                             r_content+
                             '   </td>'+
-                            '   <td width="100px">'+
+                            '   <td width="70px">'+
                             r_writer+
                             '   </td>'+
-                            '   <td width="100px">'+
+                            '   <td width="50px">'+
                             '       <input type="password" id="reply_password_'+reply_id+'" style="width:100px;" maxlength="10" placeholder="패스워드"/>'+
                             '   </td>'+
                             '   <td align="center">'+
@@ -297,13 +297,13 @@
                     }else{
                         reply = 
                             '<tr reply_type="sub">'+
-                            '   <td width="820px"> → '+
+                            '   <td width="400px"> → '+
                             r_content+
                             '   </td>'+
-                            '   <td width="100px">'+
+                            '   <td width="70px">'+
                             r_writer+
                             '   </td>'+
-                            '   <td width="100px">'+
+                            '   <td width="50px">'+
                             '       <input type="password" id="reply_password_'+reply_id+'" style="width:100px;" maxlength="10" placeholder="패스워드"/>'+
                             '   </td>'+
                             '   <td align="center">'+
@@ -401,13 +401,13 @@
                     if(r_type=="main"){
                         reply = 
                             '<tr reply_type="main">'+
-                            '   <td width="820px">'+
+                            '   <td width="400px">'+
                             $("#reply_modify_content_"+reply_id).val()+
                             '   </td>'+
-                            '   <td width="100px">'+
+                            '   <td width="70px">'+
                             $("#reply_modify_writer_"+reply_id).val()+
                             '   </td>'+
-                            '   <td width="100px">'+
+                            '   <td width="50px">'+
                             '       <input type="password" id="reply_password_'+reply_id+'" style="width:100px;" maxlength="10" placeholder="패스워드"/>'+
                             '   </td>'+
                             '   <td align="center">'+
@@ -419,13 +419,13 @@
                     }else{
                         reply = 
                             '<tr reply_type="sub">'+
-                            '   <td width="820px"> → '+
+                            '   <td width="400px"> → '+
                             $("#reply_modify_content_"+reply_id).val()+
                             '   </td>'+
-                            '   <td width="100px">'+
+                            '   <td width="70px">'+
                             $("#reply_modify_writer_"+reply_id).val()+
                             '   </td>'+
-                            '   <td width="100px">'+
+                            '   <td width="50px">'+
                             '       <input type="password" id="reply_password_'+reply_id+'" style="width:100px;" maxlength="10" placeholder="패스워드"/>'+
                             '   </td>'+
                             '   <td align="center">'+
@@ -468,7 +468,7 @@
 	            		'		<textarea name="reply_reply_content" rows="3" cols="50"></textarea>'+
 	            		'	</td>'+
 	            		'	<td width="70px">'+
-	            		'		<input type="text" name="reply_reply_writer" style="width:100%;" maxlength="10" placeholder="작성자"/>'+
+	            		'		<input type="text" name="reply_reply_writer" style="width:100%;" maxlength="10" placeholder="작성자" value="${userName}" readonly/>'+
 	            		'	</td>'+
 	            		'	<td width="50px">'+
 	            		'		<input type="password" name="reply_reply_password" style="width:100%;" maxlength="10" placeholder="패스워드"/>'+
@@ -712,9 +712,15 @@
    			<table border="1" width="100%" >
    				<tr>
    					<td colspan="2" align="right">
-   						<input type="password" id="password" name="password" style="width:200px;" maxlength="10" placeholder="패스워드"/>
-   						<button id="modify" name="modify">글 수정</button>
-   						<button id="delete" name="delete">글 삭제</button>
+   					<!-- 로그인한 사용자와 게시글 작성자 비교 -->
+                        <c:choose>
+                            <c:when test="${not empty sessionScope.memberInfo && sessionScope.memberInfo.member_id == boardView.writer}">
+                                <!-- 로그인한 사용자가 작성자인 경우 수정/삭제 버튼 표시 -->
+                                <input type="password" id="password" name="password" style="width:200px;" maxlength="10" placeholder="패스워드"/>
+                                <button id="modify" name="modify">글 수정</button>
+                                <button id="delete" name="delete">글 삭제</button>
+                            </c:when>
+                        </c:choose>
    					</td>
    				</tr>
    				<tr>
@@ -722,7 +728,7 @@
 						제목: ${boardView.subject}
 					</td>
 					<td>
-						작성자: ${boardView.writer}
+						작성자: ${boardView.member_name}
 					</td>
    				</tr>
    				<tr height="500px">
@@ -754,7 +760,7 @@
 			    			<c:if test="${replyList.depth == '1'}"> → </c:if>${replyList.reply_content}
 			    		</td>
 			    		<td width="70px">
-			    			${replyList.reply_writer}
+			    			${replyList.member_name}
 			    		</td>
 			    		<td width="50px">
 			    			<input type="password" id="reply_password_${replyList.reply_id}" style="width:100px;" maxlength="10" placeholder="패스워드"/>
@@ -770,18 +776,23 @@
 			    </c:forEach>
    			</table>
    			<table border="1" width="100%" bordercolor="#46AA46">
-   				<tr>
-   					<td width="500px">
-						이름: <input type="text" id="reply_writer" name="reply_writer" style="width:170px;" maxlength="10" placeholder="작성자"/>
-						패스워드: <input type="password" id="reply_password" name="reply_password" style="width:170px;" maxlength="10" placeholder="패스워드"/>
-						<button id="reply_save" name="reply_save">댓글 등록</button>
-					</td>
-   				</tr>
-   				<tr>
-   					<td>
-   						<textarea id="reply_content" name="reply_content" rows="4" cols="50" placeholder="댓글을 입력하세요."></textarea>
-   					</td>
-   				</tr>
+   				<c:choose>
+                	<c:when test="${not empty sessionScope.memberInfo}">
+	   				<tr>
+	   					<td width="500px">
+	                        <!-- 로그인한 사용자가 작성자인 경우 수정/삭제 버튼 표시 -->
+	                        이름: <input type="text" id="reply_writer" name="reply_writer" style="width:170px;" maxlength="10" placeholder="작성자" value="${userName}" readonly/>
+							패스워드: <input type="password" id="reply_password" name="reply_password" style="width:170px;" maxlength="10" placeholder="패스워드"/>
+							<button id="reply_save" name="reply_save">댓글 등록</button>
+						</td>
+	   				</tr>
+	   				<tr>
+	   					<td>
+	   						<textarea id="reply_content" name="reply_content" rows="4" cols="50" placeholder="댓글을 입력하세요."></textarea>
+	   					</td>
+	   				</tr>
+				    </c:when> 
+                 </c:choose>
    			</table>
    			<table width="100%">
    				<tr>

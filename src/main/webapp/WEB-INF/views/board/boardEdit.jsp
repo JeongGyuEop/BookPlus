@@ -1,4 +1,3 @@
-<%@page import="com.mysql.cj.Session"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page session="false" %>
@@ -101,12 +100,11 @@
                 $("#selectedPlaceX").val(placeX);              // 위도
                 $("#selectedPlaceY").val(placeY);              // 경도
             }
-         
-         	console.log(sessionScope.memberInfo.getMember_name());
         </script>
+    </head>
     <body>
     	<input type="hidden" id="board_id" name="board_id" value="${boardView.id}" />
-    	<input type="hidden" id="board_id" name="board_id" value="${boardView.writer}" />    	
+    	<input type="hidden" id="member_id" name="member_id" value="${userID}" />
     	<div align="center">
     		</br>
     		</br>
@@ -114,7 +112,7 @@
    				<tr>
    					<td>
    						제목: <input type="text" id="subject" name="subject" style="width:600px;" placeholder="제목" value="${boardView.subject}"/><br>
-   						작성자: <input type="text" id="writer" name="writer" style="width:170px;" maxlength="10" placeholder="작성자" value="${sessionScope.memberInfo.member_name}"/>
+   						작성자: <input type="text" id="writer" name="writer" style="width:170px;" maxlength="10" placeholder="작성자" value="${userName}" readonly/>
    						<label for="selectedPlaceInput">선택된 장소:</label>
 						<input type="text" id="selectedPlaceInput" readonly style="width: 300px;" value="${boardView.place_name}${boardView.road_address_name}">
 						<input type="hidden" id="selectedPlaceName">

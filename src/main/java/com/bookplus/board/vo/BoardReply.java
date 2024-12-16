@@ -13,7 +13,15 @@ public class BoardReply {
 	private String reply_writer;
 	private String reply_password;
 	private String register_datetime;
+	private String member_name;
 	
+	
+	public String getMember_name() {
+		return member_name;
+	}
+	public void setMember_name(String member_name) {
+		this.member_name = member_name;
+	}
 	public String getReply_id() {
 		return reply_id;
 	}

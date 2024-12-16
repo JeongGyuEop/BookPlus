@@ -52,32 +52,38 @@
 
     <select id="selectContent" resultType="Board" parameterType="java.util.HashMap">
         select
-            id,
-            subject,
-            content,
-            writer,
-            register_datetime
+            b.id,
+            b.subject,
+            b.content,
+            b.writer,
+            b.register_datetime,
+            m.member_name
         from
-            board
+            board b
+        join T_SHOPPING_MEMBER m
+        on b.writer = m.member_id
         order by id
         limit #{start}, #{end}
     </select>
 
     <select id="selectContentView" resultType="Board" parameterType="java.util.HashMap">
         select
-            id,
-            subject,
-            content,
-            writer,
-            place_name,
-            place_url,
-            road_address_name,
-            x,
-            y
+            b.id,
+            b.subject,
+            b.content,
+            b.writer,
+            b.place_name,
+            b.place_url,
+            b.road_address_name,
+            b.x,
+            b.y,
+            m.member_name
         from
-            board
+            board b
+        join T_SHOPPING_MEMBER m
+        on b.writer = m.member_id
         where
-            id = #{id}
+            b.id = #{id}
     </select>
 
     <insert id="insertBoardReply" parameterType="java.util.HashMap">
@@ -105,15 +111,18 @@
 
     <select id="selectBoardReplyList" resultType="BoardReply" parameterType="java.util.HashMap">
         select
-            reply_id,
-            board_id,
-            parent_id,
-            depth,
-            reply_content,
-            reply_writer,
-            reply_password
+            br.reply_id,
+            br.board_id,
+            br.parent_id,
+            br.depth,
+            br.reply_content,
+            br.reply_writer,
+            br.reply_password,
+            m.member_name
         from
-            board_reply
+            board_reply br
+        join T_SHOPPING_MEMBER m
+        on br.reply_writer = m.member_id
         where
             board_id = #{id}
         order by reply_id asc
@@ -177,5 +186,13 @@
         where
             reply_id = #{reply_id}
     </update>
+    
+	<select id="findMemberIdByName" parameterType="String" resultType="String">
+	    SELECT member_id
+	    FROM T_SHOPPING_MEMBER
+	    WHERE member_name = #{memberName}
+	</select>
 
+
+	
 </mapper>
