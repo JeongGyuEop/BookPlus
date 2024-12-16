@@ -155,7 +155,7 @@
 			  	   관리자 화면 추가 
 			   --%>
 		      <c:if test="${sessionScope.isLogOn==true and sessionScope.memberInfo.member_id =='admin' }">  
-		   	   <li class="no_line"><a href="${contextPath}/admin/goods/adminGoodsMain.do">관리자</a></li>
+		   	   <li class="no_line"><a href="${contextPath}/admin/member/adminMemberMain.do">관리자</a></li>
 			  </c:if>
 			  
 		</ul>

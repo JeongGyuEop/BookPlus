@@ -7,7 +7,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
-
+<c:set var="contextPath"  value="${pageContext.request.contextPath}"  />
 <c:choose>
 <c:when test='${modified_personal_info==true }'>
 <script>
@@ -22,14 +22,10 @@ function test(){
 }
 function init(){
 	var frm_mod_member=document.frm_mod_member;
-	var h_tel1=frm_mod_member.h_tel1;
 	var h_hp1=frm_mod_member.h_hp1;
-	var tel1=h_tel1.value;
 	var hp1=h_hp1.value;
 	
-	var select_tel1=frm_mod_member.tel1;
 	var select_hp1=frm_mod_member.hp1;
-	select_tel1.value=tel1;
 	select_hp1.value=hp1;
 }
 
@@ -49,14 +45,10 @@ function test(){
 }
 function init(){
 	var frm_mod_member=document.frm_mod_member;
-	var h_tel1=frm_mod_member.h_tel1;
 	var h_hp1=frm_mod_member.h_hp1;
-	var tel1=h_tel1.value;
 	var hp1=h_hp1.value;
 	
-	var select_tel1=frm_mod_member.tel1;
 	var select_hp1=frm_mod_member.hp1;
-	select_tel1.value=tel1;
 	select_hp1.value=hp1;
 }
 </script>
@@ -116,17 +108,20 @@ function init(){
 <script>
 function fn_modify_member_info(member_id,mod_type){
 	var value;
-	// alert(member_id);
-	// alert("mod_type:"+mod_type);
+	 //alert(member_id);
+	 //alert("mod_type:"+mod_type);
 		var frm_mod_member=document.frm_mod_member;
+		
 		if(mod_type=='member_pw'){
 			value=frm_mod_member.member_pw.value;
 			//alert("member_pw:"+value);
-		}else if(mod_type=='member_gender'){
+		}
+		else if(mod_type=='member_gender'){
 			var member_gender=frm_mod_member.member_gender;
-			for(var i=0; member_gender.length;i++){
+			for(var i=0; i < member_gender.length;i++){
 			 	if(member_gender[i].checked){
 					value=member_gender[i].value;
+					//alert(value);
 					break;
 				} 
 			}
@@ -138,20 +133,20 @@ function fn_modify_member_info(member_id,mod_type){
 			var member_birth_d=frm_mod_member.member_birth_d;
 			var member_birth_gn=frm_mod_member.member_birth_gn;
 			
-			for(var i=0; member_birth_y.length;i++){
+			for(var i=0; i < member_birth_y.length;i++){
 			 	if(member_birth_y[i].selected){
 					value_y=member_birth_y[i].value;
 					break;
 				} 
 			}
-			for(var i=0; member_birth_m.length;i++){
+			for(var i=0; i < member_birth_m.length;i++){
 			 	if(member_birth_m[i].selected){
 					value_m=member_birth_m[i].value;
 					break;
 				} 
 			}
 			
-			for(var i=0; member_birth_d.length;i++){
+			for(var i=0; i < member_birth_d.length;i++){
 			 	if(member_birth_d[i].selected){
 					value_d=member_birth_d[i].value;
 					break;
@@ -159,7 +154,7 @@ function fn_modify_member_info(member_id,mod_type){
 			}
 			
 			//alert("수정 년:"+value_y+","+value_m+","+value_d);
-			for(var i=0; member_birth_gn.length;i++){
+			for(var i=0; i < member_birth_gn.length;i++){
 			 	if(member_birth_gn[i].checked){
 					value_gn=member_birth_gn[i].value;
 					break;
@@ -167,28 +162,13 @@ function fn_modify_member_info(member_id,mod_type){
 			}
 			//alert("생년 양음년 "+value_gn);
 			value=+value_y+","+value_m+","+value_d+","+value_gn;
-		}else if(mod_type=='tel'){
-			var tel1=frm_mod_member.tel1;
-			var tel2=frm_mod_member.tel2;
-			var tel3=frm_mod_member.tel3;
 			
-			for(var i=0; tel1.length;i++){
-			 	if(tel1[i].selected){
-					value_tel1=tel1[i].value;
-					break;
-				} 
-			}
-			value_tel2=tel2.value;
-			value_tel3=tel3.value;
-			
-			value=value_tel1+","+value_tel2+", "+value_tel3;
 		}else if(mod_type=='hp'){
 			var hp1=frm_mod_member.hp1;
 			var hp2=frm_mod_member.hp2;
 			var hp3=frm_mod_member.hp3;
-			var smssts_yn=frm_mod_member.smssts_yn;
 			
-			for(var i=0; hp1.length;i++){
+			for(var i=0; i < hp1.length;i++){
 			 	if(hp1[i].selected){
 					value_hp1=hp1[i].value;
 					break;
@@ -196,21 +176,20 @@ function fn_modify_member_info(member_id,mod_type){
 			}
 			value_hp2=hp2.value;
 			value_hp3=hp3.value;
-			value_smssts_yn=smssts_yn.checked;
 			
-			value=value_hp1+","+value_hp2+", "+value_hp3+","+value_smssts_yn;
+			value=value_hp1+","+value_hp2+","+value_hp3;
+			//alert("member_hp:"+value);
 			
 		}else if(mod_type=='email'){
 			var email1=frm_mod_member.email1;
 			var email2=frm_mod_member.email2;
-			var emailsts_yn=frm_mod_member.emailsts_yn;
 			
 			value_email1=email1.value;
 			value_email2=email2.value;
-			value_emailsts_yn=emailsts_yn.checked;
 			
-			value=value_email1+","+value_email2+","+value_emailsts_yn;
+			value=value_email1+","+value_email2;
 			//alert(value);
+			
 		}else if(mod_type=='address'){
 			var zipcode=frm_mod_member.zipcode;
 			var roadAddress=frm_mod_member.roadAddress;
@@ -228,7 +207,7 @@ function fn_modify_member_info(member_id,mod_type){
 		$.ajax({
 			type : "post",
 			async : false, //false인 경우 동기식으로 처리한다.
-			url : "http://localhost:8090/bookshop01/admin/member/modifyMemberInfo.do",
+			url : "${contextPath}/admin/member/modifyMemberInfo.do",
 			data : {
 				member_id:member_id,
 				mod_type:mod_type,
@@ -266,12 +245,29 @@ function fn_delete_member(member_id ,del_yn){
     frm_mod_member.appendChild(i_member_id);
     frm_mod_member.appendChild(i_del_yn);
     frm_mod_member.method="post";
-    frm_mod_member.action="/bookshop01/admin/member/deleteMember.do";
+    frm_mod_member.action="${contextPath}/admin/member/deleteMember.do";
     frm_mod_member.submit();
 }
+
+function fn_real_delete_member(member_id) {
+    if (confirm("정말로 이 회원을 삭제하시겠습니까?")) {
+        $.ajax({
+            type: "POST",
+            url: "${contextPath}/admin/member/deleteRealMember.do",
+            data: { member_id: member_id },
+            success: function(data, textStatus) {
+                alert("회원이 삭제되었습니다.");
+                location.reload(); // 페이지 새로고침
+            },
+            error: function(data, textStatus) {
+                alert("회원 삭제 중 오류가 발생했습니다.");
+            }
+        });
+    }
+}
+
 </script>
 </head>
-
 <body>
 	<h3>내 상세 정보</h3>
 <form name="frm_mod_member">	
@@ -385,43 +381,6 @@ function fn_delete_member(member_id ,del_yn){
 					</td>
 				</tr>
 				<tr class="dot_line">
-					<td class="fixed_join">전화번호</td>
-					<td>
-					    <select  name="tel1" >
-							<option>없음</option>
-							<option value="02">02</option>
-							<option value="031">031</option>
-							<option value="032">032</option>
-							<option value="033">033</option>
-							<option value="041">041</option>
-							<option value="042">042</option>
-							<option value="043">043</option>
-							<option value="044">044</option>
-							<option value="051">051</option>
-							<option value="052">052</option>
-							<option value="053">053</option>
-							<option value="054">054</option>
-							<option value="055">055</option>
-							<option value="061">061</option>
-							<option value="062">062</option>
-							<option value="063">063</option>
-							<option value="064">064</option>
-							<option value="0502">0502</option>
-							<option value="0503">0503</option>
-							<option value="0505">0505</option>
-							<option value="0506">0506</option>
-							<option value="0507">0507</option>
-							<option value="0508">0508</option>
-							<option value="070">070</option>
-					</select> 
-					    - <input type="text" size=4  name="tel2" value="${member_info.tel2 }"> 
-					    - <input type="text" size=4  name="tel3" value="${member_info.tel3 }">
-					</td>
-					<td>
-					  <input type="button" value="수정하기" onClick="fn_modify_member_info('${member_info.member_id }','tel')" />
-					</td>
-				</tr>
-				<tr class="dot_line">
 					<td class="fixed_join">휴대폰번호</td>
 					<td>
 					   <select  name="hp1">
@@ -434,15 +393,7 @@ function fn_delete_member(member_id ,del_yn){
 							<option value="019">019</option>
 					</select> 
 					 - <input type="text" name="hp2" size=4 value="${member_info.hp2 }"> 
-					 - <input type="text"name="hp3"  size=4 value="${member_info.hp3 }"><br> <br>
-					 <c:choose> 
-					   <c:when test="${member_info.smssts_yn=='true' }">
-					     <input type="checkbox"  name="smssts_yn" value="Y" checked /> 쇼핑몰에서 발송하는 SMS 소식을 수신합니다.
-						</c:when>
-						<c:otherwise>
-						  <input type="checkbox"  name="smssts_yn" value="N"  /> 쇼핑몰에서 발송하는 SMS 소식을 수신합니다.
-						</c:otherwise>
-					 </c:choose>	
+					 - <input type="text"name="hp3"  size=4 value="${member_info.hp3 }">	
 				    </td>
 					<td>
 					  <input type="button" value="수정하기" onClick="fn_modify_member_info('${member_info.member_id }','hp')" />
@@ -465,15 +416,7 @@ function fn_delete_member(member_id ,del_yn){
 							<option value="empal.com">empal.com</option>
 							<option value="korea.com">korea.com</option>
 							<option value="freechal.com">freechal.com</option>
-					</select><Br><br> 
-					<c:choose> 
-					   <c:when test="${member_info.emailsts_yn=='true' }">
-					     <input type="checkbox" name="emailsts_yn"  value="Y" checked /> 쇼핑몰에서 발송하는 e-mail을 수신합니다.
-						</c:when>
-						<c:otherwise>
-						  <input type="checkbox" name="emailsts_yn"  value="N"  /> 쇼핑몰에서 발송하는 e-mail을 수신합니다.
-						</c:otherwise>
-					 </c:choose>
+					</select>
 					</td>
 					<td>
 					  <input type="button" value="수정하기" onClick="fn_modify_member_info('${member_info.member_id }','email')" />
@@ -516,9 +459,14 @@ function fn_delete_member(member_id ,del_yn){
 				
 			</td>
 		</tr>
+		<tr>
+		    <td>
+		        <input type="button" value="회원 삭제하기" onClick="fn_real_delete_member('${member_info.member_id}')">
+		    </td>
+		</tr>
+		
 	</table>
 	</div>
-	<input  type="hidden" name="h_tel1" value="${member_info.tel1}" />
 	<input  type="hidden" name="h_hp1" value="${member_info.hp1}" />		
 </form>	
 </body>

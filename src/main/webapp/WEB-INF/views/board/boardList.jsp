@@ -101,7 +101,7 @@
 	    	<input type="hidden" id="startPage" name="startPage" value=""><!-- 페이징을 위한 hidden타입 추가 -->
 	        <input type="hidden" id="visiblePages" name="visiblePages" value=""><!-- 페이징을 위한 hidden타입 추가 -->
 	    	
-	    	<h1>공지사항</h1>
+	    	<h1>게시판</h1>
 	    	<div align="center">
 	    		<table width="770px">
 	    			<tr>

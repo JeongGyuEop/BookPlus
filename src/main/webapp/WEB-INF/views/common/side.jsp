@@ -21,11 +21,7 @@
 	   <li>
 			<H3>주요기능</H3>
 			<ul>
-				<li><a href="${contextPath}/admin/goods/adminGoodsMain.do">상품관리</a></li>
-				<li><a href="${contextPath}/admin/order/adminOrderMain.do">주문관리</a></li>
 				<li><a href="${contextPath}/admin/member/adminMemberMain.do">회원관리</a></li>
-				<li><a href="#">배송관리</a></li>
-				<li><a href="${contextPath}/board/boardList.do?member_id=${member_id}">공지사항관리</a></li>
 			</ul>
 		</li>
 	</c:when>
@@ -90,21 +86,6 @@
     </ul>
 </div>
 
-
-    <h2><a href="${contextPath}/board/boardList.do">공지사항</a></h2>
-    <c:if test="${empty latestNotices}">
-        <br><p>최신 공지사항이 없습니다.</p>
-    </c:if>
-    <ul>
-        <c:forEach var="notice" items="${latestNotices}" varStatus="status">
-            <li>
-                <a href="${contextPath}/board/view.do?id=${notice.id}">
-                    ${notice.subject} 
-                </a>
-            </li>
-        </c:forEach>
-    </ul>
-</div>
 <div class="horoscope-container">
     <h3>&nbsp;&nbsp;오늘의 별자리 운세</h3>
     <form action="${contextPath}/horoscope/view.do" method="get">
@@ -185,6 +166,7 @@ $(document).ready(function() {
             },
             success: function(response) {
                 // 운세가 정상적으로 반환되었으면 운세 내용 표시
+                
                 if (response) {
                     $('#horoscopeDescription').html(response.horoscope);  // 응답에서 운세 내용 가져오기
                 } else {
