@@ -128,22 +128,26 @@
     </insert>
 
     <!-- 이미지 파일 정보 삽입 -->
-    <insert id="insertNewGoodsImage" parameterType="ImageFileVO">
-        <![CDATA[
-            INSERT INTO T_GOODS_DETAIL_IMAGE (
+<insert id="insertNewGoodsImage" parameterType="ImageFileVO">
+    <![CDATA[
+        INSERT INTO T_GOODS_DETAIL_IMAGE (
+            image_id,
             goods_id,
             filename,
             reg_id,
             filetype,
             credate
-        ) VALUES (
+        )
+        SELECT
+            IFNULL(MAX(image_id), 0) + 1,
             #{goods_id},
             #{fileName},
             #{reg_id},
             #{fileType},
             NOW()
-        )
-        ]]>
-    </insert>
+        FROM T_GOODS_DETAIL_IMAGE;
+    ]]>
+</insert>
+
 
 </mapper>

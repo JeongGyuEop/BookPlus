@@ -122,11 +122,11 @@ public class MainController extends BaseController {
                 }
                 
                 // 4. 이미지 파일 URL DB에 저장
-//                String fileName = items.getJSONObject(i).getString("cover"); // JSON에서 커버 이미지 추출
-//                List<ImageFileVO> imageFiles = createImageFiles(fileName); // 이미지 URL 리스트 생성
+                String fileName = items.getJSONObject(i).getString("cover"); // JSON에서 커버 이미지 추출
+                List<ImageFileVO> imageFiles = createImageFiles(fileName,  goodsId); // 이미지 URL 리스트 생성
 
                 // 5. 이미지 파일 DB에 저장
-//                goodsService.saveImageFiles(imageFiles, goodsId);
+                goodsService.saveImageFiles(imageFiles, goodsId);
             }
             
             return "데이터 저장 성공";
@@ -165,12 +165,13 @@ public class MainController extends BaseController {
             JSONObject item = items.getJSONObject(i);
             GoodsVO goodsVO = new GoodsVO();
 
+            goodsVO.setGoods_id(item.getInt("itemId"));  ////JSON 필드: itemId
             goodsVO.setGoods_sort(item.getString("categoryName"));  //JSON 필드: categoryName
             goodsVO.setGoods_title(item.getString("title")); // JSON 필드: title
             goodsVO.setGoods_writer(item.getString("author")); // JSON 필드: author
             goodsVO.setGoods_publisher(item.getString("publisher")); // JSON 필드: publisher
             goodsVO.setGoods_price(item.optInt("priceStandard", 0)); // JSON 필드: priceStandard
-            goodsVO.setGoods_sales_price(item.getInt("priceSales"));  // JSON 필드: priceSales
+ //           goodsVO.setGoods_sales_price(item.getInt("priceSales"));  // JSON 필드: priceSales
             goodsVO.setGoods_published_date(java.sql.Date.valueOf(item.getString("pubDate"))); // JSON 필드: pubDate
             goodsVO.setGoods_isbn(item.getString("isbn13")); // JSON 필드: isbn13
             goodsVO.setGoods_delivery_price(item.getInt("mileage"));   // JSON 필드: mileage         
@@ -181,14 +182,15 @@ public class MainController extends BaseController {
         return goodsList;
     }
     
-    private List<ImageFileVO> createImageFiles(String fileName) {
+    private List<ImageFileVO> createImageFiles(String fileName, int goodsId) {
    	 List<ImageFileVO> imageFiles = new ArrayList<>();
    	    
    	 // 이미지 파일 정보를 ImageFileVO로 매핑
    	    ImageFileVO imageFileVO = new ImageFileVO();
+   	    imageFileVO.setGoods_id(goodsId);
    	    imageFileVO.setFileName(fileName);  // API에서 가져온 커버 URL을 fileName으로 설정
-   	    imageFileVO.setReg_id("admin");  // 예: 관리자 아이디
-   	    imageFileVO.setFileType("main");  // 예: 메인 이미지 타입
+   	    imageFileVO.setReg_id("admin");  //  관리자 아이디
+   	    imageFileVO.setFileType("main");  // 메인 이미지 타입
    	    
    	    imageFiles.add(imageFileVO);
 
