@@ -1,3 +1,4 @@
+
 package com.bookplus.goods.controller;
 
 import java.util.ArrayList;
@@ -8,6 +9,7 @@ import com.bookplus.goods.service.GoodsService;
 import com.bookplus.goods.vo.GoodsVO;
 
 import net.sf.json.JSONObject;
+
 
 import java.util.List;
 import java.util.Map;
@@ -70,9 +72,15 @@ public class GoodsControllerImpl extends BaseController   implements GoodsContro
 		
 		
 		GoodsVO goodsVO=(GoodsVO)goodsMap.get("goodsVO");
+		
+		System.out.println("goodsDetail----기존에 본 상품아이디:" +goodsVO.getGoods_id() );
+		System.out.println("goodsDetail----추가로 본 상품아이디:" +goods_id );
+		
 		//상품 상페페이지에서 조회한 상품 정보를 빠른메뉴(퀵메뉴)에 표시하기 위해 !!! 
 		//메소드 호출시!  조회된 도서상품 번호, 조회한 도서상품 정보!GoodsVO객체, 세션을  전달합니다.
 		addGoodsInQuick(goods_id,goodsVO,session); 
+		
+		System.out.println("-----"+session.getAttribute("quickGoodsListNum"));
 		
 		return mav;
 	}
@@ -92,49 +100,52 @@ public class GoodsControllerImpl extends BaseController   implements GoodsContro
 
 //session에 또한 최근 본 상품정보가 저장된(퀵메뉴에 보여질 상품정보가 저장된) ArrayList배열이 저장되어 있지 않으면?
 	//상품상세페이지 요청시 본 상품정보(두번쨰 매개변수 GoodsVO goodsVO로 받는 상품정보)를  ArrayList배열 생성후 추가시킵니다.
-	private void addGoodsInQuick(String goods_id,GoodsVO goodsVO,HttpSession session){
-		
-		boolean already_existed=false;
-		 
-		List<GoodsVO> quickGoodsList; 
-		
-		//세션에 저장된 최근 본 상품 목록을 가져 옵니다.
-		quickGoodsList=(ArrayList<GoodsVO>)session.getAttribute("quickGoodsList");
-		 
-		//최근 본 상품이 있는 경우 
-		if(quickGoodsList!=null){
-			//최근 본 상품목록이 네개 미만인 경우
-			if(quickGoodsList.size() < 4){
-				
-				for(int i=0; i<quickGoodsList.size();i++){		
-					
-					GoodsVO _goodsBean=(GoodsVO)quickGoodsList.get(i);
-					
-					//상품 목록을 가져와 이미 존재하는 상품인지 비교 합니다.
-					if(goods_id.equals(_goodsBean.getGoods_id())){
-						//이미 존재 할 경우 변수의 값을 true로 설정합니다.
-						already_existed=true;
-						break;
-					}
-				}
-				
-				//already_existed변수값이 false이면 상품 정보를 목록에 저장합니다.
-				if(already_existed==false){
-					quickGoodsList.add(goodsVO);
-				}
-			}
-			
-		}else{
-			//최근 본 상품 목록이 없으면  생성하여  상품정보를 저장합니다.
-			quickGoodsList =new ArrayList<GoodsVO>();
-			quickGoodsList.add(goodsVO);
-			
-		}
-		//최근 본 상품 목록을 세션에 저장합니다.
-		session.setAttribute("quickGoodsList",quickGoodsList);
-		//최근 본 상품목록에 저장된 상품 개수를 세션에 저장합니다.
-		session.setAttribute("quickGoodsListNum", quickGoodsList.size());
+	private void addGoodsInQuick(String goods_id, GoodsVO goodsVO, HttpSession session) {
+	    boolean already_existed = false;
+
+	    // 세션에 저장된 최근 본 상품 목록을 가져 옵니다.
+	    List<GoodsVO> quickGoodsList = (List<GoodsVO>) session.getAttribute("quickGoodsList");
+
+	    // 최근 본 상품 목록이 있는 경우
+	    if (quickGoodsList != null) {
+	        // 중복 여부 확인
+	        for (GoodsVO _goodsBean : quickGoodsList) {
+	            System.out.println("기존에 본 상품아이디: " + _goodsBean.getGoods_id());
+	            System.out.println("추가로 본 상품아이디: " + goods_id);
+
+	            // 중복 검사 (goods_id와 _goodsBean.getGoods_id()를 문자열로 비교)
+	            if (goods_id != null && goods_id.equals(String.valueOf(_goodsBean.getGoods_id()))) {
+	                System.out.println("이미 존재하는 상품입니다.");
+	                already_existed = true;
+	                break;
+	            }
+	        }
+
+	        // 중복되지 않았으면 목록에 추가
+	        if (!already_existed && quickGoodsList.size() < 4) {
+	            quickGoodsList.add(goodsVO);
+	        }
+
+	    } else {
+	        // 최근 본 상품 목록이 없으면 생성하여 상품정보를 저장합니다.
+	        quickGoodsList = new ArrayList<>();
+	        quickGoodsList.add(goodsVO);
+	    }
+
+	    // 최근 본 상품 목록을 세션에 저장합니다.
+	    session.setAttribute("quickGoodsList", quickGoodsList);
+	    // 최근 본 상품 목록에 저장된 상품 개수를 세션에 저장합니다.
+	    session.setAttribute("quickGoodsListNum", quickGoodsList.size());
+
+	    // 디버깅용 출력
+	    System.out.println("현재 quickGoodsList: " + quickGoodsList);
+	    System.out.println("현재 quickGoodsListNum: " + quickGoodsList.size());
 	}
+
+
+
+
+
 
 /*	
 참고.
