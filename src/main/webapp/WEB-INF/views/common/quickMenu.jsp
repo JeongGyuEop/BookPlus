@@ -182,6 +182,7 @@
 		formObj.submit();
 		
 	}
+	
 </script>
 
 <body>
@@ -247,10 +248,11 @@
 									</c:otherwise>
 								</c:choose>
 							</c:forEach>
+							</form>
 					</c:otherwise>
 				</c:choose>
 			</ul>
-			</form>
+			
 		</div>
 		<div>
 			<c:choose>
