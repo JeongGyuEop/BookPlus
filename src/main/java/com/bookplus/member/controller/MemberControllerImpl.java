@@ -59,6 +59,12 @@ public class MemberControllerImpl extends BaseController implements MemberContro
 			session.setAttribute("isLogOn", true);
 			session.setAttribute("memberInfo",memberVO);
 			
+			  if ("admin".equals(memberVO.getRole())) { 
+		            session.setAttribute("role", "admin"); // 관리자
+		        } else {
+		            session.setAttribute("role", "member"); // 일반 회원
+		        }
+		   
 			//상품 주문 과정에서 로그인 했으면 로그인 후 다시 주문 화면으로 진행하고  그외에 는 메인페이지를 표시합니다. 
 			String action=(String)session.getAttribute("action");
 			
@@ -85,11 +91,13 @@ public class MemberControllerImpl extends BaseController implements MemberContro
 		ModelAndView mav = new ModelAndView();
 		
 		HttpSession session=request.getSession();
-		
+	    
 		session.setAttribute("isLogOn", false); //로그아웃 시키는 false값 저장 
 		
 		session.removeAttribute("memberInfo");//로그인 요청시 입력한 아이디 비번을 이용해서 조회 했던 회원정보(MemberVO객체)를 삭제 !
-		
+		  // 세션 초기화
+	    session.invalidate(); //세션 전체 삭제 -> 로그아웃했을때 퀵메뉴에서 로그인하기전 퀵메뉴상태로 돌아감
+	    
 		mav.setViewName("redirect:/main/main.do");//ViewInterCeptor클래스 -> 
 												  //MainController의 main메소드 -> 
 												  //그 후 tiles_main.xml 파일에 작성한 <definition name=/main/main ...> 태그 ->

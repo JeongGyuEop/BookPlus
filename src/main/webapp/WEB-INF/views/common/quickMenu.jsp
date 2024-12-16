@@ -213,6 +213,42 @@
             <img width="24" height="24" src="${contextPath}/resources/image/rss_icon.png"> RSS 피드
         </a>
     </li>
+<!-- 사용자 권한에 따라 메뉴 다르게 표시 ==========================================================================-->
+       
+          <!-- 관리자 메뉴: 관리하기 -->
+        <c:if test="${sessionScope.role == 'admin'}">
+            <li>
+                <a href="${contextPath}/admin/addNewGoods.do">
+                    <img class="admin-icon" width="24" height="24" 
+                         src="${contextPath}/resources/image/admin_icon.png" alt="관리하기 아이콘">
+                    <span class="admin-text">관리하기</span>
+                </a>
+            </li>
+        </c:if>
+       
+        <!-- 일반 회원 메뉴: 장바구니 -->
+        <c:if test="${sessionScope.role == 'member'}">
+            <li>
+                <a href="${contextPath}/cart/myCartList.do">
+                    <img class="cart-icon" width="24" height="24" 
+                         src="${contextPath}/resources/image/cart_icon.png" alt="장바구니 아이콘">
+                    <span class="cart-text">장바구니</span>
+                </a>
+            </li>
+        </c:if>
+
+     
+        
+        <!-- 비로그인 상태에서 보이는 기본 메뉴 -->
+        <c:if test="${empty sessionScope.role}">
+            <li>
+                <a href="${contextPath}/member/loginForm.do">
+                    <img class="login-icon" width="24" height="24" 
+                         src="${contextPath}/resources/image/login_icon.png" alt="로그인 아이콘">
+                    <span class="login-text">로그인</span>
+                </a>
+            </li>
+        </c:if>
 </ul>
 	
 		<div class="recent">
@@ -221,7 +257,7 @@
 				<c:choose>
 					<%-- 최근 본 도서상품 은 상품목록(new ArrayList<GoodsVO>();)에서 상품정보(GoodsVO객체들이)들이 없을 경우  --%>
 					<c:when test="${ empty sessionScope.quickGoodsList }">
-						<strong>최근본 상품이 없습니다.</strong>
+						<strong>최근 본 상품이 없습니다.</strong>
 					</c:when>
 					
 					<%-- 최근 본 도서상품 은 상품목록(new ArrayList<GoodsVO>();)에서 상품정보(GoodsVO객체들이)들이 하나라도 있을 경우 --%>

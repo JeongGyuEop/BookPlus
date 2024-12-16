@@ -28,6 +28,7 @@ public class MemberVO {
 	private String joinDate;
 	private String del_yn;
 	private APILoginVO apiLoginVO;
+	private String role; //사용자 역할 추가
 	
 	public String getMember_id() {
 		return member_id;
@@ -172,6 +173,13 @@ public class MemberVO {
 	}
 	public void setAPILoginVO(APILoginVO apiLoginVO) {
 		this.apiLoginVO = apiLoginVO;
+	}
+	
+	public String getRole() { //추가한 getter메소드
+		return role;
+	}
+	public void setRole(String role) { //추가한 setter메소드
+		this.role = role;
 	}
 	
 	@Override
