@@ -8,17 +8,17 @@
 <script src="https://apis.openapi.sk.com/tmap/jsv2?version=1&appKey=3yUCZPlQLSXrUVYnaBC07pB2LIkjQD43OUfAR85i"></script>
 <script type="text/javascript">
     var map;
-    var marker_s, marker_e, marker_p1, marker_p2;
+    var marker_s, marker_e;
     var totalMarkerArr = [];
     var drawInfoArr = [];
     var resultdrawArr = [];
-    var x = ${boardView.x};
-    var y = ${boardView.y};
+    var x = ${boardView.x}; // 도착지 x좌표 (경도)
+    var y = ${boardView.y}; // 도착지 y좌표 (위도)
 
     function initTmap() {
         // 1. 지도 띄우기
         map = new Tmapv2.Map("map_div", {
-            center: new Tmapv2.LatLng(y, x),
+            center: new Tmapv2.LatLng(y, x), // 도착지 좌표 기준으로 초기화
             width: "100%",
             height: "400px",
             zoom: 17,
@@ -40,20 +40,22 @@
                     map: map
                 });
 
-                // 도착지 좌표 (예: 고정값) 35.151564, 129.059674
-                var destLat = y; // 도착지 위도
-                var destLng = x; // 도착지 경도
-
                 // 도착지 마커 추가
                 marker_e = new Tmapv2.Marker({
-                    position: new Tmapv2.LatLng(destLat, destLng),
+                    position: new Tmapv2.LatLng(y, x), // 도착지 위치
                     icon: "https://maps.google.com/mapfiles/ms/icons/blue-dot.png",
                     iconSize: new Tmapv2.Size(24, 38),
                     map: map
                 });
 
+                // 지도 범위 설정 (현위치와 도착지 모두 보이게 설정)
+                var bounds = new Tmapv2.LatLngBounds();
+                bounds.extend(new Tmapv2.LatLng(userLat, userLng)); // 사용자 위치 추가
+                bounds.extend(new Tmapv2.LatLng(y, x)); // 도착지 위치 추가
+                map.fitBounds(bounds); // 지도 범위 설정
+
                 // 경로 탐색
-                findRoute(userLat, userLng, destLat, destLng);
+                findRoute(userLat, userLng, y, x);
             },
             function (error) {
                 console.error("현위치를 가져올 수 없습니다.", error);
@@ -94,7 +96,7 @@
 
                 $("#result").text(tDistance + tTime);
 
-                //기존 그려진 라인 & 마커가 있다면 초기화
+                // 기존 그려진 라인 & 마커 초기화
                 if (resultdrawArr.length > 0) {
                     for (var i in resultdrawArr) {
                         resultdrawArr[i].setMap(null);
@@ -104,7 +106,8 @@
 
                 drawInfoArr = [];
 
-                for (var i in resultData) { //for문 [S]
+                // 경로 좌표 가져오기
+                for (var i in resultData) {
                     var geometry = resultData[i].geometry;
 
                     if (geometry.type === "LineString") {
@@ -124,6 +127,7 @@
         });
     }
 
+    // 경로 그리기 함수
     function drawLine(arrPoint) {
         var polyline_ = new Tmapv2.Polyline({
             path: arrPoint,
@@ -136,7 +140,6 @@
 </script>
 </head>
 <body onload="initTmap();">
-
     <div id="map_wrap" class="map_wrap3">
         <div id="map_div"></div>
     </div>

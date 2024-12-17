@@ -13,9 +13,6 @@
         <result property="member_birth_m" column="member_birth_m" />
         <result property="member_birth_d" column="member_birth_d" />
         <result property="member_birth_gn" column="member_birth_gn" />
-        <result property="tel1" column="tel1" />
-        <result property="tel2" column="tel2" />
-        <result property="tel3" column="tel3" />
         <result property="hp1" column="hp1" />
         <result property="hp2" column="hp2" />
         <result property="hp3" column="hp3" />
@@ -57,7 +54,7 @@
 	        AND CONCAT(hp1, hp2, hp3) = #{search_word}
 	    </if>
 	    ORDER BY joinDate DESC
-	    LIMIT (#{chapter}-1)*100 + (#{pageNum}-1)*10, 10;
+	    LIMIT #{pageSection}, 10;
 	</select>
 
 
@@ -87,15 +84,6 @@
             <if test="member_birth_d != '' and member_birth_d != null">
                 member_birth_d = #{member_birth_d},
             </if>
-            <if test="tel1 != '' and tel1 != null">
-                tel1 = #{tel1},
-            </if>
-            <if test="tel2 != '' and tel2 != null">
-                tel2 = #{tel2},
-            </if>
-            <if test="tel3 != '' and tel3 != null">
-                tel3 = #{tel3},
-            </if>
             <if test="hp1 != '' and hp1 != null">
                 hp1 = #{hp1},
             </if>
@@ -104,7 +92,7 @@
             </if>
             <if test="hp3 != '' and hp3 != null">
                 hp3 = #{hp3},
-            </if>
+            </if>   
             <if test="smssts_yn != '' and smssts_yn != null">
                 smssts_yn = #{smssts_yn},
             </if>
@@ -135,4 +123,11 @@
         </set>
         WHERE member_id = #{member_id};
     </update>
+    
+    <delete id="deleteRealMember" parameterType="string">
+	    DELETE FROM T_SHOPPING_MEMBER
+	    WHERE member_id = #{member_id};
+	</delete>
+    
+    
 </mapper>

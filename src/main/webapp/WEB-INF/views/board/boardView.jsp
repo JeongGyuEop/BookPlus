@@ -691,17 +691,141 @@
             });
         </script>
     </head>
-    <style>
-    	textarea{
-              width:100%;
-            }
-        .reply_reply {
-                border: 2px solid #FF50CF;
-            }
-        .reply_modify {
-                border: 2px solid #FFBB00;
-            }
-    </style>
+   <style>
+    textarea {
+        width: 100%;
+    }
+
+    .reply_reply {
+        border: 2px solid #FF50CF;
+    }
+
+    .reply_modify {
+        border: 2px solid #FFBB00;
+    }
+
+    /* 전체 레이아웃 스타일 */
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        color: #333;
+    }
+
+    h1 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #444;
+        font-weight: bold;
+    }
+
+    .container {
+        width: 80%;
+        margin: 0 auto;
+        background: #fff;
+        border: 1px solid #ddd;
+        padding: 20px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    /* 테이블 스타일 */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    table th {
+        background-color: #333;
+        color: white;
+        padding: 10px;
+    }
+
+    table td {
+        border: 1px solid #ddd;
+        padding: 10px;
+        text-align: center;
+        word-wrap: break-word; /* 긴 단어 줄바꿈 */
+    }
+
+    table tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    table tr:hover {
+        background-color: #f1f1f1;
+    }
+
+    /* 입력 필드 스타일 */
+    input[type="text"], input[type="password"], textarea {
+        width: 95%;
+        padding: 8px;
+        margin: 5px 0;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
+
+    textarea {
+        width: 100%;
+        height: 80px;
+    }
+
+    /* 버튼 스타일 */
+    button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 8px 12px;
+        font-size: 14px;
+        cursor: pointer;
+        border-radius: 4px;
+        display: inline-block; /* 버튼을 가로로 나란히 */
+        margin-right: 5px; /* 버튼 사이 여백 */
+        white-space: nowrap; /* 버튼이 줄바꿈되지 않게 설정 */
+    }
+
+    button:hover {
+        background-color: #0056b3;
+    }
+
+    button[disabled] {
+        background-color: #aaa;
+        cursor: not-allowed;
+    }
+
+    /* 댓글 스타일 */
+    #reply_area tr[reply_type="main"] td {
+        background-color: #f9f9f9; /* 메인 댓글 배경 */
+    }
+
+    #reply_area tr[reply_type="sub"] td {
+        background-color: #f9f9f9; /* 대댓글 배경 */
+    }
+
+    /* 동적으로 생성된 댓글에 적용될 스타일 */
+    #reply_area tr.reply_reply {
+        border: 2px solid #FF50CF;
+    }
+
+    #reply_area tr.reply_modify {
+        border: 2px solid #FFBB00;
+    }
+
+    /* 댓글 버튼 한 줄로 배치 */
+    #reply_area td {
+        white-space: nowrap; /* 텍스트 및 버튼 줄바꿈 방지 */
+        text-align: center;  /* 버튼 가운데 정렬 */
+    }
+
+    #reply_area button {
+        display: inline-block; /* 버튼을 가로로 정렬 */
+        margin-right: 5px; /* 버튼 간격 */
+        padding: 5px 10px;
+    }
+
+</style>
+
     <body>
     	<input type="hidden" id="board_id" name="board_id" value="${boardView.id}" />
     	<input type="hidden" id="x" name="x" value="${boardView.x}" />
@@ -797,7 +921,7 @@
    			<table width="100%">
    				<tr>
    					<td align="right">
-   					<a href="${contextPath}/BookPlus/board/boardList.do">
+   					<a href="${contextPath}/board/boardList.do">
    						<button id="list" name="list">게시판</button>
    					</a>	
    					</td>

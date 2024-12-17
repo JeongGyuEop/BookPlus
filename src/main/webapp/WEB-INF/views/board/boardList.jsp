@@ -7,6 +7,117 @@
     <head>
         <title>게시판</title>
         <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.3.js"></script>
+        <style>
+    /* 전체 페이지 스타일 */
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        color: #333;
+    }
+
+    h1 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #444;
+        font-weight: bold;
+    }
+
+    /* 게시판 컨테이너 */
+    .form-inline {
+        width: 80%;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    /* 테이블 스타일 */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    table th {
+        background-color: #333;
+        color: white;
+        padding: 10px;
+    }
+
+    table td {
+        border: 1px solid #ddd;
+        padding: 10px;
+        text-align: center;
+    }
+
+    table tr:hover {
+        background-color: #f1f1f1;
+    }
+
+    /* 링크 스타일 */
+    .mouseOverHighlight {
+        text-decoration: none;
+        color: #007bff;
+        font-weight: bold;
+      
+    }
+
+    .mouseOverHighlight:hover {
+        text-decoration: underline;
+        color: #0056b3;
+    }       
+        
+
+    /* 버튼 스타일 */
+    button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 8px 12px;
+        font-size: 14px;
+        cursor: pointer;
+        border-radius: 4px;
+    }
+
+    button:hover {
+        background-color: #0056b3;
+    }
+
+    button[disabled] {
+        background-color: #aaa;
+        cursor: not-allowed;
+    }
+
+    /* 페이징 스타일 */
+    #pagination {
+        margin-top: 20px;
+        text-align: center;
+    }
+
+    #pagination button {
+        margin: 0 3px;
+        padding: 5px 10px;
+        border: 1px solid #ddd;
+        background-color: #6c757d;
+        color: white;
+        border-radius: 4px;
+    }
+
+    #pagination button[disabled] {
+        background-color: #007bff;
+        border-color: #007bff;
+        font-weight: bold;
+    }
+
+    #pagination button:hover:not([disabled]) {
+        background-color: #555;
+    }
+
+    /* 글 작성 버튼 위치 조정 */
+    #write {
+        float: right;
+    }
+</style>
+        
         <script type="text/javascript">
             $(document).ready(function(){
             	
@@ -87,44 +198,27 @@
             	
             });
         </script>
-        <style>
-        	.mouseOverHighlight {
-				   border-bottom: 1px solid blue;
-				   cursor: pointer !important;
-				   color: blue;
-				   pointer-events: auto;
-				}
-        </style>
+
     </head>
     <body>
     	<form class="form-inline" id="frmSearch" action="${contextPath}/board/boardList.do">
 	    	<input type="hidden" id="startPage" name="startPage" value=""><!-- 페이징을 위한 hidden타입 추가 -->
 	        <input type="hidden" id="visiblePages" name="visiblePages" value=""><!-- 페이징을 위한 hidden타입 추가 -->
 	    	
-	    	<h1>공지사항</h1>
+	    	<h1>게시판</h1>
 	    	<div align="center">
-	    		<table width="770px">
-	    			<tr>
-	    				<td align="right">
-		    				   <!-- 로그인 상태에서만 글 작성 버튼 표시 -->
-                             <c:if test="${not empty sessionScope.memberInfo}">
-                                <button type="button" id="write" name="write">글 작성</button>
-                            </c:if>
-	    				</td>
-	    			</tr>
-	    		</table>
 	    		<table border="1" width="100%">
 	    			<tr>
-	    				<th width="50px">
+	    				<th width="10%">
 	    					No
 	    				</th>
-	    				<th width="850px">
+	    				<th width="50%">
 	    					제목
 	    				</th>
-	    				<th width="100px">
+	    				<th width="20%">
 	    					작성자
 	    				</th>
-	    				<th width="200px">
+	    				<th width="30%">
 	    					작성일
 	    				</th>
 	    			</tr>
@@ -153,6 +247,14 @@
 			    	</c:choose>
 	    		</table>
 	    		<br>
+	    			<tr>
+	    				<td align="right">
+		    				   <!-- 로그인 상태에서만 글 작성 버튼 표시 -->
+                             <c:if test="${not empty sessionScope.memberInfo}">
+                                <button type="button" id="write" name="write">글 작성</button>
+                            </c:if>
+	    				</td>
+	    			</tr>
 	    		<div id="pagination"></div>
 	    	</div>
     	</form>

@@ -86,21 +86,6 @@ public class GoodsControllerImpl extends BaseController   implements GoodsContro
 		return mav;
 	}
 	
-//상품 상페페이지에서 조회한 상품 정보를 빠른메뉴(퀵메뉴)에 표시하기 위해 !!! 
-//메소드 호출시!  조회된 도서상품 번호, 조회한 도서상품 정보!GoodsVO객체, session을  전달받습니다. 
-
-//session에 최근본 상품정보(퀵메뉴에 보여질 상품정보)가 저장되어 있지 않으면 
-//2번쨰 매개변수 GoodsVO goodsVO로 전달 받은  상품상세페이지 요청시 조회한 도서상품정보(GoodsVO객체)를 
-//ArrayList배열을 생성하여 목록을 추가합니다.
-
-//session에 또한 최근 본 상품정보가 저장된(퀵메뉴에 보여질 상품정보가 저장된) ArrayList배열이 저장되어 있고 4개 미만일 경우
-//ArrayList배열에서 GoodsVO객체를 하나씩얻어 상품상세피이지 요청시 조회한 도서상품 번호(현재 메소드의 첫번째 매개변수 String goods_id로 전달받은 번호)와 비교하여
-//이미 최근본 상품인지 아닌지를 확인합니다.  
-//이미 최근본 상품이라면  already_existed변수의값을 true로 설정하고 빠져 나갑니다.
-//상품상세페이지 요청시 본 상품이  최근본 상품이 아니라면 기존 최근 본 상품정보가 저장된(퀵메뉴에 보여질 상품정보가 저장된) ArrayList배열에 상품상세페이지 요청시 본 상품 정보를 추가합니다.
-
-//session에 또한 최근 본 상품정보가 저장된(퀵메뉴에 보여질 상품정보가 저장된) ArrayList배열이 저장되어 있지 않으면?
-	//상품상세페이지 요청시 본 상품정보(두번쨰 매개변수 GoodsVO goodsVO로 받는 상품정보)를  ArrayList배열 생성후 추가시킵니다.
 	private void addGoodsInQuick(String goods_id, GoodsVO goodsVO, HttpSession session) {
 	    boolean already_existed = false;
 

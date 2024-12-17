@@ -130,7 +130,7 @@
 <body>
 	<div id="logo">
 	<a href="${contextPath}/main/main.do">
-		<img width="176" height="80" alt="booktopia" src="${contextPath}/resources/image/Booktopia_Logo.jpg">
+		<img width="176" height="80" alt="booktopia" src="${contextPath}/resources/image/bookplus.png">
 		</a>
 	</div>
 	<div id="head_link">
@@ -155,7 +155,7 @@
 			  	   관리자 화면 추가 
 			   --%>
 		      <c:if test="${sessionScope.isLogOn==true and sessionScope.memberInfo.member_id =='admin' }">  
-		   	   <li class="no_line"><a href="${contextPath}/admin/goods/adminGoodsMain.do">관리자</a></li>
+		   	   <li class="no_line"><a href="${contextPath}/admin/member/adminMemberMain.do">관리자</a></li>
 			  </c:if>
 			  
 		</ul>

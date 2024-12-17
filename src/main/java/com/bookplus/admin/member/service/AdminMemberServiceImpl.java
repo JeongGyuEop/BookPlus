@@ -45,4 +45,10 @@ public class AdminMemberServiceImpl implements AdminMemberService {
 		 String member_id=(String)memberMap.get("member_id");
 		 adminMemberDAO.modifyMemberInfo(memberMap);
 	}
+
+	@Override
+	public void deleteRealMember(String member_id) throws Exception {
+		adminMemberDAO.deleteRealMember(member_id);
+		
+	}
 }
