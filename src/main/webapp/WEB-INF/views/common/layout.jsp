@@ -31,6 +31,19 @@
 			'showControls' : false,
 			'centerMarkers' : false
 		});
+
+		// 페이지 로딩 후 DB 갱신을 위한 AJAX 요청
+		$.ajax({
+			url : "${contextPath}/goods/updateDatabase", // 갱신을 처리할 서버의 엔드포인트
+			type : "POST", // DB 갱신은 POST 요청이 적합
+			dataType : "json", // 서버에서 반환될 데이터 형식 (JSON 형식 사용)
+			success : function(response) {
+				console.log(response.message); // 성공 메시지 로깅
+			},
+			error : function(xhr, status, error) {
+				console.error("DB 갱신 실패:", error); // 에러 로깅
+			}
+		});
 	});
 	// 스티키 		
 	$(function() {

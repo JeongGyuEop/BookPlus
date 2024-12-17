@@ -14,8 +14,8 @@
         <result property="member_birth_y" column="member_birth_y" />
         <result property="member_birth_m" column="member_birth_m" />
         <result property="member_birth_d" column="member_birth_d" />
-        
         <result property="member_birth_gn" column="member_birth_gn" />
+        
         <result property="tel1" column="tel1" />
         <result property="tel2" column="tel2" />
         <result property="tel3" column="tel3" />
@@ -23,6 +23,7 @@
         <result property="hp1" column="hp1" />
         <result property="hp2" column="hp2" />
         <result property="hp3" column="hp3" />
+        
         <result property="smssts_yn" column="smssts_yn" />
         <result property="email1" column="email1" />
         <result property="email2" column="email2" />
@@ -33,6 +34,8 @@
         <result property="jibunAddress" column="jibunAddress" />
         <result property="namujiAddress" column="namujiAddress" />
         <result property="joinDate" column="joinDate" />
+        <result property="socialProvider" column="SOCIAL_PROVIDER" />
+        <result property="apiId" column="api_id" />
     </resultMap>    
 
     <!-- 로그인 시 입력한 아이디, 비밀번호 값에 해당하는 정보를 테이블에서 조회 -->

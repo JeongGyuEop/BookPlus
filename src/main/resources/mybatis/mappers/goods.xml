@@ -98,56 +98,28 @@
     <insert id="insertGoods" parameterType="GoodsVO">
         <![CDATA[
            INSERT INTO T_SHOPPING_GOODS (
-            goods_sort,
-            goods_title,
-            goods_writer,
-            goods_publisher,
-            goods_price,
-            goods_sales_price,
-            goods_published_date,
-            goods_isbn,
-            goods_delivery_price,
-            goods_delivery_date,
-            goods_status,
-            goods_credate
+            goods_title, 
+            goods_author, 
+            goods_pubDate, 
+            goods_isbn, 
+            goods_priceStandard, 
+            goods_priceSales, 
+            goods_cover, 
+            goods_categoryName, 
+            goods_publisher
         ) VALUES (
-            #{goods_sort},
-            #{goods_title},
-            #{goods_writer},
-            #{goods_publisher},
-            #{goods_price},
-            #{goods_sales_price},
-            #{goods_published_date},
-            #{goods_isbn},
-            #{goods_delivery_price},
-            #{goods_delivery_date},
-            #{goods_status},
+            #{goods_title}, 
+            #{goods_author}, 
+            #{goods_pubDate}, 
+            #{goods_isbn}, 
+            #{goods_priceStandard}, 
+            #{goods_priceSales}, 
+            #{goods_cover}, 
+            #{goods_categoryName}, 
+            #{goods_publisher}
             NOW()
         )
         ]]>
     </insert>
-
-    <!-- 이미지 파일 정보 삽입 -->
-<insert id="insertNewGoodsImage" parameterType="ImageFileVO">
-    <![CDATA[
-        INSERT INTO T_GOODS_DETAIL_IMAGE (
-            image_id,
-            goods_id,
-            filename,
-            reg_id,
-            filetype,
-            credate
-        )
-        SELECT
-            IFNULL(MAX(image_id), 0) + 1,
-            #{goods_id},
-            #{fileName},
-            #{reg_id},
-            #{fileType},
-            NOW()
-        FROM T_GOODS_DETAIL_IMAGE;
-    ]]>
-</insert>
-
 
 </mapper>

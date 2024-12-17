@@ -4,14 +4,15 @@
 
 <configuration>
   <typeAliases>
-    <typeAlias type="com.bookshop01.goods.vo.GoodsVO" alias="goodsVO" />
-    <typeAlias type="com.bookshop01.goods.vo.ImageFileVO" alias="imageFileVO" />
-    <typeAlias type="com.bookshop01.member.vo.MemberVO" alias="memberVO" />
-    <typeAlias type="com.bookshop01.cart.vo.CartVO" alias="cartVO" />
-    <typeAlias type="com.bookshop01.order.vo.OrderVO" alias="orderVO" />
-    <typeAlias type="com.bookshop01.mypage.vo.MyPageVO" alias="mypageVO" />
-    <typeAlias type="com.bookshop01.board.vo.Board" alias="Board" />
-    <typeAlias type="com.bookshop01.board.vo.BoardReply" alias="BoardReply" />
+    <typeAlias type="com.bookplus.goods.vo.GoodsVO" alias="goodsVO" />
+    <typeAlias type="com.bookplus.goods.vo.ImageFileVO" alias="imageFileVO" />
+    <typeAlias type="com.bookplus.member.vo.MemberVO" alias="memberVO" />
+    <typeAlias type="com.bookplus.cart.vo.CartVO" alias="cartVO" />
+    <typeAlias type="com.bookplus.order.vo.OrderVO" alias="orderVO" />
+    <typeAlias type="com.bookplus.mypage.vo.MyPageVO" alias="mypageVO" />
+    <typeAlias type="com.bookplus.API.weather.vo.APIweatherVO" alias="weatherVO" />
+    <typeAlias type="com.bookplus.board.vo.Board" alias="Board" />
+    <typeAlias type="com.bookplus.board.vo.BoardReply" alias="BoardReply" />
   </typeAliases>
 </configuration>
 
