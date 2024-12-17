@@ -24,5 +24,6 @@ public interface GoodsService {
 
 	// DB 업데이트
 	public boolean updateDatabase(List<GoodsVO> fetchBookDetails) throws Exception;
+	
 
 }

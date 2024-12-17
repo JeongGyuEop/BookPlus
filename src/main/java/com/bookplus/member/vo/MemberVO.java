@@ -222,9 +222,6 @@ public class MemberVO {
                 ", member_birth_m='" + member_birth_m + '\'' +
                 ", member_birth_d='" + member_birth_d + '\'' +
                 ", member_birth_gn='" + member_birth_gn + '\'' +
-                ", hp1='" + hp1 + '\'' +
-                ", hp2='" + hp2 + '\'' +
-                ", hp3='" + hp3 + '\'' +
                 ", smssts_yn='" + smssts_yn + '\'' +
                 ", email1='" + email1 + '\'' +
                 ", email2='" + email2 + '\'' +
