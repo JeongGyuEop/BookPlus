@@ -58,7 +58,7 @@
 			FROM T_SHOPPGING_ORDER
 			WHERE DATE(pay_order_time) = CURDATE()
         	AND member_id = #{member_id}
-        	ORDER BY pay_order_time DESC
+        	ORDER BY order_seq_num DESC
 		]]>
 	</select>
 

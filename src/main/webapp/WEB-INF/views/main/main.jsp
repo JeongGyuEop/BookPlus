@@ -6,7 +6,12 @@
 <%
 request.setCharacterEncoding("UTF-8");
 %>
-
+<script src="${contextPath}/resources/jquery/jquery-1.6.2.min.js" type="text/javascript"></script>
+<script src="${contextPath}/resources/jquery/jquery.easing.1.3.js" type="text/javascript"></script>
+<script src="${contextPath}/resources/jquery/stickysidebar.jquery.js" type="text/javascript"></script>
+<script src="${contextPath}/resources/jquery/basic-jquery-slider.js" type="text/javascript"></script>
+<script src="${contextPath}/resources/jquery/tabs.js" type="text/javascript"></script>
+<script src="${contextPath}/resources/jquery/carousel.js" type="text/javascript"></script>
 <div id="ad_main_banner">
 	<ul class="bjqs">
 		<li><img width="775" height="145"
@@ -21,16 +26,12 @@ request.setCharacterEncoding("UTF-8");
 <div class="main_book">
 	<c:set var="goods_count" value="0" />
 	<h3>베스트셀러</h3>
-
-	<!-- 조회된 베스트 셀러 15개를 메인화면 중앙에 표시 합니다.-->
 	<c:forEach var="item" items="${goodsMap.bestseller}">
 		<c:set var="goods_count" value="${goods_count+1}" />
 		<div class="book">
-			<!-- 이미지 클릭시 상품 상세페이지를 요청합니다. -->
 			<a href="${contextPath}/goods/goodsDetail.do?goods_isbn=${item.goods_isbn}">
 				<img class="link" src="${contextPath}/resources/image/1px.gif">
 			</a>
-			<!-- 썸네일 이미지 요청시 goods_isbn과 goods_cover 전달 -->
 			<img width="121" height="154"
 				src="${contextPath}/thumbnails.do?goods_isbn=${item.goods_isbn}&fileName=${item.goods_cover}">
 
@@ -40,8 +41,6 @@ request.setCharacterEncoding("UTF-8");
 				${goods_priceStandard}원
 			</div>
 		</div>
-
-		<!-- 조회된 베스트셀러 도서상품이 15개 이상이면? 16번째 이미지 대신 more를 표시합니다. -->
 		<c:if test="${goods_count==15}">
 			<div class="book">
 				<font size=20> <a href="#">more</a></font>
