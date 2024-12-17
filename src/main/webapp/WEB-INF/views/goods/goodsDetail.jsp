@@ -69,7 +69,7 @@
 			//	$('#message').append(data);
 				if(data.trim()=='add_success'){ //장바구니 테이블에 새상품을 추가하고 메세지를 받으면?
 					
-						imagePopup('open', '.layer01');	
+					alert("장바구니에 담았습니다.");
 				
 				}else if(data.trim()=='already_existed'){//장바구니 테이블에 
 														 //사이트 이용자가 추가할 상품이 이미 저장되어 있으면?
@@ -88,7 +88,7 @@
 	}
 
 	// 팝업창의 x 이미지를 감싸고 있는 <a>태그를 클랙했을때 호출되는 함수 
-	function imagePopup(type) {
+/* 	function imagePopup(type) {
 		
 		if (type == 'open') {
 			// 팝업창을 연다.
@@ -103,7 +103,7 @@
 			// 팝업창을 닫는다.
 			$('#layer').attr('style', 'visibility:hidden');
 		}
-	}
+	} */
 
 //구매하기 버튼을 누르면 호출되는 함수로 현재보고 있는 도서상품의 번호, 제목, 정가가격, 도서이미지명을 매개변수로 받아서 처리   
 function fn_order_each_goods(goods_id,goods_title, goods_price, goods_sales_price,fileName){
@@ -343,20 +343,6 @@ function fn_order_each_goods(goods_id,goods_title, goods_price, goods_sales_pric
 	</div>
 	<div class="clear"></div>
 	<div id="layer" style="visibility: hidden">
-		<!-- visibility:hidden 으로 설정하여 해당 div안의 모든것들을 가려둔다. -->
-		<div id="popup">
-			<!-- 팝업창 닫기  X 이미지 버튼 -->
-			<a href="javascript:" onClick="javascript:imagePopup('close', '.layer01');"> 
-				<img src="${contextPath}/resources/image/close.png" id="close" />
-			</a> 
-			<br /> 
-			<font size="12" id="contents">장바구니에 담았습니다.</font>
-			<br>
-			<%-- 장바구니 테이블에 저장된 상품목록 조회 요청! --%>
-			<form   action='${contextPath}/cart/myCartList.do'  >				
-					<input  type="submit" value="장바구니 보기">
-			</form>			
-		</div>
 	</div>		
 </body>
 </html>
