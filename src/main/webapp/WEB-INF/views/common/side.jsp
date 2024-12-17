@@ -22,6 +22,7 @@
 			<H3>주요기능</H3>
 			<ul>
 				<li><a href="${contextPath}/admin/member/adminMemberMain.do">회원관리</a></li>
+				
 			</ul>
 		</li>
 	</c:when>

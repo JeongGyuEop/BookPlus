@@ -167,8 +167,11 @@ function fn_modify_member_info(member_id,mod_type){
 			var hp1=frm_mod_member.hp1;
 			var hp2=frm_mod_member.hp2;
 			var hp3=frm_mod_member.hp3;
+			var smssts_yn=frm_mod_member.smssts_yn;
 			
-			for(var i=0; i < hp1.length;i++){
+			console.log(smssts_yn.value);
+			
+			for(var i=0; hp1.length;i++){
 			 	if(hp1[i].selected){
 					value_hp1=hp1[i].value;
 					break;
@@ -176,18 +179,31 @@ function fn_modify_member_info(member_id,mod_type){
 			}
 			value_hp2=hp2.value;
 			value_hp3=hp3.value;
+			if(smssts_yn.checked == true){
+				value_smssts_yn = 'Y';
+			}else{
+				value_smssts_yn = 'N';
+			}
 			
-			value=value_hp1+","+value_hp2+","+value_hp3;
-			//alert("member_hp:"+value);
+			
+			value=value_hp1+","+value_hp2+", "+value_hp3+","+value_smssts_yn;
+			alert("member_hp:"+value);
 			
 		}else if(mod_type=='email'){
 			var email1=frm_mod_member.email1;
 			var email2=frm_mod_member.email2;
+			var emailsts_yn=frm_mod_member.emailsts_yn;
 			
 			value_email1=email1.value;
 			value_email2=email2.value;
+			if(emailsts_yn.checked == true){
+				value_emailsts_yn='Y';
+			}else{
+				value_emailsts_yn='N';
+			}
 			
-			value=value_email1+","+value_email2;
+			
+			value=value_email1+","+value_email2+","+value_emailsts_yn;
 			//alert(value);
 			
 		}else if(mod_type=='address'){
@@ -393,7 +409,15 @@ function fn_real_delete_member(member_id) {
 							<option value="019">019</option>
 					</select> 
 					 - <input type="text" name="hp2" size=4 value="${member_info.hp2 }"> 
-					 - <input type="text"name="hp3"  size=4 value="${member_info.hp3 }">	
+					 - <input type="text"name="hp3"  size=4 value="${member_info.hp3 }"><br> <br>
+					 <c:choose> 
+					   <c:when test="${member_info.smssts_yn=='Y' }">
+					     <input type="checkbox"  name="smssts_yn" value="Y" checked /> 쇼핑몰에서 발송하는 SMS 소식을 수신합니다.
+						</c:when>
+						<c:otherwise>
+						  <input type="checkbox"  name="smssts_yn" value="N"  /> 쇼핑몰에서 발송하는 SMS 소식을 수신합니다.
+						</c:otherwise>
+					 </c:choose>	
 				    </td>
 					<td>
 					  <input type="button" value="수정하기" onClick="fn_modify_member_info('${member_info.member_id }','hp')" />
@@ -416,7 +440,15 @@ function fn_real_delete_member(member_id) {
 							<option value="empal.com">empal.com</option>
 							<option value="korea.com">korea.com</option>
 							<option value="freechal.com">freechal.com</option>
-					</select>
+					</select><Br><br> 
+					<c:choose> 
+					   <c:when test="${member_info.emailsts_yn=='Y' }">
+					     <input type="checkbox" name="emailsts_yn"  value="Y" checked /> 쇼핑몰에서 발송하는 e-mail을 수신합니다.
+						</c:when>
+						<c:otherwise>
+						  <input type="checkbox" name="emailsts_yn"  value="N" /> 쇼핑몰에서 발송하는 e-mail을 수신합니다.
+						</c:otherwise>
+					 </c:choose>
 					</td>
 					<td>
 					  <input type="button" value="수정하기" onClick="fn_modify_member_info('${member_info.member_id }','email')" />

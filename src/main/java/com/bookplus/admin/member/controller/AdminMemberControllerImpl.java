@@ -128,12 +128,14 @@ public class AdminMemberControllerImpl extends BaseController  implements AdminM
             memberMap.put("hp1", val[0]);
             memberMap.put("hp2", val[1]);
             memberMap.put("hp3", val[2]);
+			memberMap.put("smssts_yn", val[3]);
         }
         // 이메일 처리
         else if (mod_type.equals("email")) {
             val = value.split(",");
             memberMap.put("email1", val[0]);
             memberMap.put("email2", val[1]);
+			memberMap.put("emailsts_yn", val[2]);
         }
         // 주소 처리
         else if (mod_type.equals("address")) {
