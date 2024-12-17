@@ -5,48 +5,62 @@
 
 <mapper namespace="mapper.goods">
 
-    <!-- GoodsVO 매핑 변경 반영 -->
-    <resultMap id="goodsResult" type="GoodsVO">
-        <result property="goods_isbn" column="goods_isbn"/>
-        <result property="goods_title" column="goods_title"/>
-        <result property="goods_author" column="goods_author"/>
-        <result property="goods_priceStandard" column="goods_priceStandard"/>
-        <result property="goods_publisher" column="goods_publisher"/>
-        <result property="goods_status" column="goods_status"/>
-        <result property="goods_priceSales" column="goods_priceSales"/>
-        <result property="goods_pubDate" column="goods_pubDate"/>
-        <result property="goods_total_page" column="goods_total_page"/>
-        <result property="goods_isbn" column="goods_isbn"/>
-        <result property="goods_delivery_price" column="goods_delivery_price"/>
-        <result property="goods_delivery_date" column="goods_delivery_date"/>
-        <result property="goods_cover" column="fileName"/>
-        <result property="goods_categoryName" column="goods_categoryName"/>
-        <result property="goods_author_intro" column="goods_author_intro"/>
-        <result property="goods_contents_order" column="goods_contents_order"/>
-        <result property="goods_intro" column="goods_intro"/>
-    </resultMap>
+	<resultMap id="goodsResult" type="GoodsVO">
+		<result property="goods_isbn" column="goods_isbn" />
+		<result property="goods_title" column="goods_title" />
+		<result property="goods_author" column="goods_author" />
+		<result property="goods_priceStandard" column="goods_priceStandard" />
+		<result property="goods_publisher" column="goods_publisher" />
+		<result property="goods_status" column="goods_status" />
+		<result property="goods_priceSales" column="goods_priceSales" />
+		<result property="goods_pubDate" column="goods_pubDate" />
+		<result property="goods_total_page" column="goods_total_page" />
+		<result property="goods_delivery_price" column="goods_delivery_price" />
+		<result property="goods_delivery_date" column="goods_delivery_date" />
+		<result property="goods_cover" column="goods_cover" />
+		<result property="goods_categoryName" column="goods_categoryName" />
+		<result property="goods_author_intro" column="goods_author_intro" />
+		<result property="goods_contents_order" column="goods_contents_order" />
+		<result property="goods_intro" column="goods_intro" />
+	</resultMap>
 
-    <!-- imageResult 및 ImageFileVO 관련 매핑 제거 
-         이미지 정보도 GoodsVO로 통합되어 goods_cover 필드 활용 -->
+	<select id="selectGoodsList" parameterType="String" resultMap="goodsResult">
+    <![CDATA[
+    SELECT t.*
+    FROM (
+        SELECT g.*, d.goods_cover
+        FROM T_SHOPPING_GOODS g
+        JOIN T_GOODS_DETAIL_IMAGE d ON g.goods_isbn = d.goods_isbn
+        WHERE d.filetype = 'main_image'
+        AND g.goods_status = #{goodsStatus}
+        ORDER BY g.goods_creDate DESC
+    ) t
+    LIMIT 15
+    ]]>
+	</select>
 
-    <!-- 상품 리스트 조회 (goods_id → goods_isbn, fileName → goods_cover) -->
-    <select id="selectGoodsList" parameterType="String" resultMap="goodsResult">
-        <![CDATA[
-        SELECT t.*
-        FROM (
-            SELECT g.*, d.filename AS fileName
-            FROM T_SHOPPING_GOODS g
-            JOIN T_GOODS_DETAIL_IMAGE d ON g.goods_isbn = d.goods_isbn
-            WHERE d.filetype = 'main_image'
-            AND g.goods_status = #{goodsStatus}
-            ORDER BY g.goods_creDate DESC
-        ) t
-        LIMIT 15
-        ]]>
-    </select>
+	<insert id="insertNewGoodsImage" parameterType="GoodsVO">
+    <![CDATA[
+        INSERT INTO T_GOODS_DETAIL_IMAGE (
+            goods_isbn,
+            goods_cover,
+            reg_id,
+            filetype,
+            credate
+        ) VALUES (
+            #{goods_isbn},
+            #{goods_cover},
+            #{reg_id},
+            #{filetype},
+            NOW()
+        )
+    ]]>
+	</insert>
 
-    <!-- 상품 상세 정보 조회 -->
-    <select id="selectGoodsDetail" resultMap="goodsResult" parameterType="String">
+
+	<!-- 상품 상세 정보 조회 -->
+	<select id="selectGoodsDetail" resultMap="goodsResult"
+		parameterType="String">
         <![CDATA[
         SELECT g.*, d.filename AS fileName
         FROM T_SHOPPING_GOODS g
@@ -55,21 +69,23 @@
         AND g.goods_isbn = #{goods_isbn}
         ORDER BY g.goods_isbn
         ]]>
-    </select>
+	</select>
 
-    <!-- 상품 상세 이미지 정보 조회 (main_image 제외) 
-         여기서도 GoodsVO의 goods_cover를 사용해서 파일명 매핑 -->
-    <select id="selectGoodsDetailImage" resultMap="goodsResult" parameterType="String">
+	<!-- 상품 상세 이미지 정보 조회 (main_image 제외) 여기서도 GoodsVO의 goods_cover를 사용해서 파일명 
+		매핑 -->
+	<select id="selectGoodsDetailImage" resultMap="goodsResult"
+		parameterType="String">
         <![CDATA[
         SELECT d.goods_isbn, d.filename AS fileName
         FROM T_GOODS_DETAIL_IMAGE d
         WHERE d.filetype != 'main_image'
         AND d.goods_isbn = #{goods_isbn}
         ]]>
-    </select>
+	</select>
 
-    <!-- 상품 검색 -->
-    <select id="selectGoodsBySearchWord" resultMap="goodsResult" parameterType="String">
+	<!-- 상품 검색 -->
+	<select id="selectGoodsBySearchWord" resultMap="goodsResult"
+		parameterType="String">
         <![CDATA[
         SELECT g.*, d.filename AS fileName
         FROM T_SHOPPING_GOODS g
@@ -78,20 +94,21 @@
         AND g.goods_title LIKE CONCAT('%', #{searchWord}, '%')
         ORDER BY g.goods_creDate DESC
         ]]>
-    </select>
+	</select>
 
-    <!-- 키워드 자동 완성 (변경 사항 없음) -->
-    <select id="selectKeywordSearch" resultType="String" parameterType="String">
+	<!-- 키워드 자동 완성 (변경 사항 없음) -->
+	<select id="selectKeywordSearch" resultType="String"
+		parameterType="String">
         <![CDATA[
         SELECT goods_title 
         FROM T_SHOPPING_GOODS
         WHERE goods_title LIKE CONCAT('%', #{keyword}, '%')
         ORDER BY goods_creDate DESC
         ]]>
-    </select>
-    
-    <!-- Goods 데이터 삽입 -->
-    <insert id="insertGoods" parameterType="GoodsVO">
+	</select>
+
+	<!-- Goods 데이터 삽입 -->
+	<insert id="insertGoods" parameterType="GoodsVO">
         <![CDATA[
            INSERT INTO T_SHOPPING_GOODS (
             goods_categoryName,
@@ -121,25 +138,6 @@
             NOW()
         )
         ]]>
-    </insert>
-
-    <!-- 이미지 파일 정보 삽입: ImageFileVO → GoodsVO, goods_id → goods_isbn, fileName → goods_cover -->
-    <insert id="insertNewGoodsImage" parameterType="GoodsVO">
-        <![CDATA[
-            INSERT INTO T_GOODS_DETAIL_IMAGE (
-            goods_isbn,
-            filename,
-            reg_id,
-            filetype,
-            credate
-        ) VALUES (
-            #{goods_isbn},
-            #{goods_cover},
-            #{reg_id},
-            #{filetype},
-            NOW()
-        )
-        ]]>
-    </insert>
+	</insert>
 
 </mapper>

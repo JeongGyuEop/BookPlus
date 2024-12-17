@@ -5,7 +5,6 @@
 <configuration>
   <typeAliases>
     <typeAlias type="com.bookplus.goods.vo.GoodsVO" alias="goodsVO" />
-    <typeAlias type="com.bookplus.goods.vo.ImageFileVO" alias="imageFileVO" />
     <typeAlias type="com.bookplus.member.vo.MemberVO" alias="memberVO" />
     <typeAlias type="com.bookplus.cart.vo.CartVO" alias="cartVO" />
     <typeAlias type="com.bookplus.order.vo.OrderVO" alias="orderVO" />

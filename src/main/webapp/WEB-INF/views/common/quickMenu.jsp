@@ -11,7 +11,6 @@
 <nav>
     <ul>
         <c:choose>
-            <!-- admin 계정으로 로그인 했을 경우 메인화면의 왼쪽 사이드 영역 !! 관리자 메뉴 디자인 표시 -->
             <c:when test="${sessionScope.side_menu=='admin_mode'}">
                 <li>
                     <h3>주요기능</h3>
@@ -24,7 +23,6 @@
                     </ul>
                 </li>
             </c:when>
-            <!-- 일반 계정으로 로그인 했을 경우 메인화면의 왼쪽 사이드 영역!! 일반 사용자를 위한 메뉴 항목 표시 -->
             <c:when test="${sessionScope.side_menu=='my_page'}">
                 <li>
                     <h3>주문내역</h3>
@@ -45,7 +43,6 @@
                     </ul>
                 </li>
             </c:when>
-            <!-- 그 외 사용자 메뉴 표시 -->
             <c:otherwise>
                 <li>
                     <h3>국내외 도서</h3>
@@ -110,11 +107,8 @@
         </select>
         <button type="button" id="checkHoroscopeBtn">운세 보기</button>
     </form>
-    <!-- Google 번역기 API 사용하기 위한 추가3. 구글 번역기 API 적용 -->
     <div id="google_translate_element"></div>
-    <!-- Google 번역기 API 사용하기 위한 추가3. -->
     
-    <!-- 운세 결과 표시 영역 -->
     <div class="horoscope-description" id="horoscopeDescription"></div>
 </div>
 
@@ -125,10 +119,8 @@
     <a href="#"><img width="190" height="69" src="${contextPath}/resources/image/QnA_logo.jpg"></a>
 </div>
 
-<!-- jQuery 최신 버전 로드 -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-<!-- Google 번역기 API 사용하기 위한 추가2. -->
 <script type="text/javascript">
     function googleTranslateElementInit() {
         new google.translate.TranslateElement({
@@ -140,7 +132,6 @@
     /* VERTICAL 드롭다운(*Google 번역에서 제공* 수직으로 출력), HORIZONTAL 드롭다운(*Google 번역에서 제공* 수평으로 출력) */
 </script>
 <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-<!-- Google 번역기 API 사용하기 위한 추가2. -->
 
 <script type="text/javascript">
     // 별자리 운세
@@ -278,8 +269,6 @@
     }
 </script>
 <body>
-    <!-- "quickMenu.jsp" 페이지에서 최근 본 도서상품을 표시하는 부분입니다.
-         최근 본 상품이 없을 경우 메시지를 표시하고, 있으면 상품 정보를 표시합니다. -->
     <div id="sticky">
         <ul>
             <li>
@@ -302,17 +291,13 @@
             <h3>최근 본 상품</h3>
             <ul>
                 <c:choose>
-                    <!-- 최근 본 도서상품이 없을 경우 -->
                     <c:when test="${empty sessionScope.quickGoodsList}">
                         <strong>최근본 상품이 없습니다.</strong>
                     </c:when>
-                    <!-- 최근 본 도서상품이 하나라도 있을 경우 -->
                     <c:otherwise>
                         <form name="frm_sticky">
-                            <!-- 최근 본 도서상품 정보를 숨겨진 input 태그에 저장 -->
                             <c:forEach var="item" items="${sessionScope.quickGoodsList}" varStatus="itemNum">
                                 <c:choose>
-                                    <!-- 첫 번째 이미지만 퀵메뉴 영역에 표시 -->
                                     <c:when test="${itemNum.count == 1}">
                                         <a href="javascript:goodsDetail();">
                                             <img width="75" height="95" id="img_sticky" src="${contextPath}/thumbnails.do?goods_id=${item.goods_id}&fileName=${item.goods_fileName}">
@@ -333,11 +318,9 @@
         </div>
         <div>
             <c:choose>
-                <!-- 최근본 도서상품이 없을 경우 -->
                 <c:when test="${empty sessionScope.quickGoodsList}">
                     <h5>0/0</h5>
                 </c:when>
-                <!-- 최근본 도서상품이 있을 경우 -->
                 <c:otherwise>
                     <h5>
                         <a href='javascript:fn_show_previous_goods();'>이전</a> &nbsp;

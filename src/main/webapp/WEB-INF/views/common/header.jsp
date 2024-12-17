@@ -63,7 +63,6 @@
 </script>
 
 <c:if test="${sessionScope.isLogOn==true and not empty sessionScope.memberInfo }">
-	<!-- 세션에 isLogOn이 true이고 memberInfo가 존재하면 로그인 상태 -->
 </c:if>
 <c:if test="${message=='cancel_order'}">
 <script>
