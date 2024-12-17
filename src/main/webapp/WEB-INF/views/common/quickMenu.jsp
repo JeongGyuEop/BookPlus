@@ -209,7 +209,7 @@
 			<!-- 사용자 권한에 따라 메뉴 다르게 표시-->
 
 			<!-- 로그인성공하면: 장바구니 -->
-			<c:if test="${sessionScope.role == 'member'}">
+			<c:if test="${sessionScope.isLogOn == true}">
 				<li><a href="${contextPath}/cart/myCartList.do"> <img
 						class="cart-icon" width="24" height="24"
 						src="${contextPath}/resources/image/cart_icon.png" alt="장바구니 아이콘">
@@ -217,7 +217,7 @@
 				</a></li>
 			</c:if>
 			<!-- 비로그인 상태에서 보이는 기본 메뉴 -->
-			<c:if test="${empty sessionScope.role}">
+			<c:if test="${empty sessionScope.isLogOn}">
 				<li><a href="${contextPath}/member/loginForm.do"> <img
 						class="login-icon" width="24" height="24"
 						src="${contextPath}/resources/image/login_icon.png" alt="로그인 아이콘">
