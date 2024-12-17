@@ -12,7 +12,6 @@ public interface GoodsDAO {
 	public GoodsVO selectGoodsDetail(String goods_id) throws DataAccessException;
 	public List<GoodsVO> selectGoodsDetailImage(String goods_id) throws DataAccessException;
 	public List<GoodsVO> selectGoodsBySearchWord(String searchWord) throws DataAccessException;
-	public void insertGoods(GoodsVO goodsVO) throws DataAccessException, Exception;
-	public void insertImageFile(GoodsVO goodsVO) throws DataAccessException, Exception;
-	// 1. 인터페이스 만들어주고
+
+	public int insertGoods(GoodsVO goodsVO) throws DataAccessException;
 }
