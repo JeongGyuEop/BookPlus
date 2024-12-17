@@ -59,11 +59,14 @@ public class MemberControllerImpl extends BaseController implements MemberContro
 			session.setAttribute("isLogOn", true);
 			session.setAttribute("memberInfo",memberVO);
 			
-			  if ("admin".equals(memberVO.getRole())) { 
-		            session.setAttribute("role", "admin"); // 관리자
-		        } else {
-		            session.setAttribute("role", "member"); // 일반 회원
-		        }
+			if ("admin".equalsIgnoreCase(memberVO.getRole())) { 
+			    session.setAttribute("role", "admin"); //관리자
+			    System.out.println("00000관리자로 로그인 성공!");
+			} else {
+			    session.setAttribute("role", "member"); //일반 회원
+			    System.out.println("88888일반 회원으로 로그인 성공!");
+			}
+
 		   
 			//상품 주문 과정에서 로그인 했으면 로그인 후 다시 주문 화면으로 진행하고  그외에 는 메인페이지를 표시합니다. 
 			String action=(String)session.getAttribute("action");

@@ -613,5 +613,13 @@ display:none; position: absolute; left: 830px; top:80px; border: 0.1px  solid #8
 .cart-text {
     vertical-align: middle; /* 텍스트도 중앙에 맞추기 */
 }
+.login-icon {
+    margin-right: 5px; /* 아이콘과 텍스트 사이 간격 조정 */
+    vertical-align: middle; /* 텍스트와 아이콘 높이 맞춤 */
+}
+
+.login-text {
+    vertical-align: middle; /* 아이콘과 수직 정렬 */
+}
 
 
