@@ -56,10 +56,7 @@ public class OrderControllerImpl extends BaseController implements OrderControll
 		
 		Boolean isLogOn=(Boolean)session.getAttribute("isLogOn"); //true 또는 false를 반환 받음.  true -> 로그인함
 																  //                         false -> 미로그인 
-		
-		String action=(String)session.getAttribute("action");
 	
-		
 		//로그인을 하지 않았다면 먼저 로그인 후 주문을 처리하도록 주문 정보와 주문 페이지 요청 URL을 session에 저장합니다. 
 		if(isLogOn==null || isLogOn==false){
 			return new ModelAndView("redirect:/member/loginForm.do");
@@ -127,12 +124,13 @@ public class OrderControllerImpl extends BaseController implements OrderControll
 	    for (String cartGoods : cart_goods_qty) {
 	        // 상품 번호와 주문 수량 분리
 	        String[] cart_goods = cartGoods.split(":");
-	        int goodsIdFromRequest = Integer.parseInt(cart_goods[0]);
+	        String goodsIdFromRequest = cart_goods[0];
 	        int orderQty = Integer.parseInt(cart_goods[1]);
+	        
 
 	        // myGoodsList에서 해당 상품 검색
 	        for (GoodsVO goodsVO : myGoodsList) {
-	            if (goodsVO.getGoods_id() == goodsIdFromRequest) {
+	            if (goodsVO.getGoods_id().equals(goodsIdFromRequest)) {
 	                myOrderList.add(goodsVO);
 	                orderQtyList.add(orderQty);     // 해당 상품의 수량 추가
 

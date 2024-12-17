@@ -4,11 +4,7 @@
     %>
 <%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles" %>    
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<!--Google 번역기 API 사용하기위한 
-    추가1.  세계 언어 선택 메타 태그 추가-->
-<meta name="google-translate-customization"
-	content="6f1073ba568f1202-9c8990a4b3025b3e-ga74e3ea243d3f01d-14"></meta>
-<!-- 추가1.  세계 언어 선택 메타 태그 추가 colse -->
+
 
 
 <c:set var="contextPath"  value="${pageContext.request.contextPath}"  />
@@ -81,30 +77,6 @@
 </nav>
 <div class="clear"></div>
 
-<div id="notice">
-    <h2>게시판</h2>
-    <ul>
-        <c:forEach var="notice" items="${noticeList}">
-            <li><a href="${contextPath}/board/view.do?id=${notice.id}">${notice.subject}</a></li>
-        </c:forEach>
-    </ul>
-</div>
-
-
-    <h2><a href="${contextPath}/board/boardList.do">공지사항</a></h2>
-    <c:if test="${empty latestNotices}">
-        <br><p>최신 공지사항이 없습니다.</p>
-    </c:if>
-    <ul>
-        <c:forEach var="notice" items="${latestNotices}" varStatus="status">
-            <li>
-                <a href="${contextPath}/board/view.do?id=${notice.id}">
-                    ${notice.subject} 
-                </a>
-            </li>
-        </c:forEach>
-    </ul>
-</div>
 <div class="horoscope-container">
     <h3>&nbsp;&nbsp;오늘의 별자리 운세</h3>
     <form action="${contextPath}/horoscope/view.do" method="get">
@@ -125,11 +97,7 @@
         </select>
         <button type="button" id="checkHoroscopeBtn">운세 보기</button>
     </form>
-	<!--Google 번역기 API 사용하기위한 추가3.-->
-	<!-- 구글 번역기 API 적용  -->
-	<div id="google_translate_element"></div>
-	<!--Google 번역기 API 사용하기위한 추가3.-->
-	
+
    <!-- 운세 결과 표시 영역 -->
     <div class="horoscope-description" id="horoscopeDescription"></div>
 </div>
@@ -160,7 +128,6 @@
 <!--Google 번역기 API 사용하기위한 추가2.-->
 
 <script type="text/javascript">
-//별자리
 $(document).ready(function() {
     $('#checkHoroscopeBtn').click(function() {
         var sign = $('#sign').val();  // 선택된 별자리 값을 가져옴
@@ -184,9 +151,9 @@ $(document).ready(function() {
                 'x-rapidapi-key': '9c5819e8a9msh27cec47277983a8p15ee97jsn0f8fb0fd3a60'  // 본인의 RapidAPI 키로 교체
             },
             success: function(response) {
-                // 운세가 정상적으로 반환되었으면 운세 내용 표시
+                // 운세가 정상적으로 반환되었으면 번역 요청
                 if (response) {
-                    $('#horoscopeDescription').html(response.horoscope);  // 응답에서 운세 내용 가져오기
+                    translateText(response.horoscope);  // 응답에서 운세 내용을 번역
                 } else {
                     $('#horoscopeDescription').html("운세를 가져올 수 없습니다.");
                 }
@@ -196,7 +163,35 @@ $(document).ready(function() {
             }
         });
     });
+
+    // 번역 요청 함수
+    function translateText(text) {
+        $.ajax({
+            url: 'https://translate.googleapis.com/translate_a/single',  // 구글 번역 API URL
+            type: 'GET',
+            data: {
+                client: 'gtx',  // 구글 번역 API 기본 클라이언트
+                sl: 'en',  // 원본 언어 (영어)
+                tl: 'ko',  // 번역할 언어 (한국어)
+                dt: 't',  // 번역된 텍스트를 반환
+                q: text    // 번역할 텍스트
+            },
+            success: function(translation) {
+                // 번역 결과 표시
+                if (translation && translation[0] && translation[0][0]) {
+                    $('#horoscopeDescription').html(translation[0][0][0]);  // 번역된 텍스트 표시
+                } else {
+                    $('#horoscopeDescription').html("번역 결과를 가져올 수 없습니다.");
+                }
+            },
+            error: function() {
+                $('#horoscopeDescription').html("번역 중 오류가 발생했습니다.");
+            }
+        });
+    }
 });
+
+
 
 
 	

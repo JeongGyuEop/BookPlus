@@ -63,7 +63,7 @@ public class CartControllerImpl extends BaseController implements CartController
 	//라는 요청 주소 cart/addGoodsInCart.do를 받았을때....
 	@RequestMapping(value="/addGoodsInCart.do" ,method = RequestMethod.POST,produces = "application/text; charset=utf8")
 	public  @ResponseBody String addGoodsInCart(//전송된 상품 번호를 받습니다.
-												@RequestParam("goods_id") int goods_id,
+												@RequestParam("goods_id") String goods_id,
 			                                    HttpServletRequest request, 
 			                                    HttpServletResponse response)  throws Exception{
 		
@@ -98,7 +98,7 @@ public class CartControllerImpl extends BaseController implements CartController
 	//myCartList.jsp중앙화면(장바구니 목록페이지)에서 변경할 수량 정보를 입력하고 수량 변경 요청이 들어오면 호출되는 메소드 
 	//cart/modifyCartQty.do
 	@RequestMapping(value="/modifyCartQty.do" ,method = RequestMethod.POST)
-	public @ResponseBody String  modifyCartQty(@RequestParam("goods_id") int goods_id,
+	public @ResponseBody String  modifyCartQty(@RequestParam("goods_id") String goods_id,
 			                                   @RequestParam("cart_goods_qty") int cart_goods_qty,
 			                                    HttpServletRequest request, HttpServletResponse response)  throws Exception{
 		HttpSession session=request.getSession();

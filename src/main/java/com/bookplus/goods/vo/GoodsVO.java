@@ -4,7 +4,7 @@ import java.sql.Date;
 import java.util.ArrayList;
 
 public class GoodsVO {
-	private int goods_id;
+	private String goods_id;
 	private String goods_title;
 	private String goods_writer;
 	private int    goods_price;
@@ -58,11 +58,11 @@ public class GoodsVO {
 	public GoodsVO() {
 	}
 
-	public int getGoods_id() {
+	public String getGoods_id() {
 		return goods_id;
 	}
 
-	public void setGoods_id(int goods_id) {
+	public void setGoods_id(String goods_id) {
 		this.goods_id = goods_id;
 	}
 

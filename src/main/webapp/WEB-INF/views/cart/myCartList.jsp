@@ -353,7 +353,7 @@ function fn_order_all_cart_goods(){
 					<td><strong>${item.goods_delivery_price }원</strong></td>
 					<td>
 					   <strong id="total_sales_price">
-					    <fmt:formatNumber  value="${(item.goods_price * (100 - item.goods_sales_price) / 100 )* cart_goods_qty}" type="number" var="total_sales_price" />
+					    <fmt:formatNumber  value="${((item.goods_price * (100 - item.goods_sales_price) / 100 ) * cart_goods_qty) + item.goods_delivery_price}" type="number" var="total_sales_price" />
 				         ${total_sales_price}원
 						</strong> 
 					</td>

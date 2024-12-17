@@ -47,7 +47,7 @@ public class MyPageControllerImpl extends BaseController  implements MyPageContr
 	public ModelAndView myPageMain(@RequestParam(required = false,value="message")  String message,
 			   HttpServletRequest request, HttpServletResponse response)  throws Exception {
 		
-		HttpSession session=request.getSession();
+		HttpSession session=request.getSession(true);
 		
 		//마이페이지 왼쪽 화면 메뉴를 보여주기 위해 조건값 저장 
 		session.setAttribute("side_menu", "my_page"); 
@@ -71,15 +71,23 @@ public class MyPageControllerImpl extends BaseController  implements MyPageContr
 		return mav;
 	}
 	
+	//==========
+	//주문 후 주문 내역을 조회하기 위해 호출하는 함
 	@Override
-	@RequestMapping(value="/myOrderDetail.do" ,method = RequestMethod.GET)
+	@RequestMapping(value="/myOrderDetail.do" ,method = RequestMethod.POST)
 	public ModelAndView myOrderDetail(@RequestParam("order_id")  String order_id,HttpServletRequest request, HttpServletResponse response)  throws Exception {
+		System.out.println("-=-=-=-=-=-=-");
 		String viewName=(String)request.getAttribute("viewName");
 		ModelAndView mav = new ModelAndView(viewName);
-		HttpSession session=request.getSession();
+		HttpSession session=request.getSession(true);
 		MemberVO orderer=(MemberVO)session.getAttribute("memberInfo");
 		
 		List<OrderVO> myOrderList=myPageService.findMyOrderInfo(order_id);
+		// 로그로 출력
+		for (OrderVO order : myOrderList) {
+		    System.out.println(order.toString());
+		}
+		
 		mav.addObject("orderer", orderer);
 		mav.addObject("myOrderList",myOrderList);
 		return mav;

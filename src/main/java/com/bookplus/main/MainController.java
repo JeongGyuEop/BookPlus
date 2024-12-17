@@ -124,10 +124,10 @@ public class MainController extends BaseController {
             	// 상품 저장
                 goodsService.saveGoods(goodsVO);  // 상품 저장 후, goods_id가 자동 생성됨
                 
-                int goodsId = goodsVO.getGoods_id();  // 자동 생성된 goods_id
+                String goodsId = goodsVO.getGoods_id();  // 자동 생성된 goods_id
                 
                 // 확인: 상품 저장 후, goods_id가 정상적으로 설정되었는지 확인
-                if (goodsId == 0) {
+                if (goodsId == null) {
                     throw new Exception("상품 저장 실패: goods_id가 생성되지 않았습니다.");
                 }
                 

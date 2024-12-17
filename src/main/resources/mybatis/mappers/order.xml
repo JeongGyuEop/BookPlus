@@ -19,6 +19,7 @@
         <result property="receiverHp3" column="receiver_hp3" />
         <result property="deliveryAddress" column="delivery_address" />
         <result property="deliveryMessage" column="delivery_message" />
+        <result property="deliveryMethod" column="delivery_method" />
         <result property="totalPrice" column="total_price" />
         <result property="payMethod" column="pay_method" />
         <result property="paymentStatus" column="payment_status" />

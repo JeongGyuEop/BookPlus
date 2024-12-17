@@ -52,7 +52,7 @@ public class OrderServiceImpl implements OrderService {
             orderVO.setOrderId(Long.parseLong(requestData.get("order_id").toString()));
             orderVO.setOrderMemberId((String) requestData.get("order_member_id"));
             orderVO.setOrderMemberName((String) requestData.get("order_member_name"));
-            orderVO.setGoodsId(Integer.parseInt(requestData.get("goods_id").toString()));
+            orderVO.setGoodsId((String) requestData.get("goods_id").toString());
             orderVO.setGoodsTitle((String) requestData.get("goods_title"));
             orderVO.setOrderGoodsQty(Integer.parseInt(requestData.get("order_goods_qty").toString()));
             orderVO.setReceiverName((String) requestData.get("receiver_name"));

@@ -70,7 +70,7 @@ public class GoodsServiceImpl implements GoodsService{
 	//API
 	@Override
 	@Transactional
-	public int saveGoods(GoodsVO goodsVO) throws Exception {
+	public String saveGoods(GoodsVO goodsVO) throws Exception {
 	    // 상품 정보 저장
 	    goodsDAO.insertGoods(goodsVO);
 
