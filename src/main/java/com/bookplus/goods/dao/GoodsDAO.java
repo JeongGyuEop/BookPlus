@@ -12,6 +12,7 @@ public interface GoodsDAO {
 	public GoodsVO selectGoodsDetail(String goods_id) throws DataAccessException;
 	public List<GoodsVO> selectGoodsDetailImage(String goods_id) throws DataAccessException;
 	public List<GoodsVO> selectGoodsBySearchWord(String searchWord) throws DataAccessException;
-
-	public int insertGoods(GoodsVO goodsVO) throws DataAccessException;
+	GoodsVO selectGoodsByISBN(String isbn); // ISBN으로 책 조회
+    int updateGoods(GoodsVO goodsVO); // 책 정보 업데이트
+    int insertGoods(GoodsVO goodsVO); // 새 책 정보 삽입
 }

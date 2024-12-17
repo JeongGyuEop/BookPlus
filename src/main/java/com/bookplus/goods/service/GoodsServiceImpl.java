@@ -195,31 +195,36 @@ public class GoodsServiceImpl implements GoodsService {
     }
 
 
-	@Override
-	public boolean updateDatabase(List<GoodsVO> fetchBookDetails) throws Exception {
-		 boolean result = false;
-		    
-		    try {
-		        // fetchBookDetails에서 받은 VO 리스트를 DAO로 전달하여 데이터베이스에 저장
-		        for (GoodsVO goodsVO : fetchBookDetails) {
-		            // 각 상품 정보에 대해 DAO의 insert 메서드 호출
-		            // 예를 들어, insertGoods()라는 메서드를 사용한다고 가정
-		            int insertResult = goodsDAO.insertGoods(goodsVO); 
-		            
-		            // insert 결과가 1이면 성공적으로 저장됨
-		            if (insertResult == 1) {
-		                result = true;  // 성공적으로 저장된 경우
-		            } else {
-		                result = false;  // 실패한 경우
-		                break;  // 실패 시 더 이상 진행하지 않고 종료
-		            }
-		        }
-		    } catch (Exception e) {
-		        e.printStackTrace();
-		        result = false;  // 예외 발생 시 실패 처리
-		    }
-		    return result;  // true/false로 성공 여부 반환
-	}
+    @Override
+    public boolean updateDatabase(List<GoodsVO> fetchBookDetails) throws Exception {
+        boolean result = true;
+        try {
+            for (GoodsVO goods : fetchBookDetails) {
+                // ISBN으로 기존 데이터 조회
+                GoodsVO existingBook = goodsDAO.selectGoodsByISBN(goods.getGoods_isbn());
+                if (existingBook != null) {
+                    // 존재하면 업데이트
+                    int updateResult = goodsDAO.updateGoods(goods);
+                    if (updateResult != 1) {
+                        System.err.println("Update 실패: " + goods.getGoods_isbn());
+                        result = false; // 실패 처리
+                    }
+                } else {
+                    // 존재하지 않으면 삽입
+                    int insertResult = goodsDAO.insertGoods(goods);
+                    if (insertResult != 1) {
+                        System.err.println("Insert 실패: " + goods.getGoods_isbn());
+                        result = false; // 실패 처리
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            result = false; // 예외 발생 시 실패
+        }
+        return result; // 최종 성공 여부 반환
+    }
+
 	
 	private String getTagValue(String tag, Element element) {
 	    NodeList nodeList = element.getElementsByTagName(tag);

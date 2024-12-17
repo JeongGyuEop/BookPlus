@@ -55,16 +55,20 @@ public class GoodsDAOImpl implements GoodsDAO{
 		
 		return imageList;
 	}
-	
-	
 
-    //알라딘 API 조회 저장
 	@Override
-	public int insertGoods(GoodsVO goodsVO) throws DataAccessException {
+    public int insertGoods(GoodsVO goodsVO) throws DataAccessException {
+        return sqlSession.insert("mapper.goods.insertGoods", goodsVO);
+    }
 
-		return  sqlSession.insert("mapper.goods.insertGoods", goodsVO);
-	}
+    @Override
+    public int updateGoods(GoodsVO goodsVO) throws DataAccessException {
+        return sqlSession.update("mapper.goods.updateGoods", goodsVO);
+    }
 
-    
+    @Override
+    public GoodsVO selectGoodsByISBN(String isbn) throws DataAccessException {
+        return sqlSession.selectOne("mapper.goods.selectGoodsByISBN", isbn);
+    }
     
 }
