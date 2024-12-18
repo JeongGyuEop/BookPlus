@@ -1,7 +1,7 @@
 package com.bookplus.API.controller;
 
 import com.bookplus.API.service.APIService;
-import com.bookplus.API.weather.vo.APIweatherVO;
+import com.bookplus.API.vo.APIweatherVO;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

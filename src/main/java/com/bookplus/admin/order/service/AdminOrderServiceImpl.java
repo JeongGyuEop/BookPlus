@@ -30,14 +30,14 @@ public class AdminOrderServiceImpl implements AdminOrderService {
 	}
 	
 	@Override
-	public Map orderDetail(int order_id) throws Exception {
-		Map orderMap = new HashMap();
-		ArrayList<OrderVO> orderList = adminOrderDAO.selectOrderDetail(order_id);
-		OrderVO deliveryInfo = (OrderVO)orderList.get(0);
-		String member_id = (String)deliveryInfo.getMember_id();
-		MemberVO orderer = adminOrderDAO.selectOrderer(member_id);
-		orderMap.put("orderList", orderList);
-		orderMap.put("deliveryInfo", deliveryInfo);
+	public Map orderDetail(int order_id) throws Exception{
+		Map orderMap=new HashMap();
+		ArrayList<OrderVO> orderList =adminOrderDAO.selectOrderDetail(order_id);
+		OrderVO deliveryInfo=(OrderVO)orderList.get(0);
+		String member_id=(String)deliveryInfo.getOrderMemberId();
+		MemberVO orderer=adminOrderDAO.selectOrderer(member_id);
+		orderMap.put("orderList",orderList);
+		orderMap.put("deliveryInfo",deliveryInfo);
 		orderMap.put("orderer", orderer);
 		return orderMap;
 	}

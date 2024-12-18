@@ -34,7 +34,7 @@ public abstract class BaseController  {
 			String originalFileName = mFile.getOriginalFilename();
 			
 			// GoodsVO에 이미지 파일명만 저장
-			goodsVO.setGoods_cover(originalFileName);
+			goodsVO.setGoods_fileName(originalFileName);
 			fileList.add(goodsVO);
 			
 			File file = new File(path + "/" + fileName);
@@ -110,5 +110,4 @@ public abstract class BaseController  {
 		
 		return beginDate+","+endDate;
 	}
-	
 }

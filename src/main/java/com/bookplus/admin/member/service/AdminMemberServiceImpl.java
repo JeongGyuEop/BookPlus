@@ -22,13 +22,18 @@ public class AdminMemberServiceImpl implements AdminMemberService {
         return adminMemberDAO.listMember(condMap);
     }
 
-    @Override
-    public MemberVO memberDetail(String member_id) throws Exception {
-        return adminMemberDAO.memberDetail(member_id);
-    }
+	public MemberVO memberDetail(String member_id) throws Exception{
+		 return adminMemberDAO.memberDetail(member_id);
+	}
+	
+	public void  modifyMemberInfo(HashMap memberMap) throws Exception{
+		 String member_id=(String)memberMap.get("member_id");
+		 adminMemberDAO.modifyMemberInfo(memberMap);
+	}
 
-    @Override
-    public void modifyMemberInfo(HashMap memberMap) throws Exception {
-        adminMemberDAO.modifyMemberInfo(memberMap);
-    }
+	@Override
+	public void deleteRealMember(String member_id) throws Exception {
+		adminMemberDAO.deleteRealMember(member_id);
+		
+	}
 }

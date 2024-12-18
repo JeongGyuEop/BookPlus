@@ -19,6 +19,12 @@
 		<put-attribute name="title" value="쇼핑몰 메인페이지" />
 		<put-attribute name="body" value="/WEB-INF/views/main/main.jsp" />
 	</definition>
+	
+	<definition name="/map/directions" extends="baseLayout">
+		<put-attribute name="title" value="찾아오시는 길" />
+		<put-attribute name="body" value="/WEB-INF/views/map/directions.jsp" />
+	</definition>
+	
 </tiles-definitions>
 
 

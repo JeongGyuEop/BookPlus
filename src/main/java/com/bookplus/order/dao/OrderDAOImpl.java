@@ -34,7 +34,7 @@ public class OrderDAOImpl implements OrderDAO {
 		for(int i=0; i<myOrderList.size();i++){
 			OrderVO orderVO =(OrderVO)myOrderList.get(i);
 			
-			orderVO.setOrder_id(order_id); //403 주문 번호 설정 
+			orderVO.setOrderId(order_id); //403 주문 번호 설정 
 			
 			sqlSession.insert("mapper.order.insertNewOrder",orderVO);
 		}
@@ -63,5 +63,10 @@ public class OrderDAOImpl implements OrderDAO {
 		return sqlSession.selectOne("mapper.order.selectOrderID");
 		
 	}
+	
+	public void insertOrder(OrderVO orderVO) {
+        sqlSession.insert("mapper.order.insertOrder", orderVO);
+    }
+	
 }
 

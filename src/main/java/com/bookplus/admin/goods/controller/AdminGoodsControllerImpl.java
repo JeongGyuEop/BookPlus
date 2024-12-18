@@ -40,12 +40,10 @@ public class AdminGoodsControllerImpl extends BaseController implements AdminGoo
 	@Override
 	@RequestMapping(value="/adminGoodsMain.do" ,method={RequestMethod.POST,RequestMethod.GET})
 	public ModelAndView adminGoodsMain(@RequestParam Map<String, String> dateMap,
-			                           HttpServletRequest request, HttpServletResponse response) throws Exception {
-		String viewName=(String)request.getAttribute("viewName");  
-		ModelAndView mav = new ModelAndView(viewName);  
-		
-		HttpSession session=request.getSession();
-		session.setAttribute("side_menu", "admin_mode"); 
+			                           HttpServletRequest request, HttpServletResponse response)  throws Exception {
+	
+		String viewName=(String)request.getAttribute("viewName");
+		ModelAndView mav = new ModelAndView(viewName);   //    /admin/goods/adminGoodsMain
 		
 		String fixedSearchPeriod = dateMap.get("fixedSearchPeriod");
 		String section = dateMap.get("section");
@@ -58,12 +56,22 @@ public class AdminGoodsControllerImpl extends BaseController implements AdminGoo
 		dateMap.put("endDate", endDate);
 		
 		Map<String,Object> condMap=new HashMap<String,Object>();
-		if(section== null) section = "1";
-		condMap.put("section",section);
-		if(pageNum== null) pageNum = "1";
-		condMap.put("pageNum",pageNum);
+		
+		if(section== null) {
+			section = "1";
+		}
+		if(pageNum== null) {
+			pageNum = "1";
+		}
+		// String을 Integer로 변환
+		int sectionInt = Integer.parseInt(section);
+		int pageNumInt = Integer.parseInt(pageNum);
+		
+		int pageSection = (sectionInt - 1) * 100 + (pageNumInt - 1) * 10;
+
 		condMap.put("beginDate",beginDate);
 		condMap.put("endDate", endDate);
+		condMap.put("pageSection", pageSection);
 		
 		List<GoodsVO> newGoodsList=adminGoodsService.listNewGoods(condMap);
 		mav.addObject("newGoodsList", newGoodsList);
@@ -125,7 +133,7 @@ public class AdminGoodsControllerImpl extends BaseController implements AdminGoo
 			// 이미지 실제 이동
 			if(imageFileList!=null && imageFileList.size()!=0) {
 				for(GoodsVO goodsVO:imageFileList) {
-					String imageFileName = goodsVO.getGoods_cover();
+					String imageFileName = goodsVO.getGoods_fileName();
 					File srcFile = new File(CURR_IMAGE_REPO_PATH+"\\temp\\"+imageFileName);
 					File destDir = new File(CURR_IMAGE_REPO_PATH+"\\"+goods_isbn);
 					FileUtils.moveFileToDirectory(srcFile, destDir,true);
@@ -138,7 +146,7 @@ public class AdminGoodsControllerImpl extends BaseController implements AdminGoo
 		}catch(Exception e) {
 			if(imageFileList!=null && imageFileList.size()!=0) {
 				for(GoodsVO goodsVO:imageFileList) {
-					String imageFileName = goodsVO.getGoods_cover();
+					String imageFileName = goodsVO.getGoods_fileName();
 					File srcFile = new File(CURR_IMAGE_REPO_PATH+"\\temp\\"+imageFileName);
 					srcFile.delete();
 				}
@@ -216,7 +224,7 @@ public class AdminGoodsControllerImpl extends BaseController implements AdminGoo
 				
 			    adminGoodsService.modifyGoodsImage(imageFileList);
 				for(GoodsVO goodsVO : imageFileList) {
-					String imageFileName = goodsVO.getGoods_cover();
+					String imageFileName = goodsVO.getGoods_fileName();
 					File srcFile = new File(CURR_IMAGE_REPO_PATH+"\\temp\\"+imageFileName);
 					File destDir = new File(CURR_IMAGE_REPO_PATH+"\\"+goods_isbn);
 					FileUtils.moveFileToDirectory(srcFile, destDir,true);
@@ -225,7 +233,7 @@ public class AdminGoodsControllerImpl extends BaseController implements AdminGoo
 		}catch(Exception e) {
 			if(imageFileList!=null && imageFileList.size()!=0) {
 				for(GoodsVO goodsVO : imageFileList) {
-					String imageFileName = goodsVO.getGoods_cover();
+					String imageFileName = goodsVO.getGoods_fileName();
 					File srcFile = new File(CURR_IMAGE_REPO_PATH+"\\temp\\"+imageFileName);
 					srcFile.delete();
 				}
@@ -266,7 +274,7 @@ public class AdminGoodsControllerImpl extends BaseController implements AdminGoo
 				
 			    adminGoodsService.addNewGoodsImage(imageFileList);
 				for(GoodsVO goodsVO : imageFileList) {
-					String imageFileName = goodsVO.getGoods_cover();
+					String imageFileName = goodsVO.getGoods_fileName();
 					File srcFile = new File(CURR_IMAGE_REPO_PATH+"\\temp\\"+imageFileName);
 					File destDir = new File(CURR_IMAGE_REPO_PATH+"\\"+goods_isbn);
 					FileUtils.moveFileToDirectory(srcFile, destDir,true);
@@ -275,7 +283,7 @@ public class AdminGoodsControllerImpl extends BaseController implements AdminGoo
 		}catch(Exception e) {
 			if(imageFileList!=null && imageFileList.size()!=0) {
 				for(GoodsVO goodsVO : imageFileList) {
-					String imageFileName = goodsVO.getGoods_cover();
+					String imageFileName = goodsVO.getGoods_fileName();
 					File srcFile = new File(CURR_IMAGE_REPO_PATH+"\\temp\\"+imageFileName);
 					srcFile.delete();
 				}

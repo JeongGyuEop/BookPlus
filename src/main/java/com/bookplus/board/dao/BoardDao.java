@@ -34,8 +34,6 @@ public interface BoardDao {
 	
 	boolean updateReply(Map<String, Object> paramMap);
 
-	public List<Board> getLatestNotices(Map<String, Object> paramMap);
-	
-	public List<Board> getLatestNotices();
+	String findMemberIdByName(String memberName);
 	
 }

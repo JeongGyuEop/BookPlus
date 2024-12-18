@@ -1,9 +1,17 @@
 package com.bookplus.common.interceptor;
 
+import java.util.List;
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+
+import com.bookplus.board.service.BoardService;
+import com.bookplus.board.vo.Board;
 
 public class ViewNameInterceptor extends  HandlerInterceptorAdapter{
 	
@@ -75,10 +83,23 @@ public class ViewNameInterceptor extends  HandlerInterceptorAdapter{
 		   //클라이언트가 요청한 주소와 매핑된 특정 컨트롤러 클래스의 @RequestMapping된 메소드로 다시 재요청해 이동 되게 된다.
 		   return true;
 	   }
-
+	   @Autowired
+	    private BoardService boardService; // 공지사항 서비스를 주입
 	   @Override
 	   public void postHandle(HttpServletRequest request, HttpServletResponse response,
 	                           Object handler, ModelAndView modelAndView) throws Exception {
+		   
+		   if (modelAndView != null) {
+	            // 공지사항 데이터를 조회
+	            Map<String, Object> paramMap = Map.of("start", 0, "end", 5); // 최신 5개 공지사항
+	            List<Board> noticeList = boardService.getContentList(paramMap);
+
+	            // 공지사항 데이터를 모델에 추가
+	            modelAndView.addObject("noticeList", noticeList);
+
+	            System.out.println("공지사항 데이터가 모든 페이지에 추가되었습니다.");
+	        }
+		   
 	   }
 
 	   @Override

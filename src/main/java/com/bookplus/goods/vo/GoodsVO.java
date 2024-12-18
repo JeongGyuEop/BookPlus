@@ -1,16 +1,26 @@
 package com.bookplus.goods.vo;
 
 import java.sql.Date;
+import java.util.ArrayList;
 
 public class GoodsVO {
-	/*
-	 * title = goods_title (제목) author = goods_author (저자) pubDate = goods_pubDate
-	 * (출판일) isbn13 = goods_isbn (isbn) priceStandard = goods_priceStandard (정가)
-	 * priceSales = goods_priceSales (할인율) (내부 결정 사항, API 정보가 아님!) cover =
-	 * goods_cover (썸네일) categoryName = goods_categoryName (카테고리 분류) publisher =
-	 * goods_publisher (출판사)
-	 */
-	String goods_title;
+	private String goods_id;
+	private String goods_title;
+	private String goods_writer;
+	private Date    goods_published_date;
+	private String goods_isbn;
+	private int    goods_price;
+	private int    goods_sales_price;
+	private String goods_fileName;
+	private String goods_sort;
+	private String goods_publisher;
+	private int    goods_total_page;
+	private int goods_delivery_price;
+	private Date goods_delivery_date;
+	private String goods_status;
+	private Date   goods_credate;
+
+	/*String goods_title;
 	String goods_author;
 	Date goods_pubDate;
 	String goods_isbn;
@@ -18,7 +28,40 @@ public class GoodsVO {
 	int goods_priceSales;
 	String goods_cover;
 	String goods_categoryName;
-	String goods_publisher;
+	String goods_publisher;*/
+
+	@Override
+	public String toString() {
+	    return "GoodsVO {" +
+	            "goods_id=" + goods_id +
+	            ", goods_title='" + goods_title + '\'' +
+	            ", goods_writer='" + goods_writer + '\'' +
+	            ", goods_price=" + goods_price +
+	            ", goods_publisher='" + goods_publisher + '\'' +
+	            ", goods_sort='" + goods_sort + '\'' +
+	            ", goods_sales_price=" + goods_sales_price +
+	            ", goods_published_date=" + goods_published_date +
+	            ", goods_total_page=" + goods_total_page +
+	            ", goods_isbn='" + goods_isbn + '\'' +
+	            ", goods_delivery_price='" + goods_delivery_price + '\'' +
+	            ", goods_delivery_date=" + goods_delivery_date +
+	            ", goods_fileName='" + goods_fileName + '\'' +
+	            ", goods_status='" + goods_status + '\'' +
+	            ", goods_credate=" + goods_credate +
+	            '}';
+	}
+
+	
+	public GoodsVO() {
+	}
+
+	public String getGoods_id() {
+		return goods_id;
+	}
+
+	public void setGoods_id(String goods_id) {
+		this.goods_id = goods_id;
+	}
 
 	public String getGoods_title() {
 		return goods_title;
@@ -28,20 +71,51 @@ public class GoodsVO {
 		this.goods_title = goods_title;
 	}
 
-	public String getGoods_author() {
-		return goods_author;
+	public String getGoods_writer() {
+		return goods_writer;
 	}
 
-	public void setGoods_author(String goods_author) {
-		this.goods_author = goods_author;
+	public void setGoods_writer(String goods_writer) {
+		this.goods_writer = goods_writer;
 	}
 
-	public Date getGoods_pubDate() {
-		return goods_pubDate;
+	public int getGoods_price() {
+		return goods_price;
 	}
 
-	public void setGoods_pubDate(Date goods_pubDate) {
-		this.goods_pubDate = goods_pubDate;
+	public void setGoods_price(int goods_price) {
+		this.goods_price = goods_price;
+	}
+
+	public String getGoods_publisher() {
+		return goods_publisher;
+	}
+	
+	public void setGoods_publisher(String goods_publisher) {
+		this.goods_publisher = goods_publisher;
+	}
+
+	public String getGoods_sort() {
+		return goods_sort;
+	}
+
+	public void setGoods_sort(String goods_sort) {
+		this.goods_sort = goods_sort;
+	}
+	public int getGoods_sales_price() {
+		return goods_sales_price;
+	}
+
+	public void setGoods_sales_price(int goods_sales_price) {
+		this.goods_sales_price = goods_sales_price;
+	}
+
+	public int getGoods_total_page() {
+		return goods_total_page;
+	}
+
+	public void setGoods_total_page(int goods_total_page) {
+		this.goods_total_page = goods_total_page;
 	}
 
 	public String getGoods_isbn() {
@@ -52,59 +126,62 @@ public class GoodsVO {
 		this.goods_isbn = goods_isbn;
 	}
 
-	public int getGoods_priceStandard() {
-		return goods_priceStandard;
+//	public String getGoods_delivery_price() {
+//		return goods_delivery_price;
+//	}
+//
+//	public void setGoods_delivery_price(String goods_delivery_price) {
+
+
+	public int getGoods_delivery_price() {
+		return goods_delivery_price;
 	}
 
-	public void setGoods_priceStandard(int goods_priceStandard) {
-		this.goods_priceStandard = goods_priceStandard;
+
+
+	public void setGoods_delivery_price(int goods_delivery_price) {
+		this.goods_delivery_price = goods_delivery_price;
 	}
 
-	public int getGoods_priceSales() {
-		return goods_priceSales;
+
+	public Date getGoods_published_date() {
+		return goods_published_date;
 	}
 
-	public void setGoods_priceSales(int goods_priceSales) {
-		this.goods_priceSales = goods_priceSales;
+	public void setGoods_published_date(Date goods_published_date) {
+		this.goods_published_date = goods_published_date;
 	}
 
-	public String getGoods_cover() {
-		return goods_cover;
+	public Date getGoods_delivery_date() {
+		return goods_delivery_date;
 	}
 
-	public void setGoods_cover(String goods_cover) {
-		this.goods_cover = goods_cover;
+	public void setGoods_delivery_date(Date goods_delivery_date) {
+		this.goods_delivery_date = goods_delivery_date;
 	}
 
-	public String getGoods_categoryName() {
-		return goods_categoryName;
+	public String getGoods_fileName() {
+		return goods_fileName;
 	}
 
-	public void setGoods_categoryName(String goods_categoryName) {
-		this.goods_categoryName = goods_categoryName;
+	public void setGoods_fileName(String goods_fileName) {
+		this.goods_fileName = goods_fileName;
 	}
 
-	public String getGoods_publisher() {
-		return goods_publisher;
+	public String getGoods_status() {
+		return goods_status;
 	}
 
-	public void setGoods_publisher(String goods_publisher) {
-		this.goods_publisher = goods_publisher;
+	public void setGoods_status(String goods_status) {
+		this.goods_status = goods_status;
 	}
 
-	@Override
-	public String toString() {
-	    return "GoodsVO {" +
-	            "goods_title='" + goods_title + '\'' +
-	            ", goods_author='" + goods_author + '\'' +
-	            ", goods_pubDate=" + goods_pubDate +
-	            ", goods_isbn='" + goods_isbn + '\'' +
-	            ", goods_priceStandard=" + goods_priceStandard +
-	            ", goods_priceSales=" + goods_priceSales +
-	            ", goods_cover='" + goods_cover + '\'' +
-	            ", goods_categoryName='" + goods_categoryName + '\'' +
-	            ", goods_publisher='" + goods_publisher + '\'' +
-	            '}';
+	public Date getGoods_credate() {
+		return goods_credate;
+	}
+
+	public void setGoods_credate(Date goods_credate) {
+		this.goods_credate = goods_credate;
 	}
 
 }

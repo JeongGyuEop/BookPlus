@@ -7,6 +7,8 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
+
+import com.bookplus.API.vo.APILoginVO;
 import com.bookplus.member.vo.MemberVO;
 
 @Repository("memberDAO")
@@ -15,7 +17,7 @@ public class MemberDAOImpl  implements MemberDAO{
 	private SqlSession sqlSession;	
 	
 	@Override
-	public MemberVO login(Map loginMap) throws DataAccessException{
+	public MemberVO login(Map<String, String> loginMap) throws DataAccessException {
 		MemberVO member=(MemberVO)sqlSession.selectOne("mapper.member.login",loginMap);
 	    return member;
 	}
@@ -32,6 +34,19 @@ public class MemberDAOImpl  implements MemberDAO{
 	}
 	
 	@Override
+	public MemberVO selectAPIUser(String apiId, String platform) throws DataAccessException {
+		Map<String, String> paramMap = new HashMap<>();
+	    paramMap.put("apiId", apiId);
+	    paramMap.put("platform", platform);
+	    return sqlSession.selectOne("mapper.member.selectAPIUser", paramMap);
+	}
+
+
+	@Override
+	public void insertKakaoUser(APILoginVO kakaoUser) throws DataAccessException {
+	    sqlSession.insert("mapper.member.insertKakaoUser", kakaoUser);
+	}
+	
 	public String selectMemID(MemberVO memberVO) throws DataAccessException {
 		return sqlSession.selectOne("mapper.member.selectMemID",memberVO);
 	}

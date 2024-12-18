@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import com.bookplus.board.dao.BoardDao;
 import com.bookplus.board.vo.Board;
 import com.bookplus.board.vo.BoardReply;
-import com.bookplus.board.service.BoardService;
 
 @Service("boardService")
 public class BoardServiceImpl implements BoardService {
@@ -114,10 +113,9 @@ public class BoardServiceImpl implements BoardService {
 	public boolean updateReply(Map<String, Object> paramMap) {
 		return boardDao.updateReply(paramMap);
 	}
-
 	@Override
-	public List<Board> getLatestNotices() {
-		return boardDao.getLatestNotices();
+	public String getMemberIdByName(String memberName) {
+	    return boardDao.findMemberIdByName(memberName);
 	}
 
 }

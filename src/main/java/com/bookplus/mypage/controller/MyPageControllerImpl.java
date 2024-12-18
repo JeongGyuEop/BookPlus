@@ -38,18 +38,18 @@ public class MyPageControllerImpl extends BaseController implements MyPageContro
 
 	// 마이페이지 최초 화면을 요청합니다.
 	@Override
-	@RequestMapping(value = "/myPageMain.do", method = RequestMethod.GET)
-	// 주문 취소시 결과 메세지를 매개변수로 받습니다.
-	public ModelAndView myPageMain(@RequestParam(required = false, value = "message") String message,
-			HttpServletRequest request, HttpServletResponse response) throws Exception {
-
-		HttpSession session = request.getSession();
-
-		// 마이페이지 왼쪽 화면 메뉴를 보여주기 위해 조건값 저장
-		session.setAttribute("side_menu", "my_page");
-
-		// /mypage/myPageMain
-		String viewName = (String) request.getAttribute("viewName");
+	@RequestMapping(value="/myPageMain.do" ,method = RequestMethod.GET)
+								   //주문 취소시 결과 메세지를 매개변수로 받습니다. 
+	public ModelAndView myPageMain(@RequestParam(required = false,value="message")  String message,
+			   HttpServletRequest request, HttpServletResponse response)  throws Exception {
+		
+		HttpSession session=request.getSession(true);
+		
+		//마이페이지 왼쪽 화면 메뉴를 보여주기 위해 조건값 저장 
+		session.setAttribute("side_menu", "my_page"); 
+		
+	//  /mypage/myPageMain
+		String viewName=(String)request.getAttribute("viewName");
 		ModelAndView mav = new ModelAndView(viewName);
 
 		// 로그인한 상품 구매자의 정보를 session에서 얻는다.
@@ -67,17 +67,23 @@ public class MyPageControllerImpl extends BaseController implements MyPageContro
 
 		return mav;
 	}
-
+	
+	//==========
+	//주문 후 주문 내역을 조회하기 위해 호출하는 함
 	@Override
-	@RequestMapping(value = "/myOrderDetail.do", method = RequestMethod.GET)
-	public ModelAndView myOrderDetail(@RequestParam("order_id") String order_id, HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
-		String viewName = (String) request.getAttribute("viewName");
+	@RequestMapping(value="/myOrderDetail.do" ,method = RequestMethod.POST)
+	public ModelAndView myOrderDetail(@RequestParam("order_id")  String order_id,HttpServletRequest request, HttpServletResponse response)  throws Exception {
+		System.out.println("-=-=-=-=-=-=-");
+		String viewName=(String)request.getAttribute("viewName");
 		ModelAndView mav = new ModelAndView(viewName);
-		HttpSession session = request.getSession();
-		MemberVO orderer = (MemberVO) session.getAttribute("memberInfo");
-
-		List<OrderVO> myOrderList = myPageService.findMyOrderInfo(order_id);
+		HttpSession session=request.getSession(true);
+		MemberVO orderer=(MemberVO)session.getAttribute("memberInfo");
+		
+		List<OrderVO> myOrderList=myPageService.findMyOrderInfo(order_id);
+		// 로그로 출력
+		for (OrderVO order : myOrderList) {
+		    System.out.println(order.toString());
+		}
 		mav.addObject("orderer", orderer);
 		mav.addObject("myOrderList", myOrderList);
 		return mav;

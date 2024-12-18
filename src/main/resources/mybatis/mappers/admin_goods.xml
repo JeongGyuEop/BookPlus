@@ -77,14 +77,12 @@
                    goods_writer,
                    goods_publisher,
                    goods_sales_price,
-                   DATE_FORMAT(goods_cre_date, '%Y-%m-%d') AS goods_cre_date,
-                   DATE_FORMAT(goods_published_date, '%Y-%m-%d') AS goods_published_date,
-                   goods_cover,
-                   goods_sort
+                   DATE_FORMAT(goods_credate, '%Y-%m-%d') AS goods_credate,
+                   DATE_FORMAT(goods_published_date, '%Y-%m-%d') AS goods_published_date
             FROM T_SHOPPING_GOODS
-            WHERE DATE(goods_cre_date) BETWEEN #{beginDate} AND #{endDate}
-            ORDER BY goods_cre_date DESC
-            LIMIT (#{section} - 1) * 100 + (#{pageNum} - 1) * 10, 10
+            WHERE DATE(goods_credate) BETWEEN #{begin_date} AND #{end_date}
+            ORDER BY goods_credate DESC
+            LIMIT #{pageSection}, 10
         ]]>
     </select>
 

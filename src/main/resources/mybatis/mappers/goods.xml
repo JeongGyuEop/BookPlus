@@ -5,43 +5,88 @@
 
 <mapper namespace="mapper.goods">
 
-	<resultMap id="goodsResult" type="GoodsVO">
-		<result property="goods_isbn" column="goods_isbn" />
-		<result property="goods_title" column="goods_title" />
-		<result property="goods_author" column="goods_author" />
-		<result property="goods_priceStandard" column="goods_priceStandard" />
-		<result property="goods_publisher" column="goods_publisher" />
-		<result property="goods_status" column="goods_status" />
-		<result property="goods_priceSales" column="goods_priceSales" />
-		<result property="goods_pubDate" column="goods_pubDate" />
-		<result property="goods_total_page" column="goods_total_page" />
-		<result property="goods_delivery_price" column="goods_delivery_price" />
-		<result property="goods_delivery_date" column="goods_delivery_date" />
-		<result property="goods_cover" column="goods_cover" />
-		<result property="goods_categoryName" column="goods_categoryName" />
-		<result property="goods_author_intro" column="goods_author_intro" />
-		<result property="goods_contents_order" column="goods_contents_order" />
-		<result property="goods_intro" column="goods_intro" />
-	</resultMap>
+    <resultMap id="goodsResult" type="goodsVO">
+        <result property="goods_id" column="goods_id" />
+        <result property="goods_sort" column="goods_sort" />
+        <result property="goods_title" column="goods_title" />
+        <result property="goods_writer" column="goods_writer" /> 
+        <result property="goods_publisher" column="goods_publisher" />
+        <result property="goods_price" column="goods_price" />
+  		<result property="goods_sales_price" column="goods_sales_price" />
+        <result property="goods_published_date" column="goods_published_date" />
+        <result property="goods_total_page" column="goods_total_page" />
+        <result property="goods_isbn" column="goods_isbn" />
+        <result property="goods_delivery_price" column="goods_delivery_price" />
+        <result property="goods_delivery_date" column="goods_delivery_date" />
+        <result property="goods_status" column="goods_status" />
+        <result property="goods_credate" column="goods_credate" />
+        <result property="goods_fileName" column="goods_fileName" />
+    </resultMap>
 
-	<select id="selectGoodsList" parameterType="String" resultMap="goodsResult">
-    <![CDATA[
-    SELECT t.*
-    FROM (
+<!--     <resultMap id="imageResult" type="ImageFileVO">
+        <result property="goods_id" column="goods_id" />
+        <result property="fileName" column="fileName" />
+        <result property="reg_id" column="reg_id" />
+        <result property="image_id" column="image_id" />
+        <result property="fileType" column="fileType" />
+    </resultMap> -->
+
+	<select id="selectAllGoods" resultMap="goodsResult">
+		SELECT * 
+	    FROM T_SHOPPING_GOODS
+	    ORDER BY goods_credate DESC
+	    LIMIT #{limit} OFFSET #{offset};
+	</select>
+
+    <!-- 상품 상세 정보 조회 -->
+    <select id="selectGoodsDetail" resultMap="goodsResult" parameterType="String">
+        <![CDATA[
         SELECT *
-        FROM t_shopping_goods
-        WHERE goods_status = #{goodsStatus}
+        FROM T_SHOPPING_GOODS
+        WHERE goods_id = #{goods_id}
+        ]]>
+    </select>
+
+    <!-- 상품 상세 이미지 정보 조회 -->
+<!--     <select id="selectGoodsDetailImage" resultMap="imageResult" parameterType="String">
+        <![CDATA[
+        SELECT * 
+        FROM T_GOODS_DETAIL_IMAGE 
+        WHERE fileType != 'main_image'
+        AND goods_id = #{goods_id}
+        ]]>
+    </select> -->
+
+<!--     상품 검색 (검색어 포함)
+    <select id="selectGoodsBySearchWord" resultMap="goodsResult" parameterType="String">
+        <![CDATA[
+        SELECT g.*, d.fileName 
+        FROM T_SHOPPING_GOODS g
+        JOIN T_GOODS_DETAIL_IMAGE d ON g.goods_id = d.goods_id
+        WHERE d.filetype = 'main_image'
+        AND g.goods_title LIKE CONCAT('%', #{searchWord}, '%')
+        ORDER BY g.goods_creDate DESC
+        ]]>
+    </select> -->
+
+    <!-- 키워드 자동 완성 -->
+    <select id="selectKeywordSearch" resultType="String" parameterType="String">
+        <![CDATA[
+        SELECT goods_title 
+        FROM T_SHOPPING_GOODS
+        WHERE goods_title LIKE CONCAT('%', #{keyword}, '%')
         ORDER BY goods_creDate DESC
     ) t
     LIMIT 15
     ]]>
 	</select>
 
-	<insert id="insertNewGoodsImage" parameterType="GoodsVO">
-    <![CDATA[
-        INSERT INTO t_goods_detail_image (
-            goods_isbn,
-            goods_cover,
+<!--     이미지 파일 정보 삽입
+    <insert id="insertNewGoodsImage" parameterType="ImageFileVO">
+        <![CDATA[
+            INSERT INTO T_GOODS_DETAIL_IMAGE (
+            goods_id,
+            filename,
             reg_id,
             filetype,
             credate
@@ -52,9 +97,8 @@
             #{filetype},
             NOW()
         )
-    ]]>
-	</insert>
-
+        ]]>
+    </insert> -->
 
 	<!-- 상품 상세 정보 조회 -->
 	<select id="selectGoodsDetail" resultMap="goodsResult"
@@ -114,20 +158,20 @@
     <insert id="insertGoods" parameterType="GoodsVO">
 	    INSERT INTO t_shopping_goods (
 	        goods_title, 
-	        goods_author, 
-	        goods_pubDate, 
+	        goods_writer, 
+	        goods_published_date, 
 	        goods_isbn, 
-	        goods_priceStandard, 
-	        goods_priceSales, 
-	        goods_cover
+	        goods_price, 
+	        goods_sales_price, 
+	        goods_fileName
 	    ) VALUES (
 	        #{goods_title}, 
-	        #{goods_author}, 
-	        #{goods_pubDate}, 
+	        #{goods_writer}, 
+	        #{goods_published_date}, 
 	        #{goods_isbn}, 
-	        #{goods_priceStandard}, 
-	        #{goods_priceSales}, 
-	        #{goods_cover}
+	        #{goods_price}, 
+	        #{goods_sales_price}, 
+	        #{goods_fileName}
 	    )
 	</insert>
 
@@ -135,12 +179,12 @@
     <update id="updateGoods" parameterType="GoodsVO">
         UPDATE t_shopping_goods 
         SET goods_title = #{goods_title},
-            goods_author = #{goods_author},
-            goods_pubDate = #{goods_pubDate},
-            goods_priceStandard = #{goods_priceStandard},
-            goods_priceSales = #{goods_priceSales},
-            goods_cover = #{goods_cover},
-            goods_categoryName = #{goods_categoryName},
+            goods_writer = #{goods_writer},
+            goods_published_date = #{goods_published_date},
+            goods_price = #{goods_price},
+            goods_sales_price = #{goods_sales_price},
+            goods_fileName = #{goods_fileName},
+            goods_sort = #{goods_sort},
             goods_publisher = #{goods_publisher}
         WHERE goods_isbn = #{goods_isbn}
     </update>

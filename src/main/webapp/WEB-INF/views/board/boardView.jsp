@@ -1,17 +1,19 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ page session="false" %>
+<%@ page session="true" %>
+<c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 <html>
     <head>
         <title>게시판</title>
         <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.3.js"></script>
         <script type="text/javascript">
-            $(document).ready(function(){
+           
+        $(document).ready(function(){
             	
             	var status = false; //수정과 대댓글을 동시에 적용 못하도록
             	
             	$("#list").click(function(){
-            		location.href = "/board/list";
+            		location.href = "${contextPath}/board/boardList.do";
             	});
             	
             	//댓글 저장
@@ -52,7 +54,7 @@
             		
             		//ajax 호출
             		$.ajax({
-            			url			:	"/board/reply/save",
+            			url			:	"${contextPath}/board/reply/save",
             			dataType	:	"json",
             			contentType :	"application/x-www-form-urlencoded; charset=UTF-8",
             			type 		:	"post",
@@ -64,6 +66,7 @@
             					alert(retVal.message);
             					return false;
             				}else{
+            					alert(retVal.message);
                 				reply_id = retVal.reply_id;
             				}
             				
@@ -77,13 +80,13 @@
             		
             		var reply = 
             			'<tr reply_type="main">'+
-	            		'	<td width="820px">'+
+	            		'	<td width="400px">'+
 	            		reply_content+
 	            		'	</td>'+
-	            		'	<td width="100px">'+
+	            		'	<td width="70px">'+
 	            		$("#reply_writer").val()+
 	            		'	</td>'+
-	            		'	<td width="100px">'+
+	            		'	<td width="50px">'+
 	            		'		<input type="password" id="reply_password_'+reply_id+'" style="width:100px;" maxlength="10" placeholder="패스워드"/>'+
 	            		'	</td>'+
 	            		'	<td align="center">'+
@@ -130,7 +133,7 @@
             		
             		//ajax 호출
             		$.ajax({
-            			url			:	"/board/reply/del",
+            			url			:	"${contextPath}/board/reply/del",
             			dataType	:	"json",
             			contentType :	"application/x-www-form-urlencoded; charset=UTF-8",
             			type 		:	"post",
@@ -196,7 +199,7 @@
                      
                     //ajax 호출
                     $.ajax({
-                        url         :   "/board/reply/check",
+                        url         :   "${contextPath}/board/reply/check",
                         dataType    :   "json",
                         contentType :   "application/x-www-form-urlencoded; charset=UTF-8",
                         type        :   "post",
@@ -238,13 +241,13 @@
                         //입력받는 창 등록
                         var replyEditor = 
                            '<tr id="reply_add" class="reply_modify">'+
-                           '   <td width="820px">'+
+                           '   <td width="400px">'+
                            '       <textarea name="reply_modify_content_'+reply_id+'" id="reply_modify_content_'+reply_id+'" rows="3" cols="50">'+txt_reply_content+'</textarea>'+ //기존 내용 넣기
                            '   </td>'+
-                           '   <td width="100px">'+
-                           '       <input type="text" name="reply_modify_writer_'+reply_id+'" id="reply_modify_writer_'+reply_id+'" style="width:100%;" maxlength="10" placeholder="작성자" value="'+txt_reply_writer+'"/>'+ //기존 작성자 넣기
+                           '   <td width="70px">'+
+                           '       <input type="text" name="reply_modify_writer_'+reply_id+'" id="reply_modify_writer_'+reply_id+'" style="width:100%;" maxlength="10" placeholder="작성자" value="'+txt_reply_writer+'" readonly/>'+ //기존 작성자 넣기
                            '   </td>'+
-                           '   <td width="100px">'+
+                           '   <td width="50px">'+
                            '       <input type="password" name="reply_modify_password_'+reply_id+'" id="reply_modify_password_'+reply_id+'" style="width:100%;" maxlength="10" placeholder="패스워드"/>'+
                            '   </td>'+
                            '   <td align="center">'+
@@ -276,13 +279,13 @@
                     if(r_type=="main"){
                         reply = 
                             '<tr reply_type="main">'+
-                            '   <td width="820px">'+
+                            '   <td width="400px">'+
                             r_content+
                             '   </td>'+
-                            '   <td width="100px">'+
+                            '   <td width="70px">'+
                             r_writer+
                             '   </td>'+
-                            '   <td width="100px">'+
+                            '   <td width="50px">'+
                             '       <input type="password" id="reply_password_'+reply_id+'" style="width:100px;" maxlength="10" placeholder="패스워드"/>'+
                             '   </td>'+
                             '   <td align="center">'+
@@ -294,13 +297,13 @@
                     }else{
                         reply = 
                             '<tr reply_type="sub">'+
-                            '   <td width="820px"> → '+
+                            '   <td width="400px"> → '+
                             r_content+
                             '   </td>'+
-                            '   <td width="100px">'+
+                            '   <td width="70px">'+
                             r_writer+
                             '   </td>'+
-                            '   <td width="100px">'+
+                            '   <td width="50px">'+
                             '       <input type="password" id="reply_password_'+reply_id+'" style="width:100px;" maxlength="10" placeholder="패스워드"/>'+
                             '   </td>'+
                             '   <td align="center">'+
@@ -398,13 +401,13 @@
                     if(r_type=="main"){
                         reply = 
                             '<tr reply_type="main">'+
-                            '   <td width="820px">'+
+                            '   <td width="400px">'+
                             $("#reply_modify_content_"+reply_id).val()+
                             '   </td>'+
-                            '   <td width="100px">'+
+                            '   <td width="70px">'+
                             $("#reply_modify_writer_"+reply_id).val()+
                             '   </td>'+
-                            '   <td width="100px">'+
+                            '   <td width="50px">'+
                             '       <input type="password" id="reply_password_'+reply_id+'" style="width:100px;" maxlength="10" placeholder="패스워드"/>'+
                             '   </td>'+
                             '   <td align="center">'+
@@ -416,13 +419,13 @@
                     }else{
                         reply = 
                             '<tr reply_type="sub">'+
-                            '   <td width="820px"> → '+
+                            '   <td width="400px"> → '+
                             $("#reply_modify_content_"+reply_id).val()+
                             '   </td>'+
-                            '   <td width="100px">'+
+                            '   <td width="70px">'+
                             $("#reply_modify_writer_"+reply_id).val()+
                             '   </td>'+
-                            '   <td width="100px">'+
+                            '   <td width="50px">'+
                             '       <input type="password" id="reply_password_'+reply_id+'" style="width:100px;" maxlength="10" placeholder="패스워드"/>'+
                             '   </td>'+
                             '   <td align="center">'+
@@ -461,13 +464,13 @@
             		//입력받는 창 등록
             		 var replyEditor = 
             			'<tr id="reply_add" class="reply_reply">'+
-	            		'	<td width="820px">'+
+	            		'	<td width="400px">'+
 	            		'		<textarea name="reply_reply_content" rows="3" cols="50"></textarea>'+
 	            		'	</td>'+
-	            		'	<td width="100px">'+
-	            		'		<input type="text" name="reply_reply_writer" style="width:100%;" maxlength="10" placeholder="작성자"/>'+
+	            		'	<td width="70px">'+
+	            		'		<input type="text" name="reply_reply_writer" style="width:100%;" maxlength="10" placeholder="작성자" value="${userName}" readonly/>'+
 	            		'	</td>'+
-	            		'	<td width="100px">'+
+	            		'	<td width="50px">'+
 	            		'		<input type="password" name="reply_reply_password" style="width:100%;" maxlength="10" placeholder="패스워드"/>'+
 	            		'	</td>'+
 	            		'	<td align="center">'+
@@ -545,7 +548,7 @@
             		
             		//ajax 호출
             		$.ajax({
-            			url			:	"/board/reply/save",
+            			url			:	"${contextPath}/board/reply/save",
             			dataType	:	"json",
             			contentType :	"application/x-www-form-urlencoded; charset=UTF-8",
             			type 		:	"post",
@@ -568,13 +571,13 @@
             		
             		var reply = 
             			'<tr reply_type="sub">'+
-	            		'	<td width="820px"> → '+
+	            		'	<td width="400px"> → '+
 	            		reply_reply_content_val+
 	            		'	</td>'+
-	            		'	<td width="100px">'+
+	            		'	<td width="70px">'+
 	            		reply_reply_writer.val()+
 	            		'	</td>'+
-	            		'	<td width="100px">'+
+	            		'	<td width="50px">'+
 	            		'		<input type="password" id="reply_password_'+reply_id+'" style="width:100px;" maxlength="10" placeholder="패스워드"/>'+
 	            		'	</td>'+
 	            		'	<td align="center">'+
@@ -620,7 +623,7 @@
             		            		
             		//ajax 호출
             		$.ajax({
-            			url			:	"/board/check",
+            			url			:	"${contextPath}/board/check",
             			dataType	:	"json",
             			contentType :	"application/x-www-form-urlencoded; charset=UTF-8",
             			type 		:	"post",
@@ -631,7 +634,7 @@
             				if(retVal.code != "OK") {
             					alert(retVal.message);
             				}else{
-                				location.href = "/board/edit?id="+$("#board_id").val();
+                				location.href = "${contextPath}/board/edit.do?id="+$("#board_id").val();
             				}
             				
             			},
@@ -662,7 +665,7 @@
             		            		
             		//ajax 호출
             		$.ajax({
-            			url			:	"/board/del",
+            			url			:	"${contextPath}/board/del",
             			dataType	:	"json",
             			contentType :	"application/x-www-form-urlencoded; charset=UTF-8",
             			type 		:	"post",
@@ -674,7 +677,7 @@
             					alert(retVal.message);
             				}else{
             					alert("삭제 되었습니다.");
-                				location.href = "/board/list";
+                				location.href = "${contextPath}/board/boardList.do";
             				}
             				
             			},
@@ -688,36 +691,168 @@
             });
         </script>
     </head>
-    <style>
-    	textarea{
-              width:100%;
-            }
-        .reply_reply {
-                border: 2px solid #FF50CF;
-            }
-        .reply_modify {
-                border: 2px solid #FFBB00;
-            }
-    </style>
+   <style>
+    textarea {
+        width: 100%;
+    }
+
+    .reply_reply {
+        border: 2px solid #FF50CF;
+    }
+
+    .reply_modify {
+        border: 2px solid #FFBB00;
+    }
+
+    /* 전체 레이아웃 스타일 */
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        color: #333;
+    }
+
+    h1 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #444;
+        font-weight: bold;
+    }
+
+    .container {
+        width: 80%;
+        margin: 0 auto;
+        background: #fff;
+        border: 1px solid #ddd;
+        padding: 20px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    /* 테이블 스타일 */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    table th {
+        background-color: #333;
+        color: white;
+        padding: 10px;
+    }
+
+    table td {
+        border: 1px solid #ddd;
+        padding: 10px;
+        text-align: center;
+        word-wrap: break-word; /* 긴 단어 줄바꿈 */
+    }
+
+    table tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    table tr:hover {
+        background-color: #f1f1f1;
+    }
+
+    /* 입력 필드 스타일 */
+    input[type="text"], input[type="password"], textarea {
+        width: 95%;
+        padding: 8px;
+        margin: 5px 0;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
+
+    textarea {
+        width: 100%;
+        height: 80px;
+    }
+
+    /* 버튼 스타일 */
+    button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 8px 12px;
+        font-size: 14px;
+        cursor: pointer;
+        border-radius: 4px;
+        display: inline-block; /* 버튼을 가로로 나란히 */
+        margin-right: 5px; /* 버튼 사이 여백 */
+        white-space: nowrap; /* 버튼이 줄바꿈되지 않게 설정 */
+    }
+
+    button:hover {
+        background-color: #0056b3;
+    }
+
+    button[disabled] {
+        background-color: #aaa;
+        cursor: not-allowed;
+    }
+
+    /* 댓글 스타일 */
+    #reply_area tr[reply_type="main"] td {
+        background-color: #f9f9f9; /* 메인 댓글 배경 */
+    }
+
+    #reply_area tr[reply_type="sub"] td {
+        background-color: #f9f9f9; /* 대댓글 배경 */
+    }
+
+    /* 동적으로 생성된 댓글에 적용될 스타일 */
+    #reply_area tr.reply_reply {
+        border: 2px solid #FF50CF;
+    }
+
+    #reply_area tr.reply_modify {
+        border: 2px solid #FFBB00;
+    }
+
+    /* 댓글 버튼 한 줄로 배치 */
+    #reply_area td {
+        white-space: nowrap; /* 텍스트 및 버튼 줄바꿈 방지 */
+        text-align: center;  /* 버튼 가운데 정렬 */
+    }
+
+    #reply_area button {
+        display: inline-block; /* 버튼을 가로로 정렬 */
+        margin-right: 5px; /* 버튼 간격 */
+        padding: 5px 10px;
+    }
+
+</style>
+
     <body>
     	<input type="hidden" id="board_id" name="board_id" value="${boardView.id}" />
+    	<input type="hidden" id="x" name="x" value="${boardView.x}" />
+    	<input type="hidden" id="y" name="y" value="${boardView.y}" />
     	<div align="center">
     		</br>
     		</br>
-   			<table border="1" width="1200px" >
+   			<table border="1" width="100%" >
    				<tr>
    					<td colspan="2" align="right">
-   						<input type="password" id="password" name="password" style="width:200px;" maxlength="10" placeholder="패스워드"/>
-   						<button id="modify" name="modify">글 수정</button>
-   						<button id="delete" name="delete">글 삭제</button>
+   					<!-- 로그인한 사용자와 게시글 작성자 비교 -->
+                        <c:choose>
+                            <c:when test="${not empty sessionScope.memberInfo && sessionScope.memberInfo.member_id == boardView.writer}">
+                                <!-- 로그인한 사용자가 작성자인 경우 수정/삭제 버튼 표시 -->
+                                <input type="password" id="password" name="password" style="width:200px;" maxlength="10" placeholder="패스워드"/>
+                                <button id="modify" name="modify">글 수정</button>
+                                <button id="delete" name="delete">글 삭제</button>
+                            </c:when>
+                        </c:choose>
    					</td>
    				</tr>
    				<tr>
-   					<td width="900px">
+   					<td width="600px">
 						제목: ${boardView.subject}
 					</td>
 					<td>
-						작성자: ${boardView.writer}
+						작성자: ${boardView.member_name}
 					</td>
    				</tr>
    				<tr height="500px">
@@ -725,21 +860,33 @@
    						${boardView.content}
    					</td>
    				</tr>
+   				<tr>
+   					<td width="50%">
+						장소 : ${boardView.place_name}
+					</td>
+   					<td width="50%">
+						도로명 : ${boardView.road_address_name}
+					</td>
+   				</tr>
    			</table>
-   			<table border="1" width="1200px" id="reply_area">
+   			
+   			<!-- 지도  -->
+   			<jsp:include page="/WEB-INF/views/map/mettingPlace.jsp" />
+   			
+   			<table border="1" width="100%" id="reply_area">
    				<tr reply_type="all"  style="display:none"><!-- 뒤에 댓글 붙이기 쉽게 선언 -->
    					<td colspan="4"></td>
    				</tr>
 	   			<!-- 댓글이 들어갈 공간 -->
 	   			<c:forEach var="replyList" items="${replyList}" varStatus="status">
 					<tr reply_type="<c:if test="${replyList.depth == '0'}">main</c:if><c:if test="${replyList.depth == '1'}">sub</c:if>"><!-- 댓글의 depth 표시 -->
-			    		<td width="820px">
+			    		<td width="400px">
 			    			<c:if test="${replyList.depth == '1'}"> → </c:if>${replyList.reply_content}
 			    		</td>
-			    		<td width="100px">
-			    			${replyList.reply_writer}
+			    		<td width="70px">
+			    			${replyList.member_name}
 			    		</td>
-			    		<td width="100px">
+			    		<td width="50px">
 			    			<input type="password" id="reply_password_${replyList.reply_id}" style="width:100px;" maxlength="10" placeholder="패스워드"/>
 			    		</td>
 			    		<td align="center">
@@ -752,24 +899,29 @@
 			    	</tr>
 			    </c:forEach>
    			</table>
-   			<table border="1" width="1200px" bordercolor="#46AA46">
-   				<tr>
-   					<td width="500px">
-						이름: <input type="text" id="reply_writer" name="reply_writer" style="width:170px;" maxlength="10" placeholder="작성자"/>
-						패스워드: <input type="password" id="reply_password" name="reply_password" style="width:170px;" maxlength="10" placeholder="패스워드"/>
-						<button id="reply_save" name="reply_save">댓글 등록</button>
-					</td>
-   				</tr>
-   				<tr>
-   					<td>
-   						<textarea id="reply_content" name="reply_content" rows="4" cols="50" placeholder="댓글을 입력하세요."></textarea>
-   					</td>
-   				</tr>
+   			<table border="1" width="100%" bordercolor="#46AA46">
+   				<c:choose>
+                	<c:when test="${not empty sessionScope.memberInfo}">
+	   				<tr>
+	   					<td width="500px">
+	                        <!-- 로그인한 사용자가 작성자인 경우 수정/삭제 버튼 표시 -->
+	                        이름: <input type="text" id="reply_writer" name="reply_writer" style="width:170px;" maxlength="10" placeholder="작성자" value="${userName}" readonly/>
+							패스워드: <input type="password" id="reply_password" name="reply_password" style="width:170px;" maxlength="10" placeholder="패스워드"/>
+							<button id="reply_save" name="reply_save">댓글 등록</button>
+						</td>
+	   				</tr>
+	   				<tr>
+	   					<td>
+	   						<textarea id="reply_content" name="reply_content" rows="4" cols="50" placeholder="댓글을 입력하세요."></textarea>
+	   					</td>
+	   				</tr>
+				    </c:when> 
+                 </c:choose>
    			</table>
-   			<table width="1200px">
+   			<table width="100%">
    				<tr>
    					<td align="right">
-   					<a href="${contextPath}/BookPlus/board/boardList.do">
+   					<a href="${contextPath}/board/boardList.do">
    						<button id="list" name="list">게시판</button>
    					</a>	
    					</td>

@@ -1,7 +1,9 @@
 package com.bookplus.goods.dao;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,15 +17,14 @@ public class GoodsDAOImpl implements GoodsDAO{
 	@Autowired
 	private SqlSession sqlSession;
 
-													
-	@Override                                  
-	public List<GoodsVO> selectGoodsList(String goodsStatus ) throws DataAccessException {
-		
-		List<GoodsVO> goodsList=(ArrayList)sqlSession.selectList("mapper.goods.selectGoodsList",goodsStatus);
-	    return goodsList;	
-     
+	@Override
+	public List<GoodsVO> selectAllGoods(int limit, int offset) throws Exception {
+		Map<String, Integer> params = new HashMap<>();
+	    params.put("limit", limit);
+	    params.put("offset", offset);
+	    return sqlSession.selectList("mapper.goods.selectAllGoods", params);	
 	}
-	
+
 //주제 : Ajax 이용해 입력한 검색어 관련  데이터 자동으로 표시하기
 	//<input>에 검색 키워드를 입력하기 위해 키보드의 키를 눌렀다가 떼면 ~
 	//입력된 키워드가 포함된 도서상품 책제목을 조회해서 가져옵니다.

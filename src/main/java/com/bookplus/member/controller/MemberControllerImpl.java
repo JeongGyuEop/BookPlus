@@ -1,38 +1,28 @@
 package com.bookplus.member.controller;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
 import java.util.Map;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.bookplus.API.vo.APILoginVO;
 import com.bookplus.common.base.BaseController;
 import com.bookplus.member.service.MemberService;
 import com.bookplus.member.vo.MemberVO;
-
-
-
 
 
 @Controller("memberController")
@@ -53,24 +43,25 @@ public class MemberControllerImpl extends BaseController implements MemberContro
 	public ModelAndView login(@RequestParam Map<String, String> loginMap,
 			                  HttpServletRequest request, HttpServletResponse response) throws Exception {
 		
-		 ModelAndView mav = new ModelAndView();
+		ModelAndView mav = new ModelAndView();
 		 
 		 //로그인 요청을 위해 입력한 아이디와 비밀번호가 DB에 저장되어 있는지 확인을 위해
 		 //입력한 아이디와 비밀번호로 회원을 조회 해옴
 		 //조회가 되면 로그인 처리 하고 조회가 되지 않으면 로그인 처리 하면 안됨
-		 memberVO = memberService.login(loginMap);
-		 System.out.println("로그인 결과: " + memberVO);
-
+		 memberVO=memberService.login(loginMap);
 		 
 		 //조회가 되고!! 조회한 회원의 아이디가 존재하면?
-		if(memberVO != null && memberVO.getMember_id() != null){
+		if(memberVO!= null && memberVO.getMember_id()!=null){
 			
 			//조회한 회원 정보를 가져와 isLogOn 속성을 true로 설정하고 
 			//memberInfo속성으로  조회된 회원 정보를  session에  저장합니다. 
-			HttpSession session =request.getSession(true);
+			HttpSession session=request.getSession();
 			session.setAttribute("isLogOn", true);
-			session.setAttribute("memberInfo", memberVO);
+			session.setAttribute("memberInfo",memberVO);
 			
+			
+
+		   
 			//상품 주문 과정에서 로그인 했으면 로그인 후 다시 주문 화면으로 진행하고  그외에 는 메인페이지를 표시합니다. 
 			String action=(String)session.getAttribute("action");
 			
@@ -97,11 +88,13 @@ public class MemberControllerImpl extends BaseController implements MemberContro
 		ModelAndView mav = new ModelAndView();
 		
 		HttpSession session=request.getSession();
-		
+	    
 		session.setAttribute("isLogOn", false); //로그아웃 시키는 false값 저장 
 		
 		session.removeAttribute("memberInfo");//로그인 요청시 입력한 아이디 비번을 이용해서 조회 했던 회원정보(MemberVO객체)를 삭제 !
-		
+		  // 세션 초기화
+	    session.invalidate(); //세션 전체 삭제 -> 로그아웃했을때 퀵메뉴에서 로그인하기전 퀵메뉴상태로 돌아감
+	    
 		mav.setViewName("redirect:/main/main.do");//ViewInterCeptor클래스 -> 
 												  //MainController의 main메소드 -> 
 												  //그 후 tiles_main.xml 파일에 작성한 <definition name=/main/main ...> 태그 ->
@@ -110,214 +103,6 @@ public class MemberControllerImpl extends BaseController implements MemberContro
 		return mav;
 	}
 	
-	
-	// 네이버 로그인
-	@Override
-	@RequestMapping(value = "NaverCallback.do", method = RequestMethod.GET )
-	public void NaverCallback(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-	String clientId = "JyvgOzKzRCnvAIRqpVXo"; // 발급받은 Client ID
-	String clientSecret = "I9xmN7Uqi3"; // 발급받은 Client Secret
-		
-	String code = request.getParameter("code"); // 네이버가 보내준 인증 코드
-    String state = request.getParameter("state"); // CSRF 방지를 위한 상태값
-    System.out.println("Code: " + code);
-    System.out.println("State: " + state);
-    String redirectURI = URLEncoder.encode("http://localhost:8090/BookPlus/member/Naverlogin.do", "UTF-8");
-
-    //API URL 구성하기   
-    String apiURL;
-    apiURL = "https://nid.naver.com/oauth2.0/token?grant_type=authorization_code&";
-    apiURL += "client_id=" + clientId;
-    apiURL += "&client_secret=" + clientSecret;
-    apiURL += "&redirect_uri=" + redirectURI;
-    apiURL += "&code=" + code;
-    apiURL += "&state=" + state;
-
-    String access_token = "";
-    String refresh_token = "";
-    System.out.println("apiURL="+apiURL);
-
-    String accessToken = null;
-    
-    try {
-    	//HttpURLConnection으로 Access Token 요청	 
-        URL url = new URL(apiURL);
-        HttpURLConnection con = (HttpURLConnection)url.openConnection();
-        con.setRequestMethod("GET");
-        int responseCode = con.getResponseCode();
-        System.out.print("responseCode="+responseCode);
-        BufferedReader br;
-
-        if(responseCode==200) { // 정상 호출
-          br = new BufferedReader(new InputStreamReader(con.getInputStream()));
-        } else {  // 에러 발생
-          br = new BufferedReader(new InputStreamReader(con.getErrorStream()));
-        }
-        
-        String inputLine;
-        StringBuffer res = new StringBuffer();
-        while ((inputLine = br.readLine()) != null) {
-          res.append(inputLine);
-        }
-        br.close();
-        
-        if(responseCode==200) {
-          System.out.println(res.toString());
-          JSONObject jsonResponse = new JSONObject(res.toString());
-          accessToken = jsonResponse.getString("access_token");
-        } else {
-            System.out.println("Error Response: " + res.toString());
-        }
-        
-      } catch (Exception e) {
-        System.out.println(e);
-      }
-    // 사용자 정보 요청
-    if (accessToken != null) {
-        // Access Token을 세션에 저장
-        request.getSession().setAttribute("accessToken", accessToken);
-
-        // 사용자 정보를 요청할 API 호출
-        response.sendRedirect("http://localhost:8090/BookPlus/member/Naverlogin.do");
-    } else {
-        // Access Token 획득 실패 시 메시지 반환
-        response.getWriter().write("Access Token 획득 실패");
-    }
-}
-
-
-	@Override
-	@RequestMapping(value = "Naverlogin.do", method = RequestMethod.GET)
-	public ModelAndView NaverLogin(HttpServletRequest request, HttpServletResponse response)
-										throws Exception {
-		
-		ModelAndView mav = new ModelAndView();
-		
-		//1.세션에서 Access Token 가져오기
-		String accessToken = (String) request.getSession().getAttribute("accessToken");
-
-		//2.Access Token 유효성 검사
-		if (accessToken == null) {
-            response.getWriter().write("로그인이 필요합니다.");
-        //    return;
-        }
-		
-		//3.인증 헤더 생성
-        String header = "Bearer " + accessToken;
-        
-        //4.API URL 설정
-        String apiURL = "https://openapi.naver.com/v1/nid/me";
-
-        //5.URL 객체 생성
-        URL url = new URL(apiURL);
-     
-        //6.HTTP 연결 설정
-        HttpURLConnection con = (HttpURLConnection) url.openConnection();
-        
-        //7.HTTP 요청 방식 설정
-        con.setRequestMethod("GET");
-        
-        //8.인증 헤더 설정   
-        con.setRequestProperty("Authorization", header);
-
-        //9.응답 코드 확인
-        int responseCode = con.getResponseCode();
-        
-        //10.응답 데이터 읽기 준비
-        BufferedReader br = (responseCode == 200) ? new BufferedReader(new InputStreamReader(con.getInputStream()))
-                                                 : new BufferedReader(new InputStreamReader(con.getErrorStream()));
-        //11.응답 데이터 읽기
-        String inputLine;
-        StringBuffer responseContent = new StringBuffer();
-        while ((inputLine = br.readLine()) != null) {
-            responseContent.append(inputLine);
-        }
-        br.close();
-        
-        //12.응답 데이터를 JSON 객체로 변환
-        JSONObject userProfile = new JSONObject(responseContent.toString()).getJSONObject("response");
-        System.out.println(userProfile);
-        
-        //13.응답 데이터에서 사용자 정보 추출
-        request.setAttribute("userProfile", userProfile);
-        
-        //14.재요청(디스패처 방식 포워딩) 시 request공유        
-       mav.setViewName("/member/memberForm");
-        
-        
-        
-        return mav;
-    }
-	
-  
-
-	
-/*
-	참고.
-	
-	`ResponseEntity`는 Spring Framework의 클래스로, Java 기반의 엔터프라이즈 응용 프로그램을 구축하기 위한 인기있는 프레임워크 중 하나입니다.
-    `ResponseEntity`는 RESTful 웹 서비스를 생성하는 맥락에서 사용되며 HTTP 응답 전체를 나타냅니다. 이에는 상태 코드, 헤더 및 본문(body)이 포함됩니다.
-
-	`ResponseEntity`의 사용 방법에 대한 간략한 개요는 다음과 같습니다.
-
-	1. **ResponseEntity 생성:**  
-		  RESTful 엔드포인트가 반환해야 하는 응답을 나타내는 `ResponseEntity` 객체를 만들 수 있습니다. 
-	      HTTP 상태 코드, 헤더 및 응답 본문을 지정할 수 있습니다.
-
-	2. **상태 코드 설정:** 
-	    `ok()`, `created()`, `badRequest()`, `notFound()` 등의 메서드를 사용하여 요청의 결과를 나타내는 HTTP 상태 코드를 설정할 수 있습니다.
-
-	3. **헤더 설정:** 
-	     `header(String headerName, String headerValue)`와 같은 메서드를 사용하여 응답에 사용자 지정 HTTP 헤더를 설정할 수 있습니다.
-
-	4. **응답 본문 설정:** 
-	      응답 본문은 응답으로 반환하려는 객체를 전달함으로써 설정할 수 있습니다. 
-	      이는 도메인 객체, DTO(Data Transfer Object) 또는 직렬화 가능한 데이터 등이 될 수 있습니다.
-
-	5. **ResponseEntity 반환:** 
-	     RESTful 엔드포인트가 `ResponseEntity` 객체를 반환하면 Spring은 자동으로 HTTP 응답으로 직렬화하여 클라이언트에게 보냅니다.
-
-
-직렬화(serialization)는 데이터 구조나 객체를 바이트 스트림 또는 다른 표현 형식으로 변환하는 프로세스를 의미합니다. 
-이렇게 직렬화된 데이터는 파일에 저장하거나 네트워크를 통해 전송하고, 나중에 역직렬화(deserialization)를 통해 원래의 데이터 구조나 객체로 복원할 수 있습니다.
-
-------------------------------------------------------------------------------------------------------	
-	@ResponseEntity 어노테이션을 사용해 웹브라우저로 응답하기
-	
-	 - @RestController어노테이션은 별도의 View를 제공하지 않은채 데이터를 웹브라우저로 전달하므로
-	     전달 과정에서 예외가 발생할수 있습니다.
-	     예외에 대해  좀더 세밀한 제어가 필요한 경우 ResponseEntity클래스를 사용하면 됩니다.
-		
-	     예를 들어 안드로이드 기반의 어떤 모바일 쇼일몰 앱 이 있는데, 
-	     명절 기간에 주문자가 한꺼번에 몰리면서  톰캣 서버에 부하가 걸렸다고 가정합시다
-	    일정 시간이 지나도 주문이 처리 되지 않으면 서버에서 ResponseEntity클래스에 Http 상태 코드를 설정하여 앱으로 전송하도록 합니다.
-	    그러면 앱에서 Http 상태코드를 인식할수 있는 기능을 이용해 주문 상태나 예외 발생 메세지를 알려 줄수 있습니다. 
-
-그룹들
-서버 오류 응답 코드들
-      500  - INTERNAL_SERVER_ERROR 상수   :  처리할수 없는 내부 오류가 발생했다는 의미 
-      501  - NOT_IMPLEMENTED 상수 : 요청 메소드는 서버가 지원하지 않거나 처리할수 없다는 의미
-      503  - SERVICE_UNAVAILABLE 상수 : 서버는 요청을 처리할 준비가 되지 않았다는 의미
-성공 응답 코드들
-	  200 -  OK 상수 : 요청이 성공적으로 완료되었다는 의미 
-	  201 -  CREATED 상수 : 요청이 성공적이었으며 그결과로 새로운 리소스가 생성되었다는 의미
-	  202 -  ACCEPTED 상수 : 요청은 수신 했지만 그에 응하여 행동할수 없는다는 의미
-정보 응답 코드들
-	  100 
-	  101
-리다이렉션 메세지
-	  300
-	  301 
-	  302
-	  303
-클라이언트 오류 응답 
-	  400 - BAD_REQUEST 상수 : 이응답은 잘못된 문법으로 인해 서버가 요청을 이해할수 없다는 의미 
-	  401 - UNAUTHORIZED 상수 : 인증되지 않았다는 의미 
-	  403 - FORBIDDEN 상수 : 클라이언트가 콘텐트에 접근할 권리를 가지고 있지 않다는 의미 
-	  404 - NOT_FOUND 상수 : 서버는 요청 받은 리소스를 찾을수 없다는 의미 
-*/	
-
 
 	//회원 가입 요청을 받았을떄...
 	@Override
@@ -325,28 +110,53 @@ public class MemberControllerImpl extends BaseController implements MemberContro
 															//회원가입시 입력한 회원 정보를 MemberVO 객체의 각변수에 저장후 전달 받음 
 	public ResponseEntity addMember(@ModelAttribute("memberVO") MemberVO _memberVO, 
 			                		HttpServletRequest request, HttpServletResponse response) throws Exception {
-		response.setContentType("text/html; charset=UTF-8");
-		request.setCharacterEncoding("utf-8");
+
+		ModelAndView mav = new ModelAndView();
+		
+		// KakaoVO 데이터 수동 설정
+	    String id = request.getParameter("apiId");
+	    String socialProvider = request.getParameter("socialProvider");
+	    
+	    System.out.println(id);
+	    System.out.println(socialProvider);
+
+	    if (id != null && socialProvider != null) {
+	        APILoginVO apiLoginVO = new APILoginVO();
+	        apiLoginVO.setId(id);
+	        apiLoginVO.setSocialProvider(socialProvider);
+	        _memberVO.setAPILoginVO(apiLoginVO);
+	    }
+		
 		String message = null;
-		ResponseEntity resEntity = null;
 		HttpHeaders responseHeaders = new HttpHeaders();
 		responseHeaders.add("Content-Type", "text/html; charset=utf-8");  //저장해서 보여줄 값도 아래에 작성 보여줄 수 있음.
 		try {
-		    memberService.addMember(_memberVO);//새 회원 정보를 DB에 추가~ 
-		    message  = "<script>";
-		    message +=" alert('회원가입에 성공 했습니다.');";
-		    message += " location.href='"+request.getContextPath()+"/member/loginForm.do';";
-		    message += " </script>";
+			MemberVO memberVO = memberService.addMember(_memberVO);//새 회원 정보를 DB에 추가~ 
 		    
+			if (memberVO != null && memberVO.getMember_id() != null) {
+	            // 세션에 로그인 정보 저장
+	            HttpSession session = request.getSession();
+	            session.setAttribute("isLogOn", true);
+	            session.setAttribute("memberInfo", memberVO);
+
+	            // 성공 메시지
+	            message = "<script>";
+	            message += " alert('회원가입 및 로그인이 성공했습니다. 메인 페이지로 이동합니다.');";
+	            message += " location.href='" + request.getContextPath() + "/main/main.do';";
+	            message += " </script>";
+	        } else {
+	            throw new Exception("로그인 처리 실패");
+	        }
+			
 		}catch(Exception e) {
 			message  = "<script>";
-		    message +=" alert('회원가입 실패 했어요.');";
+		    message +=" alert('회원가입에 실패 했습니다.');";
 		    message += " location.href='"+request.getContextPath()+"/member/memberForm.do';";
 		    message += " </script>";
 			e.printStackTrace();
 		}
-		resEntity =new ResponseEntity(message, responseHeaders, HttpStatus.OK);
-		return resEntity;
+		
+		return new ResponseEntity<>(message, responseHeaders, HttpStatus.OK);
 	}
 	
 	
@@ -367,4 +177,43 @@ public class MemberControllerImpl extends BaseController implements MemberContro
 		
 		return resEntity;
 	}
+	
+	//==========
+	// API 로그인 했을 경우 호출되는 콜백 함수, OAuth 인증 과정에서 콜백 URL로 호출
+	@Override
+	@RequestMapping(value = "/{platform}/callback", method = RequestMethod.GET)
+	public void apiCallback(@PathVariable String platform, HttpServletRequest request, HttpServletResponse response) throws IOException {
+	    try {
+	        String redirectUrl = memberService.handleLogin(platform, request);
+	        response.sendRedirect(redirectUrl);
+	        
+	    } catch (Exception e) {
+	        response.getWriter().write(platform + " 로그인 실패: " + e.getMessage());
+	    }
+	}
+	
+
+	//==========
+	// apiCallback에서 Access Token을 받은 후, 사용자 정보를 가져와 로그인 또는 회원가입 처리를 수행
+	@Override
+	@RequestMapping(value = "/{platform}/login", method = RequestMethod.GET)
+	public ModelAndView apiLogin(@PathVariable String platform, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	    ModelAndView mav = new ModelAndView();
+
+		try {
+	        String redirectUrl = memberService.processLogin(platform, request);
+	        
+	        if (redirectUrl.startsWith("redirect:")) {
+	            mav.setViewName(redirectUrl); // 리다이렉트 처리
+	        } else {
+	            mav.setViewName(redirectUrl); // Forward 처리
+	        }
+	        return mav;
+	    } catch (Exception e) {
+	        response.getWriter().write("사용자 정보 처리 실패: " + e.getMessage());
+	        return null;
+	    }
+	}
+	
+	
 }

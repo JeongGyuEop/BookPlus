@@ -1,4 +1,4 @@
-package com.bookplus.API.weather.vo;
+package com.bookplus.API.vo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

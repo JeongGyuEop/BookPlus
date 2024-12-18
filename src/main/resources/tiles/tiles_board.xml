@@ -8,10 +8,18 @@
        <put-attribute name="body" value="/WEB-INF/views/board/boardList.jsp" />
     </definition>
     
-     <definition name="/board/view" extends="baseLayout">
-       <put-attribute name="title" value="게시글 상세 보기" />
+    <definition name="/board/view" extends="baseLayout">
+       <put-attribute name="title" value="글 상세" />
        <put-attribute name="body" value="/WEB-INF/views/board/boardView.jsp" />
     </definition>
+    
+    <definition name="/board/edit" extends="baseLayout">
+       <put-attribute name="title" value="글 작성" />
+       <put-attribute name="body" value="/WEB-INF/views/board/boardEdit.jsp" />
+    </definition>
+ 
+    <definition name="map/map" template="/WEB-INF/views/map/map.jsp" />
+ 
 </tiles-definitions>
 
 

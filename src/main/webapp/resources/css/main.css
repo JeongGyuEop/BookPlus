@@ -1,9 +1,7 @@
-@font-face {
-	font-family: NanumGothic;
-	src: local("?"), url(../imgs/nanum.woff) format("woff"), url(../imgs/nanum.ttf) format("truetype");
-}
+@import url('https://hangeul.pstatic.net/hangeul_static/css/nanum-square-neo.css');
+
 * {
-	margin: 0px; padding: 0px; vertical-align: middle;
+	font-family: 'NanumSquareNeo', sans-serif; margin: 0px; padding: 0px; vertical-align: middle;
 }
 body {
 	background-position: top; margin: 0px; padding: 0px; color: rgb(102, 102, 102); font-family: "Dotum", Arial,serif; font-size: 1em; background-image: url("../imgs/body_back.gif"); background-repeat: repeat-x; background-color: rgb(255, 255, 255);
@@ -24,7 +22,7 @@ a:hover {
 	margin: 0px auto; padding: 0px; width: 1100px;
 }
 #wrap {
-	margin: 0px auto; padding: 0px; width: 995px; float: left;
+	margin: 0px auto; padding: 0px; width: 995px;
 }
 header {
 	margin-top: 20px;
@@ -426,7 +424,12 @@ footer img {
 #sticky .recent ul li {
 	padding: 5px 0px; background-image: none;
 }
-
+#sticky { /*스크롤했을때 따라움직이게 해주는 코드*/
+    position: fixed;
+    right: 70px;
+    top: 100px;
+    z-index: 1000;
+}
 
 .list_view {
 	width: 100%; color: rgb(51, 51, 51); font-size: 0.75em; margin-top: 20px; border-top-color: rgb(51, 51, 51); border-top-width: 2px; border-top-style: solid; border-collapse: collapse;
@@ -604,3 +607,20 @@ display:none; position: absolute; left: 830px; top:80px; border: 0.1px  solid #8
 .del_row_line{
 	margin: 0px; padding: 10px 0px; border-bottom-color: rgb(153, 153, 153); border-bottom-width: 1px;     border-bottom-style: none;border-top-style:solid; border-top-width: 1px;border-top-color:#ffffff;
 }
+.cart-icon {
+    margin-right: 5px; /* 아이콘과 글씨 사이 간격 */
+    vertical-align: middle; /* 아이콘을 글씨 중앙에 정렬 */
+}
+.cart-text {
+    vertical-align: middle; /* 텍스트도 중앙에 맞추기 */
+}
+.login-icon {
+    margin-right: 5px; /* 아이콘과 텍스트 사이 간격 조정 */
+    vertical-align: middle; /* 텍스트와 아이콘 높이 맞춤 */
+}
+
+.login-text {
+    vertical-align: middle; /* 아이콘과 수직 정렬 */
+}
+
+

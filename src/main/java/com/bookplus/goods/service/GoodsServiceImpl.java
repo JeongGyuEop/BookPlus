@@ -40,101 +40,6 @@ public class GoodsServiceImpl implements GoodsService {
     @Autowired
     private GoodsDAO goodsDAO;
 
-    public Map<String, List<GoodsVO>> listGoods() throws Exception {
-        Map<String, List<GoodsVO>> goodsMap = new HashMap<String, List<GoodsVO>>();
-
-        List<GoodsVO> goodsList = goodsDAO.selectGoodsList("bestseller");
-        goodsMap.put("bestseller", goodsList);
-
-        goodsList = goodsDAO.selectGoodsList("newbook");
-        goodsMap.put("newbook", goodsList);
-
-        goodsList = goodsDAO.selectGoodsList("steadyseller");
-        goodsMap.put("steadyseller", goodsList);
-
-        return goodsMap;
-    }
-
-    // 파라미터 및 내부 _goods_id → _goods_isbn으로 변경
-    public Map goodsDetail(String _goods_isbn) throws Exception {
-        Map goodsMap = new HashMap();
-        
-        // goodsDAO 호출 시에도 _goods_isbn을 사용
-        GoodsVO goodsVO = goodsDAO.selectGoodsDetail(_goods_isbn);
-        goodsMap.put("goodsVO", goodsVO);
-
-        List<GoodsVO> imageList = goodsDAO.selectGoodsDetailImage(_goods_isbn);
-        goodsMap.put("imageList", imageList);
-
-        return goodsMap;
-    }
-
-    public List<String> keywordSearch(String keyword) throws Exception {
-        List<String> list = goodsDAO.selectKeywordSearch(keyword);
-        return list;
-    }
-
-    public List<GoodsVO> searchGoods(String searchWord) throws Exception {
-        List goodsList = goodsDAO.selectGoodsBySearchWord(searchWord);
-        return goodsList;
-    }
-
-    private String fetchApiData(String apiUrl) throws IOException {
-        URL url = new URL(apiUrl);
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        connection.setRequestMethod("GET");
-
-        BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-        StringBuilder response = new StringBuilder();
-        String line;
-
-        while ((line = reader.readLine()) != null) {
-            response.append(line);
-        }
-
-        reader.close();
-        return response.toString();
-    }
-
-    private List<GoodsVO> parseJsonData(String jsonData) {
-        List<GoodsVO> goodsList	 = new ArrayList<>();
-        JSONObject jsonObject = new JSONObject(jsonData);
-        JSONArray items = jsonObject.getJSONArray("item");
-
-        for (int i = 0; i < items.length(); i++) {
-            JSONObject item = items.getJSONObject(i);
-            GoodsVO goodsVO = new GoodsVO();
-
-            goodsVO.setGoods_title(item.getString("goods_title"));
-            goodsVO.setGoods_author(item.getString("goods_author"));
-            goodsVO.setGoods_pubDate(java.sql.Date.valueOf(item.getString("goods_pubDate")));
-            goodsVO.setGoods_isbn(item.getString("goods_isbn"));
-            goodsVO.setGoods_priceStandard(item.optInt("goods_priceStandard", 0));
-            goodsVO.setGoods_priceSales(item.getInt("goods_priceSales"));
-            goodsVO.setGoods_categoryName(item.getString("goods_categoryName"));
-            goodsVO.setGoods_publisher(item.getString("goods_publisher"));
-            
-            // 썸네일(cover) 정보가 있다면 가져오는 로직 추가 가능
-            // if(item.has("goods_cover")){
-            //     goodsVO.setGoods_cover(item.getString("goods_cover"));
-            // }
-
-            goodsList.add(goodsVO);
-        }
-
-        return goodsList;
-    }
-
-    private List<GoodsVO> createImageFiles(String fileName) {
-        List<GoodsVO> imageFiles = new ArrayList<>();
-
-        GoodsVO imageFileVO = new GoodsVO();
-        imageFileVO.setGoods_cover(fileName);
-        imageFiles.add(imageFileVO);
-
-        return imageFiles;
-    }
-
     @Override
     public List<GoodsVO> fetchBookDetails() throws Exception {
         List<GoodsVO> goodsList = new ArrayList<>();
@@ -171,15 +76,15 @@ public class GoodsServiceImpl implements GoodsService {
 
                         GoodsVO goods = new GoodsVO();
                         goods.setGoods_title(getTagValue("title", item));
-                        goods.setGoods_author(getTagValue("author", item));
-                        goods.setGoods_pubDate(java.sql.Date.valueOf(java.time.LocalDate.parse(
+                        goods.setGoods_writer(getTagValue("author", item));
+                        goods.setGoods_published_date(java.sql.Date.valueOf(java.time.LocalDate.parse(
                             getTagValue("pubDate", item),
                             java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd"))));
                         goods.setGoods_isbn(getTagValue("isbn", item));
-                        goods.setGoods_priceStandard(parseToInt(getTagValue("priceStandard", item)));
-                        goods.setGoods_priceSales(parseToInt(getTagValue("priceSales", item)));
-                        goods.setGoods_cover(getTagValue("cover", item));
-                        goods.setGoods_categoryName(getTagValue("categoryName", item));
+                        goods.setGoods_price(parseToInt(getTagValue("priceStandard", item)));
+                        goods.setGoods_sales_price(parseToInt(getTagValue("priceSales", item)));
+                        goods.setGoods_fileName(getTagValue("cover", item));
+                        goods.setGoods_sort(getTagValue("categoryName", item));
                         goods.setGoods_publisher(getTagValue("publisher", item));
 
                         System.out.println(goods.toString());
@@ -193,7 +98,6 @@ public class GoodsServiceImpl implements GoodsService {
 
         return goodsList;
     }
-
 
     @Override
     public boolean updateDatabase(List<GoodsVO> fetchBookDetails) throws Exception {
@@ -225,7 +129,6 @@ public class GoodsServiceImpl implements GoodsService {
         return result; // 최종 성공 여부 반환
     }
 
-	
 	private String getTagValue(String tag, Element element) {
 	    NodeList nodeList = element.getElementsByTagName(tag);
 	    if (nodeList != null && nodeList.getLength() > 0) {
@@ -244,5 +147,39 @@ public class GoodsServiceImpl implements GoodsService {
 	        return 0;
 	    }
 	}
-
+	
+	@Override
+	public List<GoodsVO> getAllGoods(int limit, int offset) throws Exception {
+	    return goodsDAO.selectAllGoods(limit, offset);
+	}
+	
+	//상품아이디를 매개변수로 전달 받아 도서상품정보 + 도서이미지정보를  GoodsDAOImpl의 메소드로 조회 명령 하는 메소드
+	public Map goodsDetail(String goods_id) throws Exception {
+		
+		Map goodsMap=new HashMap();
+		
+		GoodsVO goodsVO = goodsDAO.selectGoodsDetail(goods_id); //도서 상품 조회
+		
+		goodsMap.put("goodsVO", goodsVO);
+		
+//		List<ImageFileVO> imageList =goodsDAO.selectGoodsDetailImage(_goods_id); //도서상품의 이미지 정보 조회 
+//		
+//		goodsMap.put("imageList", imageList);
+		
+		return goodsMap;
+	}
+	
+//주제 : Ajax 이용해 입력한 검색어 관련  데이터 자동으로 표시하기	
+	//<input>에 검색 키워드를 입력하기 위해 키보드의 키를 눌렀다가 떼면 ~
+	//입력된 키워드가 포함된 도서상품 책제목을 조회해서 가져옵니다.
+	public List<String> keywordSearch(String keyword) throws Exception {
+		
+		List<String> list=goodsDAO.selectKeywordSearch(keyword);
+		return list;
+	}
+	
+	public List<GoodsVO> searchGoods(String searchWord) throws Exception{
+		List goodsList=goodsDAO.selectGoodsBySearchWord(searchWord);
+		return goodsList;
+	}
 }

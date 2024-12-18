@@ -49,12 +49,6 @@ public class CartControllerImpl extends BaseController implements CartController
 		String member_id=memberVO.getMember_id();
 	
 		cartVO.setMember_id(member_id);	
-		//장바구니 페이지에 표시할 상품 정보를 조회 후 Map담아 반환 해옵니다.
-		//Map에 담긴 2개의 List배열은 다음과 같습니다. 
-		//- 1. 로그인한 회원의 아이디를 이용해 장바구니 테이블에서 조회한 장바구니테이블에 저장되어 있는 상품정보를 조회한 
-		//	   CartVO객체들이 저장된  List배열 데이터~!   "myCartList"
-		//- 2. 로그인한 회원의 아이디를 이용해 장바구니 테이블에서 조회한 상품번호에 대한 상품을 도서상품 테이블과 도서이미지정보테이블을 조인해서
-		//     조회한 GoodsVO객체들이 저장된 List배열 데이터~!	 "myGoodsList"
 		Map<String ,List> cartMap=cartService.myCartList(cartVO);
 		
 		//장바구니 목록을 세션에 저장합니다.
@@ -69,7 +63,7 @@ public class CartControllerImpl extends BaseController implements CartController
 	//라는 요청 주소 cart/addGoodsInCart.do를 받았을때....
 	@RequestMapping(value="/addGoodsInCart.do" ,method = RequestMethod.POST,produces = "application/text; charset=utf8")
 	public  @ResponseBody String addGoodsInCart(//전송된 상품 번호를 받습니다.
-												@RequestParam("goods_id") int goods_id,
+												@RequestParam("goods_id") String goods_id,
 			                                    HttpServletRequest request, 
 			                                    HttpServletResponse response)  throws Exception{
 		
@@ -104,7 +98,7 @@ public class CartControllerImpl extends BaseController implements CartController
 	//myCartList.jsp중앙화면(장바구니 목록페이지)에서 변경할 수량 정보를 입력하고 수량 변경 요청이 들어오면 호출되는 메소드 
 	//cart/modifyCartQty.do
 	@RequestMapping(value="/modifyCartQty.do" ,method = RequestMethod.POST)
-	public @ResponseBody String  modifyCartQty(@RequestParam("goods_id") int goods_id,
+	public @ResponseBody String  modifyCartQty(@RequestParam("goods_id") String goods_id,
 			                                   @RequestParam("cart_goods_qty") int cart_goods_qty,
 			                                    HttpServletRequest request, HttpServletResponse response)  throws Exception{
 		HttpSession session=request.getSession();
