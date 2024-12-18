@@ -42,6 +42,7 @@ public class GoodsServiceImpl implements GoodsService {
 
     @Override
     public List<GoodsVO> fetchBookDetails() throws Exception {
+    	System.out.println("goods service fetchbookdetails start");
         List<GoodsVO> goodsList = new ArrayList<>();
         String[] queryTypes = {"itemnewall", "bestseller", "blogbest"}; // API 타입
         int maxPages = 1; // 최대 페이지 수
@@ -75,14 +76,26 @@ public class GoodsServiceImpl implements GoodsService {
                         Element item = (Element) itemList.item(k);
 
                         GoodsVO goods = new GoodsVO();
+                        double goodsPrice = (double) parseToInt(getTagValue("priceStandard", item));
+                        double goodsSalesPrice = (double) parseToInt(getTagValue("priceSales", item));
+                        double SalesPrice = (1-(goodsSalesPrice/goodsPrice))*100;
+                        
+                        // Math.round를 사용하여 소숫점 아래 2자리로 반올림
+                        double roundedSalesPrice = Math.round(SalesPrice * 100.0) / 100.0;
+                        
+                        System.out.println(goodsPrice);
+                        System.out.println(goodsSalesPrice);
+                        System.out.println(SalesPrice);
+                        System.out.println(roundedSalesPrice);
+
                         goods.setGoods_title(getTagValue("title", item));
                         goods.setGoods_writer(getTagValue("author", item));
                         goods.setGoods_published_date(java.sql.Date.valueOf(java.time.LocalDate.parse(
                             getTagValue("pubDate", item),
                             java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd"))));
-                        goods.setGoods_isbn(getTagValue("isbn", item));
-                        goods.setGoods_price(parseToInt(getTagValue("priceStandard", item)));
-                        goods.setGoods_sales_price(parseToInt(getTagValue("priceSales", item)));
+                        goods.setGoods_isbn(getTagValue("isbn13", item));
+                        goods.setGoods_price((int)goodsPrice);
+                        goods.setGoods_sales_price((int)roundedSalesPrice);
                         goods.setGoods_fileName(getTagValue("cover", item));
                         goods.setGoods_sort(getTagValue("categoryName", item));
                         goods.setGoods_publisher(getTagValue("publisher", item));

@@ -6,12 +6,12 @@
 <%
 request.setCharacterEncoding("UTF-8");
 %>
-<script src="${contextPath}/resources/jquery/jquery-1.6.2.min.js" type="text/javascript"></script>
-<script src="${contextPath}/resources/jquery/jquery.easing.1.3.js" type="text/javascript"></script>
-<script src="${contextPath}/resources/jquery/stickysidebar.jquery.js" type="text/javascript"></script>
-<script src="${contextPath}/resources/jquery/basic-jquery-slider.js" type="text/javascript"></script>
-<script src="${contextPath}/resources/jquery/tabs.js" type="text/javascript"></script>
-<script src="${contextPath}/resources/jquery/carousel.js" type="text/javascript"></script>
+    <script src="${contextPath}/resources/jquery/jquery-1.6.2.min.js" type="text/javascript"></script>
+    <script src="${contextPath}/resources/jquery/jquery.easing.1.3.js" type="text/javascript"></script>
+    <script src="${contextPath}/resources/jquery/stickysidebar.jquery.js" type="text/javascript"></script>
+    <script src="${contextPath}/resources/jquery/basic-jquery-slider.js" type="text/javascript"></script>
+    <script src="${contextPath}/resources/jquery/tabs.js" type="text/javascript"></script>
+    <script src="${contextPath}/resources/jquery/carousel.js" type="text/javascript"></script>
 <div id="ad_main_banner">
 	<ul class="bjqs">
 		<li><img width="775" height="145"
@@ -73,10 +73,28 @@ request.setCharacterEncoding("UTF-8");
 </style>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
+	$(document).ready(function() {
+		console.log("updating");
+		// 페이지 로딩 후 DB 갱신을 위한 AJAX 요청
+		$.ajax({
+		    url: "${contextPath}/goods/updateDatabase",
+		    type: "POST",
+		    dataType: "json",
+		    success: function(response) {
+		        console.log(response.message);
+		    },
+		    error: function(xhr, status, error) {
+		        console.error("DB 갱신 실패:", error);
+		    }
+		});
+	});
     let currentPage = 1; // 현재 페이지 번호
     const contextPath = "${contextPath}";
 
+    
     function loadMoreGoods() {
+    	console.log(contextPath);
+    	
         currentPage++; // 페이지 증가
 
         // AJAX 요청으로 다음 페이지 데이터를 불러옴

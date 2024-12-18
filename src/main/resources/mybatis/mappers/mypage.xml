@@ -35,33 +35,6 @@
          여기서는 goods_author나 goods_priceStandard 등이 order테이블에 없는 경우, 
          order에 필요한 필드만 반영합니다.
     -->
-    <resultMap id="orderGoodsResult" type="OrderVO">
-        <result property="order_seq_num" column="order_seq_num"/>
-        <result property="order_id" column="order_id"/>
-        <result property="member_id" column="member_id"/>
-        <!-- goods_id -> goods_isbn 변경 -->
-        <result property="goods_isbn" column="goods_isbn"/>
-        
-        <result property="goods_title" column="goods_title"/>
-        
-        <!-- goods_sales_price -> goods_priceSales 변경 -->
-        <result property="goods_priceSales" column="goods_priceSales"/>
-        
-        <result property="total_goods_price" column="order_total_price"/>
-        <result property="order_goods_qty" column="order_goods_qty"/>
-        
-        <result property="orderer_name" column="orderer_name"/>
-        <result property="receiver_name" column="receiver_name"/>
-        <result property="receiver_hp1" column="receiver_hp1"/>
-        <result property="receiver_hp2" column="receiver_hp2"/>
-        <result property="receiver_hp3" column="receiver_hp3"/>
-        
-        <result property="receiver_tel1" column="receiver_tel1"/>
-        <result property="receiver_tel2" column="receiver_tel2"/>
-        <result property="receiver_tel3" column="receiver_tel3"/>
-        <result property="delivery_address" column="delivery_address"/>
-        <result property="delivery_message" column="delivery_message"/>
-    </resultMap>
 
     <!-- 로그인한 회원의 아이디로 주문 정보 조회 (goods_id -> goods_isbn, goods_fileName -> goods_cover 컬럼 반영) -->
     <select id="selectMyOrderGoodsList" resultMap="orderGoodsResult" parameterType="String">

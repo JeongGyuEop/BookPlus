@@ -69,16 +69,15 @@
         ]]>
     </select> -->
 
-    <!-- 키워드 자동 완성 -->
-    <select id="selectKeywordSearch" resultType="String" parameterType="String">
+		<!-- 키워드 자동 완성 (변경 사항 없음) -->
+	<select id="selectKeywordSearch" resultType="String"
+		parameterType="String">
         <![CDATA[
         SELECT goods_title 
-        FROM T_SHOPPING_GOODS
+        FROM t_shopping_goods
         WHERE goods_title LIKE CONCAT('%', #{keyword}, '%')
         ORDER BY goods_creDate DESC
-    ) t
-    LIMIT 15
-    ]]>
+        ]]>
 	</select>
 
 <!--     이미지 파일 정보 삽입
@@ -99,19 +98,6 @@
         )
         ]]>
     </insert> -->
-
-	<!-- 상품 상세 정보 조회 -->
-	<select id="selectGoodsDetail" resultMap="goodsResult"
-		parameterType="String">
-        <![CDATA[
-        SELECT g.*, d.filename AS fileName
-        FROM t_shopping_goods g
-        JOIN t_goods_detail_image d ON g.goods_isbn = d.goods_isbn
-        WHERE d.filetype = 'main_image'
-        AND g.goods_isbn = #{goods_isbn}
-        ORDER BY g.goods_isbn
-        ]]>
-	</select>
 
 	<!-- 상품 상세 이미지 정보 조회 (main_image 제외) 여기서도 GoodsVO의 goods_cover를 사용해서 파일명 
 		매핑 -->
@@ -138,25 +124,18 @@
         ]]>
 	</select>
 
-	<!-- 키워드 자동 완성 (변경 사항 없음) -->
-	<select id="selectKeywordSearch" resultType="String"
-		parameterType="String">
-        <![CDATA[
-        SELECT goods_title 
-        FROM t_shopping_goods
-        WHERE goods_title LIKE CONCAT('%', #{keyword}, '%')
-        ORDER BY goods_creDate DESC
-        ]]>
-	</select>
+
 	<!-- ISBN으로 책 조회 -->
     <select id="selectGoodsByISBN" parameterType="string" resultType="GoodsVO">
         SELECT * 
         FROM t_shopping_goods 
-        WHERE goods_isbn = #{isbn}
+        WHERE goods_isbn = #{goods_isbn}
     </select>
 
     <insert id="insertGoods" parameterType="GoodsVO">
 	    INSERT INTO t_shopping_goods (
+	    	goods_id,
+	    	goods_sort,
 	        goods_title, 
 	        goods_writer, 
 	        goods_published_date, 
@@ -165,6 +144,8 @@
 	        goods_sales_price, 
 	        goods_fileName
 	    ) VALUES (
+	        #{goods_isbn}, 
+	        #{goods_sort}, 
 	        #{goods_title}, 
 	        #{goods_writer}, 
 	        #{goods_published_date}, 

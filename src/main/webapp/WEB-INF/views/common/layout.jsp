@@ -31,19 +31,6 @@
                 'showControls': false,
                 'centerMarkers': false
             });
-
-            // 페이지 로딩 후 DB 갱신을 위한 AJAX 요청
-            $.ajax({
-                url: "${contextPath}/goods/updateDatabase",
-                type: "POST",
-                dataType: "json",
-                success: function(response) {
-                    console.log(response.message);
-                },
-                error: function(xhr, status, error) {
-                    console.error("DB 갱신 실패:", error);
-                }
-            });
         });
 
         // 스티키
@@ -77,13 +64,14 @@
         <tiles:insertAttribute name="quickMenu" />
     </div>
 
-    <c:if test="${message=='cancel_order'}">
-        <script>
-            window.onload = function() {
-                alert("주문을 취소했습니다.");
-            }
-        </script>
-    </c:if>
+    <c:if test="${message eq 'cancel_order'}">
+	    <script>
+	        window.onload = function() {
+	            alert("주문을 취소했습니다.");
+	        }
+	    </script>
+	</c:if>
+
 
     <script type="text/javascript">
         var loopSearch = true;

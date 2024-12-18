@@ -68,8 +68,8 @@ public class GoodsDAOImpl implements GoodsDAO{
     }
 
     @Override
-    public GoodsVO selectGoodsByISBN(String isbn) throws DataAccessException {
-        return sqlSession.selectOne("mapper.goods.selectGoodsByISBN", isbn);
+    public GoodsVO selectGoodsByISBN(String goods_isbn) throws DataAccessException {
+        return sqlSession.selectOne("mapper.goods.selectGoodsByISBN", goods_isbn);
     }
     
 }

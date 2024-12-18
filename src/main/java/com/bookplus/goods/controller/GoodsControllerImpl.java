@@ -167,11 +167,14 @@ public class GoodsControllerImpl extends BaseController   implements GoodsContro
 
 	@RequestMapping(value = "/updateDatabase", method = RequestMethod.POST)
     public ResponseEntity<Map<String, Object>> updateDatabase() {
+		System.out.println("goods controller updatebase start");
         Map<String, Object> response = new HashMap();
         try {
             // DB 갱신 로직 실행
         	List<GoodsVO> fetchBookDetails = goodsService.fetchBookDetails();
+    		System.out.println("goods controller updatebase info fetch start");
             boolean isUpdated = goodsService.updateDatabase(fetchBookDetails);
+    		System.out.println("goods controller updatebase info fetch end");
             
             if(isUpdated) {
                 response.put("updated", isUpdated);
