@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -27,8 +26,6 @@ import com.bookplus.goods.vo.GoodsVO;
 import com.bookplus.member.vo.MemberVO;
 import com.bookplus.order.service.OrderService;
 import com.bookplus.order.vo.OrderVO;
-import com.bookplus.order.vo.PaymentVO;
-
 
 //   /order/orderAllCartGoods.do
 

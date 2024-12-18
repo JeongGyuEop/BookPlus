@@ -109,7 +109,6 @@ window.onload=function(){
 			</c:otherwise>
 		</c:choose>
 	</tbody>
->>>>>>> 67b401755196f9b953beb448228e178c26000667
 </table>
 
 <br><br><br>

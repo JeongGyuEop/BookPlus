@@ -21,7 +21,6 @@ import org.springframework.web.servlet.ModelAndView;
 import com.bookplus.common.base.BaseController;
 import com.bookplus.member.vo.MemberVO;
 import com.bookplus.mypage.service.MyPageService;
-import com.bookplus.order.service.OrderService;
 import com.bookplus.order.service.PaymentServiceImpl;
 import com.bookplus.order.vo.OrderVO;
 import com.bookplus.order.vo.PaymentVO;
@@ -86,7 +85,7 @@ public class MyPageControllerImpl extends BaseController implements MyPageContro
 		HttpSession session=request.getSession(true);
 		MemberVO orderer=(MemberVO)session.getAttribute("memberInfo");
 		
-		List<OrderVO> myOrderList=myPageService.findMyOrderInfo(order_id);
+		List<OrderVO> myOrderList = myPageService.findMyOrderInfo(order_id);
 		// 로그로 출력
 		for (OrderVO order : myOrderList) {
 		    System.out.println(order.toString());
@@ -204,7 +203,6 @@ public class MyPageControllerImpl extends BaseController implements MyPageContro
 
 		memberMap.put("member_id", member_id);
 
-		// ������ ȸ�� ������ �ٽ� ���ǿ� �����Ѵ�.
 		memberVO = (MemberVO) myPageService.modifyMyInfo(memberMap);
 		session.removeAttribute("memberInfo");
 		session.setAttribute("memberInfo", memberVO);
