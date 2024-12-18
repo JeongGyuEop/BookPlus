@@ -18,7 +18,6 @@
         <result property="order_seq_num" column="order_seq_num"/>
         <result property="order_id" column="order_id"/>
         <result property="member_id" column="member_id"/>
-        
         <!-- goods_id -> goods_isbn 변경 -->
         <result property="goods_isbn" column="goods_isbn"/>
         
