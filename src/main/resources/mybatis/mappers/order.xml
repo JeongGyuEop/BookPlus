@@ -30,7 +30,7 @@
     <select id="selectOrderList" resultMap="orderResult" parameterType="String">
         <![CDATA[
             SELECT * FROM t_shopping_order
-            WHERE member_id = #{memberId}
+            WHERE order_member_id = #{orderMemberId}
             ORDER BY order_date DESC
         ]]>
     </select>
