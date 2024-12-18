@@ -19,62 +19,45 @@
         <result property="goods_delivery_price" column="goods_delivery_price" />
         <result property="goods_delivery_date" column="goods_delivery_date" />
         <result property="goods_status" column="goods_status" />
-        <result property="goods_fileName" column="fileName" />
+        <result property="goods_credate" column="goods_credate" />
+        <result property="goods_fileName" column="goods_fileName" />
     </resultMap>
 
-    <resultMap id="imageResult" type="ImageFileVO">
+<!--     <resultMap id="imageResult" type="ImageFileVO">
         <result property="goods_id" column="goods_id" />
         <result property="fileName" column="fileName" />
         <result property="reg_id" column="reg_id" />
         <result property="image_id" column="image_id" />
         <result property="fileType" column="fileType" />
-    </resultMap>
+    </resultMap> -->
 
-    <!-- 상품 리스트를 조회 -->
-    <select id="selectGoodsList" parameterType="String" resultMap="goodsResult">
-        <![CDATA[
-        SELECT *
-		FROM T_SHOPPING_GOODS 
-		where goods_status = 'bestseller'
-		ORDER BY goods_creDate DESC
-		LIMIT 15;
-        ]]>
-    </select>
-	<!-- 
-		SELECT t.*
-        FROM (
-            SELECT g.*, d.fileName
-            FROM T_SHOPPING_GOODS g
-            JOIN T_GOODS_DETAIL_IMAGE d ON g.goods_id = d.goods_id
-            WHERE d.filetype = 'main_image' 
-            AND g.goods_status = #{goodsStatus}
-            ORDER BY g.goods_creDate DESC
-        ) t
-        LIMIT 15
-	 -->
+	<select id="selectAllGoods" resultMap="goodsResult">
+		SELECT * 
+	    FROM T_SHOPPING_GOODS
+	    ORDER BY goods_credate DESC
+	    LIMIT #{limit} OFFSET #{offset};
+	</select>
+
     <!-- 상품 상세 정보 조회 -->
     <select id="selectGoodsDetail" resultMap="goodsResult" parameterType="String">
         <![CDATA[
-        SELECT g.*, d.fileName 
-        FROM T_SHOPPING_GOODS g
-        JOIN T_GOODS_DETAIL_IMAGE d ON g.goods_id = d.goods_id
-        WHERE d.filetype = 'main_image'
-        AND g.goods_id = #{goods_id}
-        ORDER BY g.goods_id
+        SELECT *
+        FROM T_SHOPPING_GOODS
+        WHERE goods_id = #{goods_id}
         ]]>
     </select>
 
     <!-- 상품 상세 이미지 정보 조회 -->
-    <select id="selectGoodsDetailImage" resultMap="imageResult" parameterType="String">
+<!--     <select id="selectGoodsDetailImage" resultMap="imageResult" parameterType="String">
         <![CDATA[
         SELECT * 
         FROM T_GOODS_DETAIL_IMAGE 
         WHERE fileType != 'main_image'
         AND goods_id = #{goods_id}
         ]]>
-    </select>
+    </select> -->
 
-    <!-- 상품 검색 (검색어 포함) -->
+<!--     상품 검색 (검색어 포함)
     <select id="selectGoodsBySearchWord" resultMap="goodsResult" parameterType="String">
         <![CDATA[
         SELECT g.*, d.fileName 
@@ -84,7 +67,7 @@
         AND g.goods_title LIKE CONCAT('%', #{searchWord}, '%')
         ORDER BY g.goods_creDate DESC
         ]]>
-    </select>
+    </select> -->
 
     <!-- 키워드 자동 완성 -->
     <select id="selectKeywordSearch" resultType="String" parameterType="String">
@@ -130,7 +113,7 @@
         ]]>
     </insert>
 
-    <!-- 이미지 파일 정보 삽입 -->
+<!--     이미지 파일 정보 삽입
     <insert id="insertNewGoodsImage" parameterType="ImageFileVO">
         <![CDATA[
             INSERT INTO T_GOODS_DETAIL_IMAGE (
@@ -147,6 +130,6 @@
             NOW()
         )
         ]]>
-    </insert>
+    </insert> -->
 
 </mapper>

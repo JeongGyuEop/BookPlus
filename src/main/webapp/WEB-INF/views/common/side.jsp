@@ -148,12 +148,9 @@ $(document).ready(function() {
                 'x-rapidapi-key': '9c5819e8a9msh27cec47277983a8p15ee97jsn0f8fb0fd3a60'  // 본인의 RapidAPI 키로 교체
             },
             success: function(response) {
-<<<<<<< HEAD
-                // 운세가 정상적으로 반환되었으면 번역 요청
-=======
+
                 // 운세가 정상적으로 반환되었으면 운세 내용 표시
                 
->>>>>>> 944a387aa7e643fc80a5f1e3095ab41b0f55eb98
                 if (response) {
                     translateText(response.horoscope);  // 응답에서 운세 내용을 번역
                 } else {

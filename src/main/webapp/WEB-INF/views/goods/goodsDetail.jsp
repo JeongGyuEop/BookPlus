@@ -17,7 +17,6 @@
 <%-- GoodsControllerImpl클래스의 goodsDetail메소드 내부에서 ModelAndView에 저장했던  
      도서상품 정보와 이미지 정보 얻기 --%>
 <c:set var="goods"  value="${goodsMap.goodsVO}"  />
-<c:set var="imageList"  value="${goodsMap.imageList }"  />
  <%
      //치환 변수 선언합니다.
       pageContext.setAttribute("crcn", "\r\n"); //개행문자
@@ -87,23 +86,6 @@
 		}); //end ajax	
 	}
 
-	// 팝업창의 x 이미지를 감싸고 있는 <a>태그를 클랙했을때 호출되는 함수 
-/* 	function imagePopup(type) {
-		
-		if (type == 'open') {
-			// 팝업창을 연다.
-			$('#layer').attr('style', 'visibility:visible');
-
-			// 페이지를 가리기위한 레이어 영역의 높이를 페이지 전체의 높이와 같게 한다.
-			$('#layer').height(jQuery(document).height());
-		}
-
-		else if (type == 'close') {
-
-			// 팝업창을 닫는다.
-			$('#layer').attr('style', 'visibility:hidden');
-		}
-	} */
 
 //구매하기 버튼을 누르면 호출되는 함수로 현재보고 있는 도서상품의 번호, 제목, 정가가격, 도서이미지명을 매개변수로 받아서 처리   
 // 구매하기 버튼에 대한 함수 수정
@@ -197,7 +179,7 @@ function fn_order_each_goods(goods_id) {
 	<div id="goods_image">
 		<figure>
 			<img alt="HTML5 &amp; CSS3"
-				src="${contextPath}/thumbnails.do?goods_id=${goods.goods_id}&fileName=${goods.goods_fileName}">
+				src="${goods.goods_fileName}">
 		</figure>
 	</div>
 	<div id="detail_table">
@@ -278,54 +260,7 @@ function fn_order_each_goods(goods_id) {
 			<li><a class="wish" href="#">위시리스트</a></li> -->
 		</ul>
 	</div>
-	<div class="clear"></div>
-	<!-- 내용 들어 가는 곳 -->
-	<div id="container">
-		<ul class="tabs">
-			<li><a href="#tab1">책소개</a></li>
-			<li><a href="#tab2">저자소개</a></li>
-			<li><a href="#tab3">책목차</a></li>
-			<li><a href="#tab4">출판사서평</a></li>
-			<li><a href="#tab5">추천사</a></li>
-			<li><a href="#tab6">리뷰</a></li>
-		</ul>
-		<div class="tab_container">
-			<div class="tab_content" id="tab1">
-				<h4>책소개</h4>
-				<p>${fn:replace(goods.goods_intro,crcn,br)}</p>
-				<c:forEach var="image" items="${imageList }">
-					<img src="${contextPath}/download.do?goods_id=${goods.goods_id}&fileName=${image.fileName}">
-				</c:forEach>
-			</div>
-			<div class="tab_content" id="tab2">
-				<h4>저자소개</h4>
-				<p>
-				<div class="writer">저자 : ${goods.goods_writer}</div>
-				
-				 <%-- fn:relpace함수를 이용해 입력했던 저자 소개에 포함된 개행문자 "\r\n"을 <br>대체 후 반환 받아 웹브라우저 화면에 출력합니다. --%>
-				 <p>${fn:replace(goods.goods_writer_intro,crcn,br) }</p> 
-				
-			</div>
-			<div class="tab_content" id="tab3">
-				<h4>책목차</h4>
-				<%-- replace함수를 이용해 상품 목차에 포함된 crcn( "\r\n")을 br(<br>태그)로 대체합니다. --%>
-				<p>${fn:replace(goods.goods_contents_order,crcn,br)}</p> 
-			</div>
-			<div class="tab_content" id="tab4">
-				<h4>출판사서평</h4>
-				<%-- replace함수를 이용해 출판사 서평 내용에 포함된 crcn( "\r\n")을 br(<br>태그)로 대체합니다. --%>
-				 <p>${fn:replace(goods.goods_publisher_comment ,crcn,br)}</p> 
-			</div>
-			<div class="tab_content" id="tab5">
-				<h4>추천사</h4>
-				<%-- replace함수를 이용해 추천사 내용에 포함된 crcn( "\r\n")을 br(<br>태그)로 대체합니다. --%>
-				<p>${fn:replace(goods.goods_recommendation,crcn,br) }</p>
-			</div>
-			<div class="tab_content" id="tab6">
-				<h4>리뷰</h4>
-			</div>
-		</div>
-	</div>
+	
 	<div class="clear"></div>
 	<div id="layer" style="visibility: hidden">
 	</div>		

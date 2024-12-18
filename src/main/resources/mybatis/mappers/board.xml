@@ -64,7 +64,7 @@
             board b
         join T_SHOPPING_MEMBER m
         on b.writer = m.member_id
-        order by id
+        order by id desc
         limit #{start}, #{end}
     </select>
 

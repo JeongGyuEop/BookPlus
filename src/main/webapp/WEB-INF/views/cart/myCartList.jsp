@@ -325,7 +325,7 @@ function fn_order_all_cart_goods(){
 					
 					<td class="goods_image">
 						<a href="${contextPath}/goods/goodsDetail.do?goods_id=${item.goods_id }">
-							<img width="75" alt="" src="${contextPath}/thumbnails.do?goods_id=${item.goods_id}&fileName=${item.goods_fileName}"  />
+							<img width="75" alt="" src="${item.goods_fileName}"  />
 						</a>
 					</td>
 					<td>

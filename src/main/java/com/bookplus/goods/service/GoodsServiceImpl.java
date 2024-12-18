@@ -20,35 +20,23 @@ public class GoodsServiceImpl implements GoodsService{
 	@Autowired
 	private GoodsDAO goodsDAO;
 	
-	public Map<String,List<GoodsVO>> listGoods() throws Exception {
-		
-		Map<String,List<GoodsVO>> goodsMap=new HashMap<String,List<GoodsVO>>();
-		
-		List<GoodsVO> goodsList=goodsDAO.selectGoodsList("bestseller");
-		goodsMap.put("bestseller",goodsList);
-		
-		
-		goodsList=goodsDAO.selectGoodsList("newbook");
-		goodsMap.put("newbook",goodsList);
-		
-		goodsList=goodsDAO.selectGoodsList("steadyseller");
-		goodsMap.put("steadyseller",goodsList);
-		
-		return goodsMap;
+	@Override
+	public List<GoodsVO> getAllGoods(int limit, int offset) throws Exception {
+	    return goodsDAO.selectAllGoods(limit, offset);
 	}
 	
 	//상품아이디를 매개변수로 전달 받아 도서상품정보 + 도서이미지정보를  GoodsDAOImpl의 메소드로 조회 명령 하는 메소드
-	public Map goodsDetail(String _goods_id) throws Exception {
+	public Map goodsDetail(String goods_id) throws Exception {
 		
 		Map goodsMap=new HashMap();
 		
-		GoodsVO goodsVO = goodsDAO.selectGoodsDetail(_goods_id); //도서 상품 조회
+		GoodsVO goodsVO = goodsDAO.selectGoodsDetail(goods_id); //도서 상품 조회
 		
 		goodsMap.put("goodsVO", goodsVO);
 		
-		List<ImageFileVO> imageList =goodsDAO.selectGoodsDetailImage(_goods_id); //도서상품의 이미지 정보 조회 
-		
-		goodsMap.put("imageList", imageList);
+//		List<ImageFileVO> imageList =goodsDAO.selectGoodsDetailImage(_goods_id); //도서상품의 이미지 정보 조회 
+//		
+//		goodsMap.put("imageList", imageList);
 		
 		return goodsMap;
 	}

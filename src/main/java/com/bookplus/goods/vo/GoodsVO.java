@@ -11,7 +11,6 @@ public class GoodsVO {
 	private String goods_publisher;
 	private String goods_sort;
 	private int    goods_sales_price;
-	private int    goods_point;     // ?
 	private Date    goods_published_date;
 	private int    goods_total_page;
 	private String goods_isbn;
@@ -19,11 +18,6 @@ public class GoodsVO {
 	private Date goods_delivery_date;
 	private String goods_fileName;
 	private String goods_status;
-	private String goods_writer_intro;
-	private String goods_contents_order;
-	private String goods_intro;
-	private String goods_publisher_comment;
-	private String goods_recommendation;
 	private Date   goods_credate;
 
 
@@ -37,7 +31,6 @@ public class GoodsVO {
 	            ", goods_publisher='" + goods_publisher + '\'' +
 	            ", goods_sort='" + goods_sort + '\'' +
 	            ", goods_sales_price=" + goods_sales_price +
-	            ", goods_point=" + goods_point +
 	            ", goods_published_date=" + goods_published_date +
 	            ", goods_total_page=" + goods_total_page +
 	            ", goods_isbn='" + goods_isbn + '\'' +
@@ -45,11 +38,6 @@ public class GoodsVO {
 	            ", goods_delivery_date=" + goods_delivery_date +
 	            ", goods_fileName='" + goods_fileName + '\'' +
 	            ", goods_status='" + goods_status + '\'' +
-	            ", goods_writer_intro='" + goods_writer_intro + '\'' +
-	            ", goods_contents_order='" + goods_contents_order + '\'' +
-	            ", goods_intro='" + goods_intro + '\'' +
-	            ", goods_publisher_comment='" + goods_publisher_comment + '\'' +
-	            ", goods_recommendation='" + goods_recommendation + '\'' +
 	            ", goods_credate=" + goods_credate +
 	            '}';
 	}
@@ -113,13 +101,6 @@ public class GoodsVO {
 		this.goods_sales_price = goods_sales_price;
 	}
 
-	public int getGoods_point() {
-		return goods_point;
-	}
-
-	public void setGoods_point(int goods_point) {
-		this.goods_point = goods_point;
-	}
 	public int getGoods_total_page() {
 		return goods_total_page;
 	}
@@ -185,43 +166,6 @@ public class GoodsVO {
 	public void setGoods_status(String goods_status) {
 		this.goods_status = goods_status;
 	}
-	
-	public String getGoods_writer_intro() {
-		return goods_writer_intro;
-	}
-
-	public void setGoods_writer_intro(String goods_writer_intro) {
-		this.goods_writer_intro = goods_writer_intro;
-	}
-	
-	public String getGoods_contents_order() {
-		return goods_contents_order;
-	}
-	public void setGoods_contents_order(String goods_contents_order) {
-		this.goods_contents_order = goods_contents_order;
-	}
-	public String getGoods_intro() {
-		return goods_intro;
-	}
-	public void setGoods_intro(String goods_intro) {
-		this.goods_intro = goods_intro;
-	}
-
-	public String getGoods_publisher_comment() {
-		return goods_publisher_comment;
-	}
-
-	public void setGoods_publisher_comment(String goods_publisher_comment) {
-		this.goods_publisher_comment = goods_publisher_comment;
-	}
-
-	public String getGoods_recommendation() {
-		return goods_recommendation;
-	}
-
-	public void setGoods_recommendation(String goods_recommendation) {
-		this.goods_recommendation = goods_recommendation;
-	}
 
 	public Date getGoods_credate() {
 		return goods_credate;
@@ -230,6 +174,5 @@ public class GoodsVO {
 	public void setGoods_credate(Date goods_credate) {
 		this.goods_credate = goods_credate;
 	}
-	
 
 }
