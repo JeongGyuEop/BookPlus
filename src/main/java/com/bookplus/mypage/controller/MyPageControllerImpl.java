@@ -59,7 +59,7 @@ public class MyPageControllerImpl extends BaseController implements MyPageContro
 
 		// 로그인한 상품 구매자의 정보를 session에서 얻는다.
 		memberVO = (MemberVO) session.getAttribute("memberInfo");
-		System.out.println("로그인 값 가져오기 전!: " + memberVO);
+		System.out.println("로그인 값 가져오기 전!: " + memberVO.getMember_id());
 		String member_id = memberVO.getMember_id();
 
 		// 로그인한 회원 ID를 이용해 주문한 상품을 조회 합니다.
