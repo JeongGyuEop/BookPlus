@@ -2,6 +2,7 @@
     pageEncoding="utf-8"
     isELIgnored="false"%> 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <c:set var="contextPath" value="${pageContext.request.contextPath}" />
 <!DOCTYPE html>
 <html>
@@ -22,6 +23,28 @@ function fn_cancel_order(order_id){
 		formObj.submit();	
 	}
 }
+
+function submitPost(orderId) {
+    // 폼 객체 생성
+    var form = document.createElement("form");
+    form.method = "POST";
+    form.action = "${contextPath}/mypage/myOrderDetail.do";
+
+    // 파라미터 추가
+    var input = document.createElement("input");
+    input.type = "hidden";
+    input.name = "order_id";
+    input.value = orderId;
+
+    form.appendChild(input);
+    document.body.appendChild(form);
+
+    // 폼 제출
+    form.submit();
+
+    // 폼 제거
+    document.body.removeChild(form);
+}
 </script>
 <c:if test="${message=='cancel_order'}">
 <script>
@@ -32,86 +55,91 @@ window.onload=function(){
 </c:if>
 </head>
 <body>
-<h1>최근주문내역
-	<a href="#"><img src="${contextPath}/resources/image/btn_more_see.jpg"></a>
-</h1>
+<h1>최근주문내역</h1>
 <table class="list_view">
 	<tbody align="center">
 		<tr style="background:#33ff00">
 			<td>주문번호</td>
 			<td>주문일자</td>
 			<td>주문상품</td>
-			<td>주문상태</td>
+			<td>수량</td>
+			<td>배송상태</td>
 			<td>주문취소</td>
 		</tr>
 		<c:choose>
 			<c:when test="${empty myOrderList}">
 				<tr>
-					<td colspan=5 class="fixed"><strong>주문한 상품이 없습니다.</strong></td>
+					<td colspan=6 class="fixed"><strong>주문한 상품이 없습니다.</strong></td>
 				</tr>
 			</c:when>
 			<c:otherwise>
 				<c:forEach var="item" items="${myOrderList}" varStatus="i">
 					<c:choose>
-						<c:when test="${pre_order_id != item.order_id}">
+						<c:when test="${pre_order_id != item.orderId}">
 							<c:choose>
-								<c:when test="${item.delivery_state=='delivery_prepared'}">
+								<c:when test="${item.deliveryState=='delivery_prepared'}">
 									<tr bgcolor="lightgreen">
 								</c:when>
-								<c:when test="${item.delivery_state=='finished_delivering'}">
+								<c:when test="${item.deliveryState=='finished_delivering'}">
 									<tr bgcolor="lightgray">
 								</c:when>
 								<c:otherwise>
 									<tr bgcolor="orange">
 								</c:otherwise>
-							</c:choose>
+							</c:choose> 
 							<td>
-								<a href="${contextPath}/mypage/myOrderDetail.do?order_id=${item.order_id}">
-									<span>${item.order_id}</span>
+								<a href="javascript:void(0);" onclick="submitPost('${item.orderId}')">
+								    <span>${item.orderId}</span>
 								</a>
 							</td>
-							<td><span>${item.pay_order_time}</span></td>
-							<td align="left">
+							<fmt:parseDate value="${item.orderDate}" pattern="yyyy-MM-dd HH:mm:ss" var="parsedDate" />
+							<td>
+							    <span>
+							        <fmt:formatDate value="${parsedDate}" pattern="yyyy-MM-dd" />
+							    </span>
+							</td>
+							<td align="left" width="250px">
 								<strong>
 									<c:forEach var="item2" items="${myOrderList}" varStatus="j">
-										<c:if test="${item.order_id == item2.order_id}">
-											<a href="${contextPath}/goods/goodsDetail.do?goods_id=${item2.goods_id}">
-												${item2.goods_title}/${item.order_goods_qty}개
-											</a><br>
+										<c:if test="${item.orderId == item2.orderId}">
+												${item2.goodsTitle}<br>
 										</c:if>
 									</c:forEach>
 								</strong>
 							</td>
 							<td>
+								<span>${item.orderGoodsQty}개</span>
+							</td>
+							<td>
 								<c:choose>
-									<c:when test="${item.delivery_state=='delivery_prepared'}">배송준비중</c:when>
-									<c:when test="${item.delivery_state=='delivering'}">배송중</c:when>
-									<c:when test="${item.delivery_state=='finished_delivering'}">배송완료</c:when>
-									<c:when test="${item.delivery_state=='cancel_order'}">주문취소</c:when>
-									<c:when test="${item.delivery_state=='returning_goods'}">반품완료</c:when>
+									<c:when test="${item.deliveryState=='delivery_prepared'}">배송준비중</c:when>
+									<c:when test="${item.deliveryState=='delivering'}">배송중</c:when>
+									<c:when test="${item.deliveryState=='finished_delivering'}">배송완료</c:when>
+									<c:when test="${item.deliveryState=='cancel_order'}">주문취소</c:when>
+									<c:when test="${item.deliveryState=='returning_goods'}">반품완료</c:when>
 								</c:choose>
 							</td>
 							<td>
 								<c:choose>
-									<c:when test="${item.delivery_state=='delivery_prepared'}">
-										<input type="button" onClick="fn_cancel_order('${item.order_id}')" value="주문취소"/>
+									<c:when test="${item.deliveryState=='delivery_prepared'}">
+										<input type="button" onClick="fn_cancel_order('${item.orderId}')" value="주문취소"/>
 									</c:when>
 									<c:otherwise>
-										<input type="button" onClick="fn_cancel_order('${item.order_id}')" value="주문취소" disabled/>
+										<input type="button" onClick="fn_cancel_order('${item.orderId}')" value="주문취소" disabled/>
 									</c:otherwise>
 								</c:choose>
-							</td>
+							</td> 
 							</tr>
-							<c:set var="pre_order_id" value="${item.order_id}"/>
-						</c:when>
+							<c:set var="pre_order_id" value="${item.orderId}"/>
+						 </c:when>
 					</c:choose>
 				</c:forEach>
 			</c:otherwise>
 		</c:choose>
 	</tbody>
->>>>>>> 67b401755196f9b953beb448228e178c26000667
 </table>
 
+<%-- 
 <br><br><br>
 <h1>계좌내역
 	<a href="#"><img src="${contextPath}/resources/image/btn_more_see.jpg"></a>
@@ -129,7 +157,7 @@ window.onload=function(){
 		<td>상품권 &nbsp;&nbsp;<strong>4000원</strong></td>
 		<td>디지털머니 &nbsp;&nbsp;<strong>9000원</strong></td>
 	</tr>
-</table>
+</table> --%>
 
 <br><br><br>
 <h1>나의 정보

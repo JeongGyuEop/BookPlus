@@ -17,7 +17,7 @@
 			<c:forEach var="item" items="${myOrderList }">
 			<tr>
 				    <td> ${item.orderId}</td>
-					<td>
+					<td width="250px">
 					  <h3>${item.goodsTitle }</h3>
 					</td>
 					<td>

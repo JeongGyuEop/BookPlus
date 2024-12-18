@@ -1,5 +1,6 @@
 package com.bookplus.mypage.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.bookplus.common.base.BaseController;
+import com.bookplus.goods.service.GoodsService;
+import com.bookplus.goods.vo.GoodsVO;
 import com.bookplus.member.vo.MemberVO;
 import com.bookplus.mypage.service.MyPageService;
 import com.bookplus.order.service.OrderService;
@@ -35,6 +38,9 @@ import com.bookplus.order.vo.PaymentVO;
 public class MyPageControllerImpl extends BaseController implements MyPageController {
 	@Autowired
 	private MyPageService myPageService;
+	
+	@Autowired
+	private GoodsService goodsService;
 
 	@Autowired
 	private PaymentServiceImpl paymentService;
@@ -87,18 +93,31 @@ public class MyPageControllerImpl extends BaseController implements MyPageContro
 		MemberVO orderer=(MemberVO)session.getAttribute("memberInfo");
 		
 		List<OrderVO> myOrderList=myPageService.findMyOrderInfo(order_id);
+		
+	    List<Map<String, Object>> goodsList = new ArrayList<>();
 		// 로그로 출력
 		for (OrderVO order : myOrderList) {
 		    System.out.println(order.toString());
+		    String goodsIds = order.getGoodsId(); // goodsId 필드 값 (콤마로 구분된 문자열)
+	        String[] goodsIdArray = goodsIds.split(","); // 콤마를 기준으로 분리
+	        
+	        for (String goodsId : goodsIdArray) {
+	            Map<String, Object> goodsMap = goodsService.goodsDetail(goodsId.trim()); // 각 goods_id로 책 정보 조회
+	            if (goodsMap != null && !goodsMap.isEmpty()) {
+	                goodsList.add(goodsMap); // 리스트에 추가
+	            }
+	        }
 		}
-		
 		// 결제 정보 조회
-	    PaymentVO paymentInfo = paymentService.findPaymentByOrderId(order_id); // 결제 서비스 호출
-	    
+	    PaymentVO paymentInfo = paymentService.findPaymentByOrderId(order_id);
+
+	    // ModelAndView에 데이터 추가
 	    mav.addObject("paymentInfo", paymentInfo);
-		mav.addObject("orderer", orderer);
-		mav.addObject("myOrderList", myOrderList);
-		return mav;
+	    mav.addObject("orderer", orderer);
+	    mav.addObject("myOrderList", myOrderList);
+	    mav.addObject("goodsList", goodsList); // 조회한 책 정보 리스트 추가
+
+	    return mav;
 	}
 
 	@Override
