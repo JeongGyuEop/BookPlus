@@ -29,7 +29,7 @@
     <!-- 주문 목록 조회 -->
     <select id="selectOrderList" resultMap="orderResult" parameterType="String">
         <![CDATA[
-            SELECT * FROM T_SHOPPING_ORDER
+            SELECT * FROM t_shopping_order
             WHERE member_id = #{memberId}
             ORDER BY order_date DESC
         ]]>
@@ -37,7 +37,7 @@
 
     <insert id="insertOrder" parameterType="OrderVO">
     	<![CDATA[
-		    INSERT INTO T_SHOPPING_ORDER (
+		    INSERT INTO t_shopping_order (
 		        order_id, order_member_id, order_member_name, goods_id, goods_title, order_goods_qty,
 		        receiver_name, receiver_hp1, receiver_hp2, receiver_hp3,
 		        delivery_address, delivery_message, total_price, pay_method,

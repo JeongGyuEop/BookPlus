@@ -1,7 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
     pageEncoding="utf-8"
-    isELIgnored="false"    
-    %>
+    isELIgnored="false" %>
 <%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles" %>    
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <c:set var="contextPath" value="${pageContext.request.contextPath}" />
@@ -26,4 +25,3 @@
      대표전화 : 1544-1544 (발신자 부담전화)   팩스 : 0502-977-7777 (지역번호공통) <br>
      COPYRIGHT(C) 북플러스 BOOK CENTRE ALL RIGHTS RESERVED.
 </div>
-

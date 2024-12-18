@@ -2,15 +2,7 @@
 package com.bookplus.goods.controller;
 
 import java.util.ArrayList;
-
-
-import com.bookplus.common.base.BaseController;
-import com.bookplus.goods.service.GoodsService;
-import com.bookplus.goods.vo.GoodsVO;
-
-import net.sf.json.JSONObject;
-
-
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -19,6 +11,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -27,21 +21,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.bookplus.common.base.BaseController;
+import com.bookplus.goods.service.GoodsService;
+import com.bookplus.goods.vo.GoodsVO;
+
 import net.sf.json.JSONObject;
-
-
-/*
-	상품 상세 이미지를 표시하면서 빠른 메뉴(퀵 메뉴라고도함)에 최근 본 상품을 추가하여 표시합니다.
-	빠른 메뉴에는 최대 네개 까지 상품을 저장할수 있습니다.
-	
-	빠른 메뉴에 최근 본 상품을 추가하고 표시 하는 과정
-	1. 세션에 저장된 최근 본 상품 목록을 가져옵니다.
-	2. 상품 목록에 저장된 상품 개수가 네 개 미만이고  방금 본 상품이 목록에 있는지 체크 합니다.
-	3. 목록에 없으면 목록에 추가합니다.
-	4. 다시 상품 목록을 세션에 저장합니다.
-	5. 화면에 상품을 표시하는 quickMenu.jsp에서는 세션의 최근 본 상품 목록을 가져와 차례대로 표시 합니다.
-
-*/
 
 @Controller("goodsController")
 @RequestMapping(value="/goods") 
@@ -86,127 +70,125 @@ public class GoodsControllerImpl extends BaseController   implements GoodsContro
 		return mav;
 	}
 	
+	//session에 또한 최근 본 상품정보가 저장된(퀵메뉴에 보여질 상품정보가 저장된) ArrayList배열이 저장되어 있지 않으면?
+	// 상품상세페이지 요청시 본 상품정보(두번쨰 매개변수 GoodsVO goodsVO로 받는 상품정보)를 ArrayList배열 생성후
+	// 추가시킵니다.
 	private void addGoodsInQuick(String goods_id, GoodsVO goodsVO, HttpSession session) {
-	    boolean already_existed = false;
 
-	    // 세션에 저장된 최근 본 상품 목록을 가져 옵니다.
-	    List<GoodsVO> quickGoodsList = (List<GoodsVO>) session.getAttribute("quickGoodsList");
+		boolean already_existed = false;
 
-	    // 최근 본 상품 목록이 있는 경우
-	    if (quickGoodsList != null) {
-	        // 중복 여부 확인
-	        for (GoodsVO _goodsBean : quickGoodsList) {
-	            System.out.println("기존에 본 상품아이디: " + _goodsBean.getGoods_id());
-	            System.out.println("추가로 본 상품아이디: " + goods_id);
+		List<GoodsVO> quickGoodsList;
 
-	            // 중복 검사 (goods_id와 _goodsBean.getGoods_id()를 문자열로 비교)
-	            if (goods_id != null && goods_id.equals(String.valueOf(_goodsBean.getGoods_id()))) {
-	                System.out.println("이미 존재하는 상품입니다.");
-	                already_existed = true;
-	                break;
-	            }
-	        }
+		// 세션에 저장된 최근 본 상품 목록을 가져 옵니다.
+		quickGoodsList = (ArrayList<GoodsVO>) session.getAttribute("quickGoodsList");
 
-	        // 중복되지 않았으면 목록에 추가
-	        if (!already_existed && quickGoodsList.size() < 4) {
-	            quickGoodsList.add(goodsVO);
-	        }
+		// 최근 본 상품이 있는 경우
+		if (quickGoodsList != null) {
+			// 최근 본 상품목록이 네개 미만인 경우
+			if (quickGoodsList.size() < 4) {
 
-	    } else {
-	        // 최근 본 상품 목록이 없으면 생성하여 상품정보를 저장합니다.
-	        quickGoodsList = new ArrayList<>();
-	        quickGoodsList.add(goodsVO);
-	    }
+				for (int i = 0; i < quickGoodsList.size(); i++) {
 
-	    // 최근 본 상품 목록을 세션에 저장합니다.
-	    session.setAttribute("quickGoodsList", quickGoodsList);
-	    // 최근 본 상품 목록에 저장된 상품 개수를 세션에 저장합니다.
-	    session.setAttribute("quickGoodsListNum", quickGoodsList.size());
+					GoodsVO _goodsBean = (GoodsVO) quickGoodsList.get(i);
+					
+					if (goods_id != null && goods_id.equals(String.valueOf(_goodsBean.getGoods_id()))) {
+				        System.out.println("이미 존재하는 상품입니다.");
+				        already_existed = true;
+				        break;
+				    }
+				}
 
-	    // 디버깅용 출력
-	    System.out.println("현재 quickGoodsList: " + quickGoodsList);
-	    System.out.println("현재 quickGoodsListNum: " + quickGoodsList.size());
+				// already_existed변수값이 false이면 상품 정보를 목록에 저장합니다.
+				if (already_existed == false) {
+					quickGoodsList.add(goodsVO);
+				}
+			}
+
+			
+			
+		} else {
+			// 최근 본 상품 목록이 없으면 생성하여 상품정보를 저장합니다.
+			quickGoodsList = new ArrayList<GoodsVO>();
+			quickGoodsList.add(goodsVO);
+
+		}
+		// 최근 본 상품 목록을 세션에 저장합니다.
+		session.setAttribute("quickGoodsList", quickGoodsList);
+		// 최근 본 상품목록에 저장된 상품 개수를 세션에 저장합니다.
+		session.setAttribute("quickGoodsListNum", quickGoodsList.size());
 	}
 
-
-
-
-
-
-/*	
-참고.
-@ResponseBody는 Spring MVC에서 사용되는 어노테이션 중 하나로, 
-	Controller에서 처리한 데이터를 HTTP Response Body에 직접 작성해주는 역할을 합니다. 	
-	이 어노테이션을 사용하면 Controller 메서드가 반환하는 값을 View가 아닌, Response Body에 직접 작성할 수 있습니다.
-
-	예를 들어, Controller에서 JSON 형식의 데이터를 반환하고자 할 때, 
-	@ResponseBody 어노테이션을 이용하여 JSON 형식으로 변환된 데이터를 HTTP Response Body에 작성할 수 있습니다. 
-	이를 통해, 별도의 View 페이지 없이도 JSON 데이터를 반환할 수 있으며, 클라이언트 측에서 이를 바로 처리할 수 있습니다.
-
-	또한, @ResponseBody 어노테이션을 사용하면, HTTP Response의 Content-Type 헤더 값도 자동으로 설정됩니다. 
-	반환되는 데이터의 형식에 따라 자동으로 Content-Type을 설정하여, 
-	클라이언트에서 받는 데이터가 어떤 형식인지 명확하게 알 수 있도록 합니다.	
-	
-*/	
-//주제 : Ajax 이용해 입력한 검색어 관련  데이터 자동으로 표시하기	
-	//header.jsp페이지에서 검색을 위해 검색키워드를 입력하고 검색요청을 했을때 
-	//검색키워드가 포함된 도서상품 책 제목목록을 조회해서  JSONObject로 만들어서 다시~~웹브라우저 전송 하는 메소드 
-																		  //전송하는 JSON데이터의 한글 인코딩을 지정 합니다. 
-	@RequestMapping(value="/keywordSearch.do",method = RequestMethod.GET,produces = "application/json; charset=utf8")
-	//JSON데이터를 웹브라우저로 출력합니다.             //검색할 키워드를 가져 옵니다. 
-	public @ResponseBody String  keywordSearch(@RequestParam("keyword") String keyword,
-			                                  HttpServletRequest request, HttpServletResponse response) throws Exception{
+	@RequestMapping(value = "/keywordSearch.do", method = RequestMethod.GET, produces = "application/json; charset=utf8")
+	// JSON데이터를 웹브라우저로 출력합니다. //검색할 키워드를 가져 옵니다.
+	public @ResponseBody String keywordSearch(@RequestParam("keyword") String keyword, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
 		response.setContentType("text/html;charset=utf-8");
 		response.setCharacterEncoding("utf-8");
-		//System.out.println(keyword);
-		if(keyword == null || keyword.equals("")) {
-		   return null ;
+		// System.out.println(keyword);
+		if (keyword == null || keyword.equals("")) {
+			return null;
 		}
 		keyword = keyword.toUpperCase();
-		
-		//<input>에 검색 키워드를 입력하기 위해 키보드의 키를 눌렀다가 떼면 ~
-		//입력된 키워드가 포함된 도서상품 책제목을 조회해서 가져옵니다.
-	    List<String> keywordList =goodsService.keywordSearch(keyword);
-	    
-	    //JSONObject객체 -> {  } 객체 를 생성 
+
+		// <input>에 검색 키워드를 입력하기 위해 키보드의 키를 눌렀다가 떼면 ~
+		// 입력된 키워드가 포함된 도서상품 책제목을 조회해서 가져옵니다.
+		List<String> keywordList = goodsService.keywordSearch(keyword);
+
+		// JSONObject객체 -> { } 객체 를 생성
 		JSONObject jsonObject = new JSONObject();
-		//{ "keyword": keywordList }
+		// { "keyword": keywordList }
 		jsonObject.put("keyword", keywordList);
-		
-		// "{ 'keyword': keywordList }"	
-	    String jsonInfo = jsonObject.toString();
-	    
-//	    '{"keyword":["가장 빨리 만나는 자바9",
-//	    			"자바로 배우는 리팩토링",
-//	    			"자바 EE 디자인 패턴",
-//	    			"유지 보수가 가능한 코딩의 기술-자바편",
-//	    			"초보자를 위한 자바 프로그래밍",
-//	    			"자바스크립트 배우기",
-//	    			"Try! helloworld 자바스크립트"]}'
-	
-	    System.out.println(jsonInfo);
-	    
-	    return jsonInfo ;
+
+		// "{ 'keyword': keywordList }"
+		String jsonInfo = jsonObject.toString();
+
+		System.out.println(jsonInfo);
+
+		return jsonInfo;
 	}
-	
-	
-	// 검색버튼 누르면 !~ http://localhost:8090/bookshop01/goods/searchGoods.do 입력한 검색어 단어가 포함된 도서상품 검색 
-	@RequestMapping(value="/searchGoods.do" ,method = RequestMethod.GET)
-	public ModelAndView searchGoods(@RequestParam("searchWord") String searchWord,
-			                       HttpServletRequest request, HttpServletResponse response) throws Exception{
-		
-		String viewName=(String)request.getAttribute("viewName"); //  /goods/searchGoods
-		
-		List<GoodsVO> goodsList=goodsService.searchGoods(searchWord); // 자바 EE 디자인 패턴
-		
+
+	// 검색버튼 누르면 !~ http://localhost:8090/bookplus/goods/searchGoods.do 입력한 검색어 단어가
+	// 포함된 도서상품 검색
+	@RequestMapping(value = "/searchGoods.do", method = RequestMethod.GET)
+	public ModelAndView searchGoods(@RequestParam("searchWord") String searchWord, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+
+		String viewName = (String) request.getAttribute("viewName"); // /goods/searchGoods
+
+		List<GoodsVO> goodsList = goodsService.searchGoods(searchWord); // 자바 EE 디자인 패턴
+
 		ModelAndView mav = new ModelAndView(viewName); // /goods/searchGoods
-		
+
 		mav.addObject("goodsList", goodsList);
-		
+
 		return mav;
-		
+
 	}
-	
 
+	@RequestMapping(value = "/updateDatabase", method = RequestMethod.POST)
+    public ResponseEntity<Map<String, Object>> updateDatabase() {
+		System.out.println("goods controller updatebase start");
+        Map<String, Object> response = new HashMap();
+        try {
+            // DB 갱신 로직 실행
+        	List<GoodsVO> fetchBookDetails = goodsService.fetchBookDetails();
+    		System.out.println("goods controller updatebase info fetch start");
+            boolean isUpdated = goodsService.updateDatabase(fetchBookDetails);
+    		System.out.println("goods controller updatebase info fetch end");
+            
+            if(isUpdated) {
+                response.put("updated", isUpdated);
+                response.put("message", "DB 갱신 성공");
+                return ResponseEntity.ok(response);
+            } else {
+                response.put("updated", isUpdated);
+                response.put("message", "DB 갱신 실패");
+                return ResponseEntity.ok(response);
+            }
+        } catch (Exception e) {
+            response.put("updated", false);
+            response.put("message", "DB 갱신 중 오류 발생");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
 }
-

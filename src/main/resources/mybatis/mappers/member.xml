@@ -1,10 +1,9 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper
-	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="mapper.member">
-    <!-- 리절트 맵 정의 -->    
     <resultMap id="memberResult" type="MemberVO">
         <result property="member_id" column="member_id" />
         <result property="member_pw" column="member_pw" />
@@ -35,32 +34,28 @@
     
     <select id="selectAPIUser" parameterType="map" resultMap="memberResult">
 	    SELECT *
-	    FROM T_SHOPPING_MEMBER 
+	    FROM t_shopping_member 
 	    WHERE social_provider=#{platform} AND api_id = #{apiId} 
 	</select>
-	
-
-    <!-- 로그인 시 입력한 아이디, 비밀번호 값에 해당하는 정보를 테이블에서 조회 -->
+	    <!-- 로그인 시 입력한 아이디, 비밀번호 값에 해당하는 정보를 테이블에서 조회 -->
     <select id="login" resultType="memberVO" parameterType="java.util.Map">
         <![CDATA[
         SELECT * 
-        FROM T_SHOPPING_MEMBER 
+        FROM t_shopping_member 
         WHERE member_id = #{member_id}
         AND member_pw = #{member_pw}
         ]]>
     </select>
-    
-    <!-- 회원가입을 위해 입력한 아이디로 조회한 회원이 1명이라면 true, 0이라면 false 결과 반환 -->
+
     <select id="selectOverlappedID" parameterType="String" resultType="String">
         SELECT IF(COUNT(*) = 1, 'true', 'false')
-        FROM T_SHOPPING_MEMBER
+        FROM t_shopping_member
         WHERE member_id = #{id}
     </select>
-    
-    <!-- 새 회원 정보 삽입 -->
+
     <insert id="insertNewMember" parameterType="memberVO">
         <![CDATA[
-        INSERT INTO T_SHOPPING_MEMBER(
+        INSERT INTO t_shopping_member(
             member_id,
             member_pw,
             member_name,
@@ -108,33 +103,44 @@
         )
         ]]>
     </insert>
-    
-    	<select id="selectMemID" resultType="String"  parameterType="memberVO">
-	    <![CDATA[
-		select MEMBER_ID from t_shopping_member 
-		where member_name=#{member_name} and member_birth_y=#{member_birth_y} and member_birth_m=#{member_birth_m} and member_birth_d=#{member_birth_d} and member_birth_gn=#{member_birth_gn} 
-		and email1=#{email1} and email2=#{email2}	 
-		]]>
-	</select>
-	
-	
-	<select id="checkMemInfo" resultType="memberVO"  parameterType="java.util.Map"  >
-	    <![CDATA[
-		select * from t_shopping_member 
-		where MEMBER_ID=#{member_id} and MEMBER_NAME=#{member_name} and EMAIL1=#{email1} and EMAIL2 LIKE '%' || #{email2} || '%'
-		]]>
-	</select>
-  
-   <delete id="removeMember" parameterType="String">
-  		<![CDATA[
-  		delete from t_shopping_member  where MEMBER_ID=#{member_id}
-  		]]>
-  	</delete>
-  	
-  	<update id="updatePass" parameterType="java.util.Map">
-  		<![CDATA[
-  			update t_shopping_member SET MEMBER_PW = #{user_psw_confirm} where MEMBER_ID=#{mem_id}
-  		]]>
-  	</update>
-  	
+
+    <select id="selectMemID" resultType="String" parameterType="memberVO">
+        <![CDATA[
+        SELECT member_id
+        FROM t_shopping_member
+        WHERE member_name=#{member_name}
+        AND member_birth_y=#{member_birth_y}
+        AND member_birth_m=#{member_birth_m}
+        AND member_birth_d=#{member_birth_d}
+        AND member_birth_gn=#{member_birth_gn}
+        AND email1=#{email1}
+        AND email2=#{email2}
+        ]]>
+    </select>
+
+    <select id="checkMemInfo" resultType="memberVO" parameterType="java.util.Map">
+        <![CDATA[
+        SELECT *
+        FROM t_shopping_member
+        WHERE member_id=#{member_id}
+        AND member_name=#{member_name}
+        AND email1=#{email1}
+        AND email2 LIKE '%' || #{email2} || '%'
+        ]]>
+    </select>
+
+    <delete id="removeMember" parameterType="String">
+        <![CDATA[
+        DELETE FROM t_shopping_member
+        WHERE member_id=#{member_id}
+        ]]>
+    </delete>
+
+    <update id="updatePass" parameterType="java.util.Map">
+        <![CDATA[
+        UPDATE t_shopping_member
+        SET member_pw = #{user_psw_confirm}
+        WHERE member_id=#{mem_id}
+        ]]>
+    </update>
 </mapper>

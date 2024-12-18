@@ -1,10 +1,9 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper
     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="mapper.board">
-
     <insert id="insertContent" parameterType="java.util.HashMap">
         insert into board(
             subject,
@@ -12,11 +11,11 @@
             writer,
             password,
             register_datetime,
-           	place_name,
-           	road_address_name,
-           	place_url,
-           	x,
-           	y
+            place_name,
+            road_address_name,
+            place_url,
+            x,
+            y
         ) values(
             #{subject},
             #{content},
@@ -33,8 +32,7 @@
 
     <update id="updateContent" parameterType="java.util.HashMap">
         update board
-        set
-            subject = #{subject},
+        set subject = #{subject},
             content = #{content},
             writer = #{writer},
             password = #{password},
@@ -48,8 +46,7 @@
     </update>
 
     <select id="selectContentCnt" resultType="int" parameterType="java.util.HashMap">
-        select count(id)
-        from board
+        select count(id) from board
     </select>
 
     <select id="selectContent" resultType="Board" parameterType="java.util.HashMap">
@@ -62,9 +59,9 @@
             m.member_name
         from
             board b
-        join T_SHOPPING_MEMBER m
+        join t_shopping_member m
         on b.writer = m.member_id
-        order by id
+        order by id desc
         limit #{start}, #{end}
     </select>
 
@@ -82,7 +79,7 @@
             m.member_name
         from
             board b
-        join T_SHOPPING_MEMBER m
+        join t_shopping_member m
         on b.writer = m.member_id
         where
             b.id = #{id}
@@ -90,25 +87,10 @@
 
     <insert id="insertBoardReply" parameterType="java.util.HashMap">
         <selectKey keyProperty="reply_id" resultType="string" order="BEFORE">
-            select UUID() 
+            select UUID()
         </selectKey>
-        insert into board_reply(
-            reply_id,
-            board_id,
-            parent_id,
-            depth,
-            reply_content,
-            reply_writer,
-            reply_password
-        ) values(
-            #{reply_id},
-            #{board_id},
-            #{parent_id},
-            #{depth},
-            #{reply_content},
-            #{reply_writer},
-            #{reply_password}
-        )
+        insert into board_reply(reply_id, board_id, parent_id, depth, reply_content, reply_writer, reply_password)
+        values(#{reply_id}, #{board_id}, #{parent_id}, #{depth}, #{reply_content}, #{reply_writer}, #{reply_password})
     </insert>
 
     <select id="selectBoardReplyList" resultType="BoardReply" parameterType="java.util.HashMap">
@@ -123,7 +105,7 @@
             m.member_name
         from
             board_reply br
-        join T_SHOPPING_MEMBER m
+        join t_shopping_member m
         on br.reply_writer = m.member_id
         where
             board_id = #{id}
@@ -132,68 +114,59 @@
 
     <delete id="deleteBoardReply" parameterType="java.util.HashMap">
         delete from board_reply
-        where
-            reply_id = #{reply_id}
-            and reply_password = #{reply_password}
+        where reply_id = #{reply_id}
+        and reply_password = #{reply_password}
     </delete>
 
-<delete id="deleteBoardReplyAll" parameterType="java.util.HashMap">
-    delete from board_reply
-    where reply_id in (
-        select * from (
-            select reply_id
-            from board_reply
-            where reply_id = #{reply_id}
-            and reply_password = #{reply_password}
-            union
-            select reply_id
-            from board_reply
-            where parent_id = #{reply_id}
-        ) as temp_table
-    );
-</delete>
-
+    <delete id="deleteBoardReplyAll" parameterType="java.util.HashMap">
+        delete from board_reply
+        where reply_id in (
+            select * from (
+                select reply_id
+                from board_reply
+                where reply_id = #{reply_id}
+                and reply_password = #{reply_password}
+                union
+                select reply_id
+                from board_reply
+                where parent_id = #{reply_id}
+            ) as temp_table
+        );
+    </delete>
 
     <select id="selectBoardCnt" resultType="int" parameterType="java.util.HashMap">
         select count(id)
         from board
-        where
-            id = #{id}
-            and password = #{password}
+        where id = #{id}
+        and password = #{password}
     </select>
 
     <delete id="deleteBoard" parameterType="java.util.HashMap">
         delete from board
-        where
-            id = #{id}
-            and password = #{password}
+        where id = #{id}
+        and password = #{password}
     </delete>
 
     <select id="selectReplyPassword" resultType="int" parameterType="java.util.HashMap">
         select count(*)
         from board_reply
-        where
-            reply_id = #{reply_id}
-            and reply_password = #{reply_password}
+        where reply_id = #{reply_id}
+        and reply_password = #{reply_password}
     </select>
 
     <update id="updateReply" parameterType="java.util.HashMap">
         update board_reply
-        set
-            parent_id = #{parent_id},
+        set parent_id = #{parent_id},
             depth = #{depth},
             reply_content = #{reply_content},
             reply_writer = #{reply_writer},
             reply_password = #{reply_password}
-        where
-            reply_id = #{reply_id}
+        where reply_id = #{reply_id}
     </update>
     
 <!-- 	<select id="findMemberIdByName" parameterType="String" resultType="String">
 	    SELECT member_id
-	    FROM T_SHOPPING_MEMBER
+	    FROM t_shopping_member
 	    WHERE member_name = #{memberName}
 	</select> -->
-
-	
 </mapper>

@@ -19,134 +19,109 @@
         <result property="goods_delivery_price" column="goods_delivery_price" />
         <result property="goods_delivery_date" column="goods_delivery_date" />
         <result property="goods_status" column="goods_status" />
-        <result property="goods_fileName" column="fileName" />
+        <result property="goods_credate" column="goods_credate" />
+        <result property="goods_fileName" column="goods_fileName" />
     </resultMap>
 
-    <resultMap id="imageResult" type="ImageFileVO">
-        <result property="goods_id" column="goods_id" />
-        <result property="fileName" column="fileName" />
-        <result property="reg_id" column="reg_id" />
-        <result property="image_id" column="image_id" />
-        <result property="fileType" column="fileType" />
-    </resultMap>
+	<select id="selectAllGoods" resultMap="goodsResult">
+		SELECT * 
+	    FROM t_shopping_goods
+	    ORDER BY goods_credate DESC
+	    LIMIT #{limit} OFFSET #{offset};
+	</select>
 
-    <!-- 상품 리스트를 조회 -->
-    <select id="selectGoodsList" parameterType="String" resultMap="goodsResult">
-        <![CDATA[
-        SELECT *
-		FROM T_SHOPPING_GOODS 
-		where goods_status = 'bestseller'
-		ORDER BY goods_creDate DESC
-		LIMIT 15;
-        ]]>
-    </select>
-	<!-- 
-		SELECT t.*
-        FROM (
-            SELECT g.*, d.fileName
-            FROM T_SHOPPING_GOODS g
-            JOIN T_GOODS_DETAIL_IMAGE d ON g.goods_id = d.goods_id
-            WHERE d.filetype = 'main_image' 
-            AND g.goods_status = #{goodsStatus}
-            ORDER BY g.goods_creDate DESC
-        ) t
-        LIMIT 15
-	 -->
     <!-- 상품 상세 정보 조회 -->
     <select id="selectGoodsDetail" resultMap="goodsResult" parameterType="String">
         <![CDATA[
-        SELECT g.*, d.fileName 
-        FROM T_SHOPPING_GOODS g
-        JOIN T_GOODS_DETAIL_IMAGE d ON g.goods_id = d.goods_id
-        WHERE d.filetype = 'main_image'
-        AND g.goods_id = #{goods_id}
-        ORDER BY g.goods_id
+        SELECT *
+        FROM t_shopping_goods
+        WHERE goods_id = #{goods_id}
         ]]>
     </select>
 
-    <!-- 상품 상세 이미지 정보 조회 -->
-    <select id="selectGoodsDetailImage" resultMap="imageResult" parameterType="String">
-        <![CDATA[
-        SELECT * 
-        FROM T_GOODS_DETAIL_IMAGE 
-        WHERE fileType != 'main_image'
-        AND goods_id = #{goods_id}
-        ]]>
-    </select>
-
-    <!-- 상품 검색 (검색어 포함) -->
-    <select id="selectGoodsBySearchWord" resultMap="goodsResult" parameterType="String">
-        <![CDATA[
-        SELECT g.*, d.fileName 
-        FROM T_SHOPPING_GOODS g
-        JOIN T_GOODS_DETAIL_IMAGE d ON g.goods_id = d.goods_id
-        WHERE d.filetype = 'main_image'
-        AND g.goods_title LIKE CONCAT('%', #{searchWord}, '%')
-        ORDER BY g.goods_creDate DESC
-        ]]>
-    </select>
-
-    <!-- 키워드 자동 완성 -->
-    <select id="selectKeywordSearch" resultType="String" parameterType="String">
+	<!-- 키워드 자동 완성 -->
+	<select id="selectKeywordSearch" resultType="String" parameterType="String">
         <![CDATA[
         SELECT goods_title 
-        FROM T_SHOPPING_GOODS
+        FROM t_shopping_goods
         WHERE goods_title LIKE CONCAT('%', #{keyword}, '%')
-        ORDER BY goods_creDate DESC
+        ORDER BY goods_credate DESC
         ]]>
+	</select>
+
+	<!-- 상품 상세 이미지 정보 조회 -->
+	<select id="selectGoodsDetailImage" resultMap="goodsResult" parameterType="String">
+        <![CDATA[
+        SELECT d.goods_isbn, d.filename AS fileName
+        FROM t_goods_detail_image d
+        WHERE d.filetype != 'main_image'
+        AND d.goods_isbn = #{goods_isbn}
+        ]]>
+	</select>
+
+	<!-- 상품 검색 -->
+	<select id="selectGoodsBySearchWord" resultMap="goodsResult" parameterType="String">
+        <![CDATA[
+        SELECT g.*, d.filename AS fileName
+        FROM t_shopping_goods g
+        JOIN t_goods_detail_image d ON g.goods_isbn = d.goods_isbn
+        WHERE d.filetype = 'main_image'
+        AND g.goods_title LIKE CONCAT('%', #{searchWord}, '%')
+        ORDER BY g.goods_credate DESC
+        ]]>
+	</select>
+
+	<!-- ISBN으로 책 조회 -->
+    <select id="selectGoodsByISBN" parameterType="string" resultType="GoodsVO">
+        SELECT * 
+        FROM t_shopping_goods 
+        WHERE goods_isbn = #{goods_isbn}
     </select>
-    
-    
-    <!-- Goods 데이터 삽입 -->
+
     <insert id="insertGoods" parameterType="GoodsVO">
-        <![CDATA[
-           INSERT INTO T_SHOPPING_GOODS (
-            goods_sort,
-            goods_title,
-            goods_writer,
-            goods_publisher,
-            goods_price,
-            goods_sales_price,
-            goods_published_date,
-            goods_isbn,
-            goods_delivery_price,
-            goods_delivery_date,
-            goods_status,
-            goods_credate
-        ) VALUES (
-            #{goods_sort},
-            #{goods_title},
-            #{goods_writer},
-            #{goods_publisher},
-            #{goods_price},
-            #{goods_sales_price},
-            #{goods_published_date},
-            #{goods_isbn},
-            #{goods_delivery_price},
-            #{goods_delivery_date},
-            #{goods_status},
-            NOW()
-        )
-        ]]>
-    </insert>
+	    INSERT INTO t_shopping_goods (
+	    	goods_id,
+	    	goods_sort,
+	        goods_title, 
+	        goods_writer, 
+	        goods_published_date, 
+	        goods_total_page,
+	        goods_isbn, 
+	        goods_delivery_price,
+	        goods_delivery_date,
+	        goods_price, 
+	        goods_sales_price, 
+	        goods_fileName
+	    ) VALUES (
+	        #{goods_isbn}, 
+	        #{goods_sort}, 
+	        #{goods_title}, 
+	        #{goods_writer}, 
+	        #{goods_published_date}, 
+	        #{goods_total_page},
+	        #{goods_isbn}, 
+	        #{goods_delivery_price},
+	        #{goods_delivery_date},
+	        #{goods_price}, 
+	        #{goods_sales_price}, 
+	        #{goods_fileName}
+	    )
+	</insert>
 
-    <!-- 이미지 파일 정보 삽입 -->
-    <insert id="insertNewGoodsImage" parameterType="ImageFileVO">
-        <![CDATA[
-            INSERT INTO T_GOODS_DETAIL_IMAGE (
-            goods_id,
-            filename,
-            reg_id,
-            filetype,
-            credate
-        ) VALUES (
-            #{goods_id},
-            #{fileName},
-            #{reg_id},
-            #{fileType},
-            NOW()
-        )
-        ]]>
-    </insert>
-
+    <!-- 기존 책 정보 업데이트 -->
+    <update id="updateGoods" parameterType="GoodsVO">
+        UPDATE t_shopping_goods 
+        SET goods_title = #{goods_title},
+            goods_writer = #{goods_writer},
+            goods_published_date = #{goods_published_date},
+            goods_total_page = #{goods_total_page},
+            goods_delivery_price = #{goods_delivery_price},
+            goods_delivery_date = #{goods_delivery_date},
+            goods_price = #{goods_price},
+            goods_sales_price = #{goods_sales_price},
+            goods_fileName = #{goods_fileName},
+            goods_sort = #{goods_sort},
+            goods_publisher = #{goods_publisher}
+        WHERE goods_isbn = #{goods_isbn}
+    </update>
 </mapper>

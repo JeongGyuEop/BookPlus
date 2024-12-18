@@ -17,7 +17,7 @@
     <!-- 결제 정보 추가 -->
     <insert id="insertPayment" parameterType="PaymentVO">
         <![CDATA[
-            INSERT INTO T_SHOPPING_PAYMENT (
+            INSERT INTO t_shopping_payment (
                 imp_uid, merchant_uid, amount, pay_method, 
                 payment_status, order_id
             ) VALUES (
@@ -30,7 +30,7 @@
     <!-- 결제 정보 조회 -->
     <select id="selectPaymentByOrderId" resultMap="paymentResult" parameterType="String">
         <![CDATA[
-            SELECT * FROM T_SHOPPING_PAYMENT
+            SELECT * FROM t_shopping_payment
             WHERE order_id = #{orderId}
         ]]>
     </select>

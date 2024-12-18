@@ -33,6 +33,4 @@ public interface BoardService {
 	boolean updateReply(Map<String, Object> paramMap);
 
 	String getMemberIdByName(String memberName);
-	
-	
 }

@@ -1,7 +1,7 @@
 <%@page import="org.json.JSONObject"%>
 <%@ page language="java" contentType="text/html; charset=utf-8"
-	pageEncoding="utf-8"
-	isELIgnored="false"%>
+    pageEncoding="utf-8"
+    isELIgnored="false"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 <c:set var="contextPath"  value="${pageContext.request.contextPath}"  />
@@ -14,12 +14,19 @@
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script>
 function execDaumPostcode() {
-	  new daum.Postcode({
-	    oncomplete: function (data) {
-	      // 팝업에서 검색결과 항목을 클릭했을 때 실행할 코드를 작성하는 부분.
+	new daum.Postcode({
+		oncomplete: function(data) {
+			var fullRoadAddr = data.roadAddress;
+			var extraRoadAddr = '';
+			if (data.bname !== '' && /[동|로|가]$/g.test(data.bname)) extraRoadAddr += data.bname;
+			if (data.buildingName !== '' && data.apartment === 'Y') {
+				extraRoadAddr += (extraRoadAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+			}
+			if (extraRoadAddr !== '') fullRoadAddr += ' (' + extraRoadAddr + ')';
 
-	      var fullRoadAddr = data.roadAddress; // 도로명 주소 변수
-	      var extraRoadAddr = ''; // 도로명 조합형 주소 변수
+			document.getElementById('zipcode').value = data.zonecode;
+			document.getElementById('roadAddress').value = fullRoadAddr;
+			document.getElementById('jibunAddress').value = data.jibunAddress;
 
 	      // 법정동명이 있을 경우 추가 (법정리는 제외)
 	      if (data.bname !== '' && /[동|로|가]$/g.test(data.bname)) {
@@ -132,11 +139,59 @@ function prepareFormData() {
     }
 }
 
+function fn_overlapped(){
+	var _id=$("#_member_id").val();
+	if(_id==''){
+		alert("ID를 입력하세요");
+		return;
+	}
+	$.ajax({
+		type:"post",
+		async:false,
+		url:"${contextPath}/member/overlapped.do",
+		dataType:"text",
+		data: {id:_id},
+		success:function(data,textStatus){
+			if(data=='false'){
+				alert("사용할 수 있는 ID입니다.");
+				$('#btnOverlapped').prop("disabled", true);
+				$('#_member_id').prop("disabled", true);
+				$('#member_id').val(_id);
+			}else{
+				alert("사용할 수 없는 ID입니다.");
+			}
+		},
+		error:function(data,textStatus){
+			alert("에러가 발생했습니다.");
+		}
+	});
+}
 
+function updateEmailDomain() {
+	var select = document.getElementById('email2Select');
+	var emailInput = document.getElementById('email2Input');
+	emailInput.value = select.value;
+}
+
+function prepareFormData() {
+	const smsCheckbox = document.getElementById('smsstsCheckbox');
+	const emailCheckbox = document.getElementById('emailstsCheckbox');
+
+	if (smsCheckbox.checked) {
+		document.getElementById('smsHidden').disabled = true;
+	} else {
+		document.getElementById('smsHidden').disabled = false;
+	}
+
+	if (emailCheckbox.checked) {
+		document.getElementById('emailHidden').disabled = true;
+	} else {
+		document.getElementById('emailHidden').disabled = false;
+	}
+}
 </script>
 </head>
 <body>
-
 <%
     JSONObject userProfile = (JSONObject) request.getAttribute("userProfile");
 %>
@@ -373,7 +428,7 @@ function prepareFormData() {
 			</td>
 		</tr>
 	</table>
-	</div>
-</form>	
+</div>
+</form>
 </body>
 </html>

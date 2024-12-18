@@ -8,8 +8,7 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <c:set var="contextPath"  value="${pageContext.request.contextPath}"  />
 <%
-     //치환 변수 선언합니다.
-      pageContext.setAttribute("crcn", "\r\n"); //Space, Enter
+      pageContext.setAttribute("crcn", "\r\n"); //개행문자
       pageContext.setAttribute("br", "<br/>"); //br 태그
 %> 
 <head>
@@ -48,33 +47,34 @@
 		<div id="carousel_inner">
 			<ul id="carousel_ul">
 			<c:choose>
-			   <c:when test="${ empty goodsList  }" >
+			   <c:when test="${ empty goodsList }" >
 			        <li>
-					<div id="book">
-						<a><h1>제품이없습니다.</h1></a>
+					 <div id="book">
+						<h1><a>제품이없습니다.</a></h1>
 					  </div>
-				</li> 
+					</li> 
 			   </c:when>
 			   <c:otherwise>
 			    <c:forEach var="item" items="${goodsList }" >
 			     <li>
 					<div id="book">
-						<a href="${contextPath}/goods/goodsDetail.do?goods_id=${item.goods_id}">
-						<img width="75" alt="" src="${contextPath}/thumbnails.do?goods_id=${item.goods_id}&fileName=${item.goods_fileName}">
+						<a href="${contextPath}/goods/goodsDetail.do?goods_isbn=${item.goods_isbn}">
+						<img width="75" alt=""
+							src="${contextPath}/thumbnails.do?goods_isbn=${item.goods_isbn}&fileName=${item.goods_cover}">
 						</a>
 						<div class="sort">[컴퓨터 인터넷]</div>
 						<div class="title">
-							<a href="${contextPath}/goods/goodsDetail.do?goods_id=${item.goods_id }">
+							<a href="${contextPath}/goods/goodsDetail.do?goods_isbn=${item.goods_isbn }">
 							  ${item.goods_title}
 							</a>
 						</div>
-						<div class="writer">${item.goods_writer} | ${item.goods_publisher}</div>
+						<div class="writer">${item.goods_author} | ${item.goods_publisher}</div>
 						<div class="price">
 							<span>
-							  <fmt:formatNumber  value="${item.goods_price}" type="number" var="goods_price" />
-		                         ${goods_price}원
+							  <fmt:formatNumber value="${item.goods_priceStandard}" type="number" var="goods_priceStandard" />
+		                         ${goods_priceStandard}원
 							</span> <br>
-							 <fmt:formatNumber  value="${item.goods_price*0.9}" type="number" var="discounted_price" />
+							 <fmt:formatNumber value="${item.goods_priceStandard*0.9}" type="number" var="discounted_price" />
 				               ${discounted_price}원(10%할인)
 						</div>
 					</div>
@@ -84,11 +84,10 @@
 				</li> 
 			   </c:otherwise>
 			 </c:choose>
-			 
 			</ul>
 		</div>
 		<div id="right_scroll">
-			<a href='javascript:slide("right");'><img  src="${contextPath}/resources/image/right.gif"></a>
+			<a href='javascript:slide("right");'><img src="${contextPath}/resources/image/right.gif"></a>
 		</div>
 		<input id="hidden_auto_slide_seconds" type="hidden" value="0">
 
@@ -107,23 +106,25 @@
 		  <c:forEach var="item" items="${goodsList }"> 
 			<tr>
 					<td class="goods_image">
-						<a href="${contextPath}/goods/goodsDetail.do?goods_id=${item.goods_id}">
-							   <img width="75" alt="" src="${contextPath}/thumbnails.do?goods_id=${item.goods_id}&fileName=${item.goods_fileName}">
+						<a href="${contextPath}/goods/goodsDetail.do?goods_isbn=${item.goods_isbn}">
+							   <img width="75" alt=""
+							    src="${contextPath}/thumbnails.do?goods_isbn=${item.goods_isbn}&fileName=${item.goods_cover}">
 						</a>
 					</td>
 					<td class="goods_description">
 						<h2>
-							<a href="${contextPath}/goods/goodsDetail.do?goods_id=${item.goods_id }">${item.goods_title }</a>
+							<a href="${contextPath}/goods/goodsDetail.do?goods_isbn=${item.goods_isbn }">${item.goods_title }</a>
 						</h2>
-						<c:set var="goods_pub_date" value="${item.goods_published_date }" />
-					   <c:set var="arr" value="${fn:split(goods_pub_date,' ')}" />
-						<div class="writer_press"  >${item.goods_writer }저
+						<c:set var="goods_pub_date" value="${item.goods_pubDate }" />
+					    <c:set var="arr" value="${fn:split(goods_pub_date,' ')}" />
+						<div class="writer_press">${item.goods_author }저
 							|${item.goods_publisher }|<c:out value="${arr[0]}" />
 						</div>
 					</td>
-					<td class="price"><span>${item.goods_price }원</span><br>
+					<td class="price">
+						<span>${item.goods_priceStandard }원</span><br>
 						<strong>
-						 <fmt:formatNumber  value="${item.goods_price*0.9}" type="number" var="discounted_price" />
+						 <fmt:formatNumber value="${item.goods_priceStandard*0.9}" type="number" var="discounted_price" />
 				               ${discounted_price}원
 						</strong><br>(10% 할인)
 					</td>
@@ -155,8 +156,7 @@
 				</c:choose>
 			</c:forEach>
 			<li><a class="no_border" href="#">Next</a></li>
-		</ul>
-		
+		</ul>		
 	</div>
 
 

@@ -316,6 +316,4 @@ public class MemberServiceImpl implements MemberService {
 	public int updatePass(String mem_id, String user_psw_confirm) throws Exception {
 		return memberDAO.updatePass(mem_id,user_psw_confirm);	
 	}
-
-	
 }

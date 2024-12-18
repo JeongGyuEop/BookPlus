@@ -375,8 +375,4 @@ public class BoardController{
 		return retVal;
 
 	}
-
-	
-
-
 }

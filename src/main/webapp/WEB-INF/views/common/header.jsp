@@ -1,134 +1,79 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
     pageEncoding="utf-8"
-    isELIgnored="false"
-    %>
-<%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles" %>    
+    isELIgnored="false"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<c:set var="contextPath" value="${pageContext.request.contextPath}" />
 
-
-<c:set var="contextPath"  value="${pageContext.request.contextPath}" />
-
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
 <script type="text/javascript">
-	var loopSearch=true;
+	var loopSearch = true;
 	
-	//사용자가 검색창에 검색키워드를 입력하면 Ajax기능을 이용해 해당 키워드가 포함된 목록을 조회해서 가져옵니다.
-	//그런 후 ! id속성값이  suggest인 <div>태그를 선택해 차례대로 표시합니다. 
-	function keywordSearch(){
-		
-		//제시된 키워드를 클릭하면 keywordSearch()함수의 실행을 중지 시키고 빠져나감
-		if(loopSearch==false){
-			return;
-		}
-		
-		//사용자가 검색창에 입력한 검색키워드를 가져옵니다.
-	 	var value=document.frmSearch.searchWord.value;
-		
-		
+	function keywordSearch() {
+		if(!loopSearch) return;
+		var value = document.frmSearch.searchWord.value;
 		$.ajax({
-			type : "get",
-			async : true, //false인 경우 동기식으로 처리한다.
-			url : "${contextPath}/goods/keywordSearch.do",
-			data : {keyword:value},
-			success : function(data, textStatus) {
-				console.log(data,"");
-				console.log(typeof data);
-				
-//			    {"keyword":["가장 빨리 만나는 자바9",
-//    			"자바로 배우는 리팩토링",
-//    			"자바 EE 디자인 패턴",
-//    			"유지 보수가 가능한 코딩의 기술-자바편",
-//    			"초보자를 위한 자바 프로그래밍",
-//    			"자바스크립트 배우기",
-//    			"Try! helloworld 자바스크립트"]}
-//		        var jsonInfo = JSON.parse(data);
-			    var jsonInfo = data;
-				displayResult(jsonInfo);
+			type: "get",
+			async: true,
+			url: "${contextPath}/goods/keywordSearch.do",
+			dataType: "json",
+			data: { keyword: value },
+			success: function(data, textStatus) {
+				displayResult(data);
 			},
-			error : function(data, textStatus) {
-				alert("에러가 발생했습니다."+data);
-			},
-			complete : function(data, textStatus) {
-				//alert("작업을완료 했습니다");
-				
+			error: function(data, textStatus) {
+				alert("에러가 발생했습니다." + data);
 			}
-		}); //end ajax	
+		});
 	}
 	
-	function displayResult(jsonInfo){
-		
-//	    {"keyword":["가장 빨리 만나는 자바9",
-//		"자바로 배우는 리팩토링",
-//		"자바 EE 디자인 패턴",
-//		"유지 보수가 가능한 코딩의 기술-자바편",
-//		"초보자를 위한 자바 프로그래밍",
-//		"자바스크립트 배우기",
-//		"Try! helloworld 자바스크립트"]}
-		
+	function displayResult(jsonInfo) {
 		var count = jsonInfo.keyword.length;
 		if(count > 0) {
-		    var html = '';
-		    for(var i in jsonInfo.keyword){
-			   html += "<a href=\"javascript:select('"+jsonInfo.keyword[i]+"')\">"+jsonInfo.keyword[i]+"</a><br/>";
-		    }
-		    /*
-		    
-		    	<a href="javascript:select('가장 빨리 만나는 자바9')">가장 빨리 만나는 자바9</a><br/>
-		    	<a href="javascript:select('자바로 배우는 리팩토링')">자바로 배우는 리팩토링</a><br/>
-		    	<a href="javascript:select('가장 빨리 만나는 자바9')">가장 빨리 만나는 자바9</a><br/>
-		    	<a href="javascript:select('자바 EE 디자인 패턴')">자바 EE 디자인 패턴</a><br/>
-		    	<a href="javascript:select('유지 보수가 가능한 코딩의 기술-자바편')">유지 보수가 가능한 코딩의 기술-자바편</a><br/>
-		    	<a href="javascript:select('초보자를 위한 자바 프로그래밍')">초보자를 위한 자바 프로그래밍</a><br/>
-		    	<a href="javascript:select('자바스크립트 배우기')">자바스크립트 배우기</a><br/>
-		    	<a href="javascript:select('Try! helloworld 자바스크립트')">Try! helloworld 자바스크립트</a><br/>
-		    
-		    */
-		    
-		    //<div id="suggestList"></div> 태그를 선택해  
-		    var listView = document.getElementById("suggestList");
-		    //<div>사이 내부에 데이터 집어 넣기</div>
-		    listView.innerHTML = html;
-		    /*
-		    	  <div id="suggestList">
-				    	<a href="javascript:select('가장 빨리 만나는 자바9')">가장 빨리 만나는 자바9</a><br/>
-				    	<a href="javascript:select('자바로 배우는 리팩토링')">자바로 배우는 리팩토링</a><br/>
-				    	<a href="javascript:select('가장 빨리 만나는 자바9')">가장 빨리 만나는 자바9</a><br/>
-				    	<a href="javascript:select('자바 EE 디자인 패턴')">자바 EE 디자인 패턴</a><br/>
-				    	<a href="javascript:select('유지 보수가 가능한 코딩의 기술-자바편')">유지 보수가 가능한 코딩의 기술-자바편</a><br/>
-				    	<a href="javascript:select('초보자를 위한 자바 프로그래밍')">초보자를 위한 자바 프로그래밍</a><br/>
-				    	<a href="javascript:select('자바스크립트 배우기')">자바스크립트 배우기</a><br/>
-				    	<a href="javascript:select('Try! helloworld 자바스크립트')">Try! helloworld 자바스크립트</a><br/>
-		    	  </div>
-		    
-		    */
-		    show('suggest');
-		}else{
-		    hide('suggest');
+			var html = '';
+			for(var i in jsonInfo.keyword) {
+				html += "<a href=\"javascript:select('"+jsonInfo.keyword[i]+"')\">"+jsonInfo.keyword[i]+"</a><br/>";
+			}
+			var listView = document.getElementById("suggestList");
+			listView.innerHTML = html;
+			show('suggest');
+		} else {
+			hide('suggest');
 		} 
 	}
 	
 	function select(selectedKeyword) {
-		 document.frmSearch.searchWord.value=selectedKeyword;
-		 loopSearch = false;
-		 hide('suggest');
+		document.frmSearch.searchWord.value=selectedKeyword;
+		loopSearch = false;
+		hide('suggest');
 	}
 		
 	function show(elementId) {
-		 var element = document.getElementById(elementId);
-		 if(element) {
-		  element.style.display = 'block';
-		 }
-		}
-	
-	function hide(elementId){
-	   var element = document.getElementById(elementId);
-	   if(element){
-		  element.style.display = 'none';
-	   }
+		var element = document.getElementById(elementId);
+		if(element) element.style.display = 'block';
 	}
-
+	
+	function hide(elementId) {
+		var element = document.getElementById(elementId);
+		if(element) element.style.display = 'none';
+	}
 </script>
+
+<c:if test="${sessionScope.isLogOn==true and not empty sessionScope.memberInfo }">
+</c:if>
+<c:if test="${message=='cancel_order'}">
+<script>
+window.onload = function() {
+	alert("주문을 취소했습니다.");
+}
+</script>
+</c:if>
+</head>
 <body>
-	<div id="logo">
+<div id="logo">
 	<a href="${contextPath}/main/main.do">
 		<img width="176" height="80" alt="booktopia" src="${contextPath}/resources/image/bookplus.png">
 		</a>
@@ -173,16 +118,3 @@
    </div>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-

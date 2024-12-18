@@ -5,41 +5,26 @@
 
 <mapper namespace="mapper.admin.goods">
 
-    <resultMap id="goodsResult" type="goodsVO">
-        <result property="goods_id" column="goods_id" />
-        <result property="goods_title" column="goods_title" />
-        <result property="goods_writer" column="goods_writer" />
-        <result property="goods_price" column="goods_price" />
-        <result property="goods_publisher" column="goods_publisher" />
-        <result property="goods_status" column="goods_status" />
-        <result property="goods_sales_price" column="goods_sales_price" />
-        <result property="goods_published_date" column="goods_published_date" />
-        <result property="goods_total_page" column="goods_total_page" />
+    <!-- GoodsVO 매핑: goods_id → goods_isbn, goods_file_name → goods_cover -->
+    <resultMap id="goodsResult" type="com.bookplus.goods.vo.GoodsVO">
         <result property="goods_isbn" column="goods_isbn" />
-        <result property="goods_delivery_price" column="goods_delivery_price" />
-        <result property="goods_delivery_date" column="goods_delivery_date" />
-        <result property="goods_file_name" column="file_name" />
-        <result property="goods_sort" column="goods_sort" />
-        <result property="goods_writer_intro" column="goods_writer_intro" />
-        <result property="goods_intro" column="goods_intro" />
-        <result property="goods_contents_order" column="goods_contents_order" javaType="java.lang.String" jdbcType="CLOB" />
+        <result property="goods_title" column="goods_title" />
+        <result property="goods_author" column="goods_writer" /> <!-- goods_writer → goods_author -->
+        <result property="goods_priceStandard" column="goods_price" />
+        <result property="goods_publisher" column="goods_publisher" />
+        <result property="goods_priceSales" column="goods_sales_price" />
+        <result property="goods_pubDate" column="goods_published_date" />
+        <result property="goods_cover" column="goods_cover" />
+        <result property="goods_categoryName" column="goods_sort" />
     </resultMap>
 
-    <resultMap id="imageResult" type="imageFileVO">
-        <result property="goods_id" column="goods_id" />
-        <result property="file_name" column="file_name" />
-        <result property="reg_id" column="reg_id" />
-        <result property="image_id" column="image_id" />
-        <result property="file_type" column="file_type" />
-    </resultMap>
-
-    <resultMap id="orderGoodsResult" type="OrderVO">
+    <resultMap id="orderGoodsResult" type="com.bookplus.order.vo.OrderVO">
         <result property="order_id" column="order_id" />
         <result property="member_id" column="member_id" />
-        <result property="goods_id" column="goods_id" />
+        <result property="goods_isbn" column="goods_isbn" />
         <result property="goods_title" column="goods_title" />
-        <result property="goods_sales_price" column="goods_sales_price" />
-        <result property="order_total_price" column="order_total_price" />
+        <result property="goods_priceSales" column="goods_sales_price" />
+        <result property="total_goods_price" column="order_total_price" />
         <result property="order_goods_qty" column="order_goods_qty" />
         <result property="orderer_name" column="orderer_name" />
         <result property="receiver_name" column="receiver_name" />
@@ -61,37 +46,37 @@
         <result property="delivery_state" column="delivery_state" />
         <result property="final_total_price" column="final_total_price" />
         <result property="goods_qty" column="goods_qty" />
-        <result property="goods_file_name" column="goods_file_name" />
+        <result property="goods_cover" column="goods_file_name" />
     </resultMap>
 
     <insert id="insertNewGoods" parameterType="java.util.Map">
         <![CDATA[
-           INSERT INTO T_SHOPPING_GOODS (
+           INSERT INTO t_shopping_goods (
                goods_sort, goods_title, goods_writer, goods_publisher,
                goods_price, goods_sales_price, goods_point, goods_published_date,
                goods_total_page, goods_isbn, goods_delivery_price, goods_delivery_date,
                goods_status, goods_writer_intro, goods_intro, goods_publisher_comment,
-               goods_recommendation, goods_contents_order
+               goods_recommendation, goods_contents_order, goods_cover
            ) VALUES (
                #{goods_sort}, #{goods_title}, #{goods_writer}, #{goods_publisher},
                #{goods_price}, #{goods_sales_price}, #{goods_point}, #{goods_published_date},
                #{goods_total_page}, #{goods_isbn}, #{goods_delivery_price}, #{goods_delivery_date},
                #{goods_status}, #{goods_writer_intro}, #{goods_intro}, #{goods_publisher_comment},
-               #{goods_recommendation}, #{goods_contents_order:VARCHAR}
+               #{goods_recommendation}, #{goods_contents_order:VARCHAR}, #{goods_cover}
            )
         ]]>
     </insert>
 
      <select id="selectNewGoodsList" resultMap="goodsResult" parameterType="java.util.Map">
         <![CDATA[
-            SELECT goods_id,
+            SELECT goods_isbn,
                    goods_title,
                    goods_writer,
                    goods_publisher,
                    goods_sales_price,
                    DATE_FORMAT(goods_credate, '%Y-%m-%d') AS goods_credate,
                    DATE_FORMAT(goods_published_date, '%Y-%m-%d') AS goods_published_date
-            FROM T_SHOPPING_GOODS
+            FROM t_shopping_goods
             WHERE DATE(goods_credate) BETWEEN #{begin_date} AND #{end_date}
             ORDER BY goods_credate DESC
             LIMIT #{pageSection}, 10
@@ -101,8 +86,8 @@
     <select id="selectOrderGoodsList" resultMap="orderGoodsResult" parameterType="java.util.Map">
         <![CDATA[
             SELECT *
-            FROM T_SHOPPING_ORDER
-            WHERE DATE(pay_order_time) BETWEEN #{begin_date} AND #{end_date}
+            FROM t_shopping_order
+            WHERE DATE(pay_order_time) BETWEEN #{beginDate} AND #{endDate}
             <if test="search_type == 'orderer_id'">
                 AND orderer_id = #{search_word}
             </if>
@@ -113,36 +98,30 @@
                 AND pay_orderer_hp_num = #{search_word}
             </if>
             ORDER BY pay_order_time DESC
-            LIMIT (#{section} - 1) * 100 + (#{page_num} - 1) * 10, 10
+            LIMIT (#{section} - 1) * 100 + (#{pageNum} - 1) * 10, 10
         ]]>
     </select>
 
     <select id="selectGoodsDetail" resultMap="goodsResult" parameterType="String">
         <![CDATA[
-            SELECT g.*,
-                   DATE_FORMAT(g.goods_published_date, '%Y-%m-%d') AS goods_published_date,
-                   d.file_name
-            FROM T_SHOPPING_GOODS g
-            JOIN T_GOODS_DETAIL_IMAGE d
-            ON g.goods_id = d.goods_id
-            WHERE d.file_type = 'main_image'
-              AND g.goods_id = #{goods_id}
-            ORDER BY g.goods_id
-        ]]>
-    </select>
-
-    <select id="selectGoodsImageFileList" resultMap="imageResult" parameterType="String">
-        <![CDATA[
-            SELECT *
-            FROM T_GOODS_DETAIL_IMAGE
-            WHERE goods_id = #{goods_id}
-            ORDER BY image_id ASC
+            SELECT 
+                   goods_isbn,
+                   goods_title,
+                   goods_writer,
+                   goods_publisher,
+                   goods_price,
+                   goods_sales_price,
+                   DATE_FORMAT(goods_published_date, '%Y-%m-%d') AS goods_published_date,
+                   goods_cover,
+                   goods_sort
+            FROM t_shopping_goods
+            WHERE goods_isbn = #{goods_isbn}
         ]]>
     </select>
 
     <update id="updateGoodsInfo" parameterType="java.util.HashMap">
         <![CDATA[
-            UPDATE T_SHOPPING_GOODS
+            UPDATE t_shopping_goods
             <set>
                 <if test="goods_sort != '' and goods_sort != null">
                     goods_sort = #{goods_sort},
@@ -196,44 +175,45 @@
                     recommendation = #{recommendation},
                 </if>
                 <if test="goods_contents_order != '' and goods_contents_order != null">
-                    goods_contents_order = #{goods_contents_order}
+                    goods_contents_order = #{goods_contents_order},
+                </if>
+                <if test="goods_cover != '' and goods_cover != null">
+                    goods_cover = #{goods_cover}
                 </if>
             </set>
-            WHERE goods_id = #{goods_id}
+            WHERE goods_isbn = #{goods_isbn}
         ]]>
     </update>
 
-    <update id="updateGoodsImage" parameterType="imageFileVO">
+    <update id="updateGoodsImage" parameterType="com.bookplus.goods.vo.GoodsVO">
         <![CDATA[
-            UPDATE T_GOODS_DETAIL_IMAGE
-            SET file_name = #{file_name}
-            WHERE goods_id = #{goods_id}
-              AND image_id = #{image_id}
+            UPDATE t_shopping_goods
+            SET goods_cover = #{goods_cover}
+            WHERE goods_isbn = #{goods_isbn}
         ]]>
     </update>
 
     <delete id="deleteGoodsImage" parameterType="String">
         <![CDATA[
-            DELETE FROM T_GOODS_DETAIL_IMAGE
-            WHERE image_id = #{image_id}
+            UPDATE t_shopping_goods
+            SET goods_cover = NULL
+            WHERE goods_isbn = #{goods_isbn}
         ]]>
     </delete>
 
     <update id="updateOrderGoods" parameterType="java.util.HashMap">
         <![CDATA[
-            UPDATE T_SHOPPING_ORDER
+            UPDATE t_shopping_order
             <set>
                 <if test="delivery_state != '' and delivery_state != null">
                     delivery_state = #{delivery_state},
                 </if>
                 <if test="delivery_address != '' and delivery_address != null">
-                    delivery_address = #{delivery_address},
+                    delivery_address = #{delivery_address}
                 </if>
             </set>
             WHERE order_id = #{order_id}
         ]]>
     </update>
-
-
 
 </mapper>

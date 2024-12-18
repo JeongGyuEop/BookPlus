@@ -135,7 +135,7 @@ public class MemberControllerImpl extends BaseController implements MemberContro
 		    
 			if (memberVO != null && memberVO.getMember_id() != null) {
 	            // 세션에 로그인 정보 저장
-	            HttpSession session = request.getSession();
+	            HttpSession session = request.getSession(true);
 	            session.setAttribute("isLogOn", true);
 	            session.setAttribute("memberInfo", memberVO);
 

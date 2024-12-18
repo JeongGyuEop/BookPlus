@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="mapper.mypage">
     <!-- 리절트 맵 정의 -->
@@ -24,15 +24,15 @@
 	    <result property="paymentStatus" column="payment_status" />
 	    <result property="totalPrice" column="total_price" />
 	    <result property="orderDate" column="pay_order_time" />
-	</resultMap>	
+	</resultMap>
 
-    <!-- 로그인한 회원의 아이디를 이용해 장바구니 테이블에 담아 구매한 상품 정보들을 최근에 주문한 일자를 기준으로 내림차순 정렬하여 조회 -->
+    <!-- 로그인한 회원의 아이디로 주문 정보 조회 -->
     <select id="selectMyOrderGoodsList" resultMap="orderGoodsResult" parameterType="String">
         <![CDATA[
         SELECT * 
-        FROM T_SHOPPING_ORDER
+        FROM t_shopping_order
         WHERE member_id = #{member_id}
-        ORDER BY pay_order_time DESC
+        ORDER BY order_seq_num DESC
         ]]>
     </select>
     
@@ -40,7 +40,7 @@
     <select id="selectMyOrderInfo" resultMap="orderGoodsResult" parameterType="String">
         <![CDATA[
         SELECT * 
-        FROM T_SHOPPING_ORDER
+        FROM t_shopping_order
         WHERE order_id = #{order_id}
         ]]>
     </select>
@@ -49,7 +49,7 @@
     <select id="selectMyOrderHistoryList" resultMap="orderGoodsResult" parameterType="java.util.Map">
         <![CDATA[
         SELECT * 
-        FROM T_SHOPPING_ORDER
+        FROM t_shopping_order
         WHERE member_id = #{member_id}
         AND DATE_FORMAT(pay_order_time, '%Y-%m-%d') BETWEEN #{beginDate} AND #{endDate}
         ORDER BY pay_order_time DESC
@@ -58,7 +58,7 @@
     
     <!-- 회원 정보 업데이트 -->
     <update id="updateMyInfo" parameterType="java.util.HashMap">
-        UPDATE T_SHOPPING_MEMBER
+        UPDATE t_shopping_member
         <set>
             <if test="member_pw != '' and member_pw != null">
                 member_pw = #{member_pw},
@@ -115,16 +115,19 @@
     <!-- 회원 상세 정보 조회 -->
     <select id="selectMyDetailInfo" resultType="memberVO" parameterType="String">
         <![CDATA[
-        SELECT * 
-        FROM T_SHOPPING_MEMBER
+        SELECT *
+        FROM t_shopping_member
         WHERE member_id = #{member_id}
         ]]>
     </select>
     
     <!-- 주문 취소 처리 -->
     <update id="updateMyOrderCancel" parameterType="String">
-        UPDATE T_SHOPPING_ORDER
+        <![CDATA[
+        UPDATE t_shopping_order
         SET delivery_state = 'cancel_order'
         WHERE order_id = #{order_id}
+        ]]>
     </update>
+
 </mapper>

@@ -1,14 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
-    pageEncoding="utf-8"
-    isELIgnored="false"
-    %>
-<%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles" %>    
+    pageEncoding="utf-8" isELIgnored="false" %>
+<%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
-
-
-<c:set var="contextPath"  value="${pageContext.request.contextPath}"  />
- <link rel="stylesheet" type="text/css" href="<c:url value='/resources/css/horoscope.css' />">
+<c:set var="contextPath" value="${pageContext.request.contextPath}" />
+<link rel="stylesheet" type="text/css" href="<c:url value='/resources/css/horoscope.css' />">
 <nav>
 <ul>
 <c:choose>
@@ -73,9 +69,8 @@
 </ul>
 </nav>
 <div class="clear"></div>
-
 <div class="horoscope-container">
-    <h3>&nbsp;&nbsp;오늘의 별자리 운세</h3>
+    <h3>오늘의 별자리 운세</h3>
     <form action="${contextPath}/horoscope/view.do" method="get">
         <select id="sign" name="sign" required>
             <option value="">------ 별자리 선택 ------</option>
@@ -100,29 +95,25 @@
 </div>
 
 <div id="banner">
-	<a href="#"><img width="190" height="104" src="${contextPath}/resources/image/call_center_logo.jpg"></a>
+    <a href="#"><img width="190" height="104" src="${contextPath}/resources/image/call_center_logo.jpg"></a>
 </div>
 <div id="banner">
-	<a href="#"><img width="190" height="69" src="${contextPath}/resources/image/QnA_logo.jpg"></a>
+    <a href="#"><img width="190" height="69" src="${contextPath}/resources/image/QnA_logo.jpg"></a>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-<!--Google 번역기 API 사용하기위한 추가2.-->
 <script type="text/javascript">
-	function googleTranslateElementInit() {
-		new google.translate.TranslateElement({
-			pageLanguage : 'en',
-			   includedLanguages: 'ko,en', // 번역할 언어 목록
-			layout : google.translate.TranslateElement.InlineLayout.VERTICAL
-		}, 'google_translate_element');
-	}
-/* VERTICAL 드롭다운(*Google 번역번역에서 제공* 수평으로 출력),  HORIZONTAL 드롭다운(*Google 번역번역에서 제공* 수평으로 출력) */
+    function googleTranslateElementInit() {
+        new google.translate.TranslateElement({
+            pageLanguage: 'en',
+            includedLanguages: 'ko,en', // 번역할 언어 목록
+            layout: google.translate.TranslateElement.InlineLayout.VERTICAL
+        }, 'google_translate_element');
+    }
+    /* VERTICAL 드롭다운(*Google 번역에서 제공* 수직으로 출력), HORIZONTAL 드롭다운(*Google 번역에서 제공* 수평으로 출력) */
 </script>
-
-<script type="text/javascript"
-	    src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-<!--Google 번역기 API 사용하기위한 추가2.-->
+<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
 <script type="text/javascript">
 $(document).ready(function() {
@@ -148,12 +139,9 @@ $(document).ready(function() {
                 'x-rapidapi-key': '9c5819e8a9msh27cec47277983a8p15ee97jsn0f8fb0fd3a60'  // 본인의 RapidAPI 키로 교체
             },
             success: function(response) {
-<<<<<<< HEAD
-                // 운세가 정상적으로 반환되었으면 번역 요청
-=======
+
                 // 운세가 정상적으로 반환되었으면 운세 내용 표시
                 
->>>>>>> 944a387aa7e643fc80a5f1e3095ab41b0f55eb98
                 if (response) {
                     translateText(response.horoscope);  // 응답에서 운세 내용을 번역
                 } else {
@@ -163,9 +151,33 @@ $(document).ready(function() {
             error: function() {
                 $('#horoscopeDescription').html("운세를 가져오는 중 오류가 발생했습니다.");
             }
+
+            // AJAX 요청 보내기
+            $.ajax({
+                url: 'https://horoscope-astrology.p.rapidapi.com/horoscope', // RapidAPI 엔드포인트 URL
+                type: 'GET',
+                data: {
+                    day: 'today', // 오늘의 운세를 가져옵니다
+                    sunsign: sign // 선택된 별자리 정보 전달
+                },
+                headers: {
+                    'x-rapidapi-host': 'horoscope-astrology.p.rapidapi.com', // RapidAPI 호스트
+                    'x-rapidapi-key': '9c5819e8a9msh27cec47277983a8p15ee97jsn0f8fb0fd3a60' // 본인의 RapidAPI 키로 교체
+                },
+                success: function(response) {
+                    // 운세가 정상적으로 반환되었으면 운세 내용 표시
+                    if (response) {
+                        $('#horoscopeDescription').html(response.horoscope); // 응답에서 운세 내용 가져오기
+                    } else {
+                        $('#horoscopeDescription').html("운세를 가져올 수 없습니다.");
+                    }
+                },
+                error: function() {
+                    $('#horoscopeDescription').html("운세를 가져오는 중 오류가 발생했습니다.");
+                }
+            });
         });
     });
-
     // 번역 요청 함수
     function translateText(text) {
         $.ajax({
@@ -192,10 +204,6 @@ $(document).ready(function() {
         });
     }
 });
-
-
-
-
-	
 </script>
+
 </html>
