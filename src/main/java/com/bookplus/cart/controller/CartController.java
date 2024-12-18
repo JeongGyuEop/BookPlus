@@ -11,7 +11,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 public interface CartController {
 	public ModelAndView myCartMain(HttpServletRequest request, HttpServletResponse response)  throws Exception;
-	public @ResponseBody String addGoodsInCart(@RequestParam("goods_id") String goods_id,HttpServletRequest request, HttpServletResponse response)  throws Exception;
+	public @ResponseBody String addGoodsInCart(@RequestParam("goods_id") String goods_id,@RequestParam("order_goods_qty") int order_goods_qty, HttpServletRequest request, HttpServletResponse response)  throws Exception;
 	public  @ResponseBody String modifyCartQty(@RequestParam("goods_id") String goods_id,@RequestParam("cart_goods_qty") int cart_goods_qty,
 			                  HttpServletRequest request, HttpServletResponse response)  throws Exception;
 	public ModelAndView removeCartGoods(@RequestParam("cart_id") int cart_id,HttpServletRequest request, HttpServletResponse response)  throws Exception;

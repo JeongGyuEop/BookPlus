@@ -8,37 +8,34 @@
     <!-- 장바구니 정보 매핑: cart_id, goods_isbn, member_id, cart_goods_qty 등 -->
     <resultMap id="cartResult" type="CartVO">
         <result property="cart_id" column="cart_id"/>
-        <result property="goods_isbn" column="goods_isbn"/>
+        <result property="goods_id" column="goods_id"/>
         <result property="member_id" column="member_id"/>
         <result property="cart_goods_qty" column="cart_goods_qty"/>
         <result property="creDate" column="creDate"/>
     </resultMap>
     
-    <!-- GoodsVO 매핑 변경 사항 반영 -->
-    <resultMap id="goodsResult" type="GoodsVO">
-        <result property="goods_isbn" column="goods_isbn"/>
-        <result property="goods_title" column="goods_title"/>
-        <result property="goods_author" column="goods_author"/>
-        <result property="goods_priceStandard" column="goods_priceStandard"/>
-        <result property="goods_publisher" column="goods_publisher"/>
-        <result property="goods_status" column="goods_status"/>
-        <result property="goods_priceSales" column="goods_priceSales"/>
-        <result property="goods_pubDate" column="goods_pubDate"/>
-        <result property="goods_total_page" column="goods_total_page"/>
-        <result property="goods_isbn" column="goods_isbn"/>
-        <result property="goods_delivery_price" column="goods_delivery_price"/>
-        <result property="goods_delivery_date" column="goods_delivery_date"/>
-        <result property="goods_cover" column="goods_cover"/>
-        <result property="goods_categoryName" column="goods_sort"/>
-        <result property="goods_author_intro" column="goods_writer_intro"/>
-        <result property="goods_contents_order" column="goods_contents_order"/>
-        <result property="goods_intro" column="goods_intro"/>
+    <resultMap id="goodsResult" type="goodsVO">
+        <result property="goods_id" column="goods_id" />
+        <result property="goods_sort" column="goods_sort" />
+        <result property="goods_title" column="goods_title" />
+        <result property="goods_writer" column="goods_writer" /> 
+        <result property="goods_publisher" column="goods_publisher" />
+        <result property="goods_price" column="goods_price" />
+  		<result property="goods_sales_price" column="goods_sales_price" />
+        <result property="goods_published_date" column="goods_published_date" />
+        <result property="goods_total_page" column="goods_total_page" />
+        <result property="goods_isbn" column="goods_isbn" />
+        <result property="goods_delivery_price" column="goods_delivery_price" />
+        <result property="goods_delivery_date" column="goods_delivery_date" />
+        <result property="goods_status" column="goods_status" />
+        <result property="goods_credate" column="goods_credate" />
+        <result property="goods_fileName" column="goods_fileName" />
     </resultMap>
 
     <!-- 로그인한 회원 아이디로 장바구니 조회 -->
     <select id="selectCartList" parameterType="cartVO" resultMap="cartResult">
         <![CDATA[
-        SELECT cart_id, goods_isbn, member_id, cart_goods_qty, creDate
+        SELECT cart_id, goods_id, member_id, cart_goods_qty, creDate
         FROM t_shopping_cart
         WHERE member_id=#{member_id}
         ORDER BY cart_id DESC
@@ -48,15 +45,13 @@
     <!-- 장바구니 테이블에 있는 goods_isbn를 이용해 상품정보와 이미지정보 JOIN 조회 -->
     <select id="selectGoodsList" resultMap="goodsResult" parameterType="java.util.Map">
         <![CDATA[
-        SELECT G.*, I.goods_cover, C.cart_id
+        SELECT G.*, C.cart_id
         FROM t_shopping_goods G
-        JOIN t_goods_detail_image I ON G.goods_isbn = I.goods_isbn
-        JOIN t_shopping_cart C ON I.goods_isbn = C.goods_isbn
-        WHERE I.fileType = 'main_image'
-        AND G.goods_isbn IN
+        JOIN t_shopping_cart C ON G.goods_id = C.goods_id
+        WHERE G.goods_id IN
         ]]>
         <foreach item="item" collection="list" open="(" separator="," close=")">
-            #{item.goods_isbn}
+            #{item.goods_id}
         </foreach>
         <![CDATA[
         ORDER BY C.cart_id DESC
@@ -68,7 +63,7 @@
         <![CDATA[
         SELECT IF(COUNT(*), 'true', 'false') 
         FROM t_shopping_cart
-        WHERE goods_isbn=#{goods_isbn}
+        WHERE goods_id=#{goods_id}
         AND member_id=#{member_id}
         ]]>
     </select>
@@ -76,8 +71,8 @@
     <!-- 장바구니에 상품 추가 -->
     <insert id="insertGoodsInCart" parameterType="cartVO">
         <![CDATA[
-        INSERT INTO t_shopping_cart(cart_id, goods_isbn, member_id)
-        VALUES(#{cart_id}, #{goods_isbn}, #{member_id})
+        INSERT INTO t_shopping_cart(cart_id, goods_id, member_id, cart_goods_qty)
+        VALUES(#{cart_id}, #{goods_id}, #{member_id}, #{cart_goods_qty})
         ]]>
     </insert>
 
@@ -87,7 +82,7 @@
         UPDATE t_shopping_cart
         SET cart_goods_qty=#{cart_goods_qty}
         WHERE member_id=#{member_id}
-        AND goods_isbn=#{goods_isbn}
+        AND goods_id=#{goods_id}
         ]]>
     </update>
 

@@ -65,7 +65,7 @@ request.setCharacterEncoding("UTF-8");
 </style>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-	$(document).ready(function() {
+	/* $(document).ready(function() {
 		console.log("updating");
 		// 페이지 로딩 후 DB 갱신을 위한 AJAX 요청
 		$.ajax({
@@ -79,7 +79,7 @@ request.setCharacterEncoding("UTF-8");
 		        console.error("DB 갱신 실패:", error);
 		    }
 		});
-	});
+	}); */
     let currentPage = 1; // 현재 페이지 번호
     const contextPath = "${contextPath}";
 
