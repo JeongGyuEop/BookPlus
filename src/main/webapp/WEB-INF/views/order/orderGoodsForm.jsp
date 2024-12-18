@@ -72,9 +72,7 @@
 		function requestPay() {
 			
 
-            document.getElementById("order_id").value = "1734406453328"; // 서버에서 반환된 order_id
-            document.getElementById("orderForm").submit();
-			<%-- var IMP = window.IMP;
+			var IMP = window.IMP;
 	    	IMP.init("imp63260822"); // 아임포트 초기화
 	    
 	        var buyerName = document.getElementById("order_name").value;
@@ -191,7 +189,7 @@
 		        } else {
 		            alert("결제 실패: " + rsp.error_msg);
 		        }
-		    }); --%>
+		    });
 		}
 
 		

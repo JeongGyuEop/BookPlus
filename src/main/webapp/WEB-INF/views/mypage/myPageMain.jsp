@@ -88,12 +88,7 @@ function fn_cancel_order(order_id){
 		  </tr>
         </c:when>
         <c:otherwise>
-        
- <%--            
-        delivery_prepared  : 배송준비중
-        cancel_order  : 주문취소
-        delivering  : 배송중    
- --%>        
+          
  
 	      <c:forEach var="item" items="${myOrderList }"  varStatus="i">
 	       <c:choose> 

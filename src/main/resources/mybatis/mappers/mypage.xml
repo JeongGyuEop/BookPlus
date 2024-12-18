@@ -22,7 +22,7 @@
 	    <result property="deliveryMethod" column="delivery_method" />
 	    <result property="payMethod" column="pay_method" />
 	    <result property="paymentStatus" column="payment_status" />
-	    <result property="totalPrice" column="final_total_price" />
+	    <result property="totalPrice" column="total_price" />
 	    <result property="orderDate" column="pay_order_time" />
 	</resultMap>	
 

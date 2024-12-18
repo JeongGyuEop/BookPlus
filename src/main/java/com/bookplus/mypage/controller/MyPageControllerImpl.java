@@ -22,7 +22,10 @@ import org.springframework.web.servlet.ModelAndView;
 import com.bookplus.common.base.BaseController;
 import com.bookplus.member.vo.MemberVO;
 import com.bookplus.mypage.service.MyPageService;
+import com.bookplus.order.service.OrderService;
+import com.bookplus.order.service.PaymentServiceImpl;
 import com.bookplus.order.vo.OrderVO;
+import com.bookplus.order.vo.PaymentVO;
 
 // 화면상단에 마이페이지 누르면  요청하는 주소
 // http://localhost:8090/bookplus/mypage/myPageMain.do
@@ -35,6 +38,9 @@ import com.bookplus.order.vo.OrderVO;
 public class MyPageControllerImpl extends BaseController  implements MyPageController{
 	@Autowired
 	private MyPageService myPageService;
+	
+	@Autowired
+	private PaymentServiceImpl paymentService;
 	
 	@Autowired
 	private MemberVO memberVO;
@@ -76,9 +82,10 @@ public class MyPageControllerImpl extends BaseController  implements MyPageContr
 	@Override
 	@RequestMapping(value="/myOrderDetail.do" ,method = RequestMethod.POST)
 	public ModelAndView myOrderDetail(@RequestParam("order_id")  String order_id,HttpServletRequest request, HttpServletResponse response)  throws Exception {
-		System.out.println("-=-=-=-=-=-=-");
+		
 		String viewName=(String)request.getAttribute("viewName");
 		ModelAndView mav = new ModelAndView(viewName);
+		
 		HttpSession session=request.getSession(true);
 		MemberVO orderer=(MemberVO)session.getAttribute("memberInfo");
 		
@@ -87,6 +94,12 @@ public class MyPageControllerImpl extends BaseController  implements MyPageContr
 		for (OrderVO order : myOrderList) {
 		    System.out.println(order.toString());
 		}
+		
+		// 결제 정보 조회
+	    PaymentVO paymentInfo = paymentService.findPaymentByOrderId(order_id); // 결제 서비스 호출
+	    
+	    mav.addObject("paymentInfo", paymentInfo);
+
 		
 		mav.addObject("orderer", orderer);
 		mav.addObject("myOrderList",myOrderList);

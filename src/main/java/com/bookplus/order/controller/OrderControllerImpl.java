@@ -210,13 +210,16 @@ public class OrderControllerImpl extends BaseController implements OrderControll
 	@ResponseBody
     public ResponseEntity<Map<String, Object>> handlePaymentSuccess(@RequestBody Map<String, Object> requestData) {
         Map<String, Object> response = new HashMap<>();
+        
         try {
             // OrderService에서 결제 검증, 주문 및 결제 데이터 저장까지 처리
             boolean isProcessed = orderService.processOrderAndPayment(requestData);
 
             if (isProcessed) {
+            	response.put("order_id", requestData.get("order_id").toString());
                 response.put("success", true);
                 response.put("message", "결제가 성공적으로 처리되었습니다.");
+                System.out.println(response);
                 return ResponseEntity.ok(response);
             } else {
                 response.put("success", false);

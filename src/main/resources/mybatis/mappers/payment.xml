@@ -28,7 +28,7 @@
     </insert>
 
     <!-- 결제 정보 조회 -->
-    <select id="selectPaymentByOrderId" resultMap="paymentResult" parameterType="int">
+    <select id="selectPaymentByOrderId" resultMap="paymentResult" parameterType="String">
         <![CDATA[
             SELECT * FROM T_SHOPPING_PAYMENT
             WHERE order_id = #{orderId}

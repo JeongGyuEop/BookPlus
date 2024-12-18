@@ -17,4 +17,8 @@ public class PaymentDAO {
         sqlSession.insert("mapper.payment.insertPayment", paymentVO);
     }
 
+	public PaymentVO selectPaymentByOrderId(String orderId) {
+		return sqlSession.selectOne("mapper.payment.selectPaymentByOrderId", orderId);
+	}
+
 }

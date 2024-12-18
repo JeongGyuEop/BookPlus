@@ -10,37 +10,21 @@
 		<tbody align=center>
 			<tr style="background: #33ff00">
 			     <td>주문번호 </td>
-			      <td>주문일자 </td>
-				<td colspan=2 class="fixed">주문상품명</td>
-				<td>수량</td>
-				<td>주문금액</td>
-				<td>배송비</td>
+				<td class="fixed">주문상품명</td>
+				<td>총 수량</td>
 				<td>주문금액합계</td>
 			</tr>
 			<c:forEach var="item" items="${myOrderList }">
 			<tr>
 				    <td> ${item.orderId}</td>
-				     <td> ${item.orderDate}</td>
-					<td class="goods_image">
-					  <%-- <a href="${contextPath}/goods/goodsDetail.do?goods_id=${item.goods_id }">
-					    <IMG width="75" alt=""  src="${contextPath}/thumbnails.do?goods_id=${item.goods_id}&fileName=${item.goods_fileName}">
-					  </a> --%>
-					 <img width="75" alt=""  src="${contextPath}/thumbnails.do?goods_id=${item.goodsId}<%--&fileName=${item.goods_fileName} --%>">
-					  
-					</td>
 					<td>
-					  <%-- <h2>
-					     <a href="${contextPath}/goods/goodsDetail.do?goods_id=${item.goods_id }">${item.goods_title }</a>
-					  </h2> --%>
 					  <h3>${item.goodsTitle }</h3>
 					</td>
 					<td>
 					  <h2>${item.orderGoodsQty }개<h2>
 					</td>
-					<td><h2><%-- ${item.orderGoodsQty *item.goods_sales_price} --%>원 </h2></td>
-					<td><h2>0원</h2></td>
 					<td>
-					  <h2>${totalPrice}원</h2>
+					  <h2>${item.totalPrice}원</h2>
 					</td>
 			</tr>
 			</c:forEach>
@@ -129,15 +113,15 @@
 		<table>
 			<tbody>
 				<tr class="dot_line">
-					<td class="fixed_join">결제방법</td>
-					<td>
-					   <%-- ${myOrderList[0].pay_method } --%>
+				    <td class="fixed_join">결제방법</td>
+				    <td>
+				       ${paymentInfo.payMethod}
 				    </td>
 				</tr>
 				<tr class="dot_line">
-					<td class="fixed_join">결제카드</td>
-					<td>
-					   <%-- ${myOrderList[0].card_com_name} --%>
+				    <td class="fixed_join">결제상태</td>
+				    <td>
+				       ${paymentInfo.paymentStatus}
 				    </td>
 				</tr>
 			</tbody>
