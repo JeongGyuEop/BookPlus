@@ -170,14 +170,18 @@ public class MyPageControllerImpl extends BaseController implements MyPageContro
 		return mav;
 	}
 	
-//	@Override -> 진행 중
-//	@RequestMapping(value = "/deleteMyOrder.do", method = RequestMethod.POST)
-//	public ModelAndView deleteMyOrder(@RequestParam("order_id") String order_id, HttpServletRequest request,
-//			HttpServletResponse response) throws Exception {
-//		ModelAndView mav = new ModelAndView();
-//		myPageService.deleteOrder(order_id);
-//
-//	}
+	@Override
+	@RequestMapping(value = "/deleteMyOrder.do", method = RequestMethod.POST)
+	public ModelAndView deleteMyOrder(@RequestParam("order_id") String order_id, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		ModelAndView mav = new ModelAndView();
+		myPageService.deleteOrder(order_id);
+		
+		mav.addObject("message", "delete_order");
+		mav.setViewName("redirect:/mypage/myPageMain.do");
+		return mav;
+
+	}
 
 	
 	
