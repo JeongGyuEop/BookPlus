@@ -30,11 +30,6 @@ public class AdminMemberDAOImpl  implements AdminMemberDAO{
 		sqlSession.update("mapper.admin.member.modifyMemberInfo",memberMap);
 	}
 
-	@Override
-	public void deleteRealMember(String member_id) throws DataAccessException {
-		 sqlSession.delete("mapper.admin.member.deleteRealMember", member_id);
-		
-	}
 	
 	
 

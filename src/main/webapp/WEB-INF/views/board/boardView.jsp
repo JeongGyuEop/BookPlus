@@ -68,6 +68,35 @@
             				}else{
             					alert(retVal.message);
                 				reply_id = retVal.reply_id;
+                				var reply_area = $("#reply_area");
+                        		
+                        		var reply = 
+                        			'<tr reply_type="main">'+
+            	            		'	<td width="400px">'+
+            	            		reply_content+
+            	            		'	</td>'+
+            	            		'	<td width="70px">'+
+            	            		$("#reply_writer").val()+
+            	            		'	</td>'+
+            	            		'	<td width="50px">'+
+            	            		'		<input type="password" id="reply_password_'+reply_id+'" style="width:100px;" maxlength="10" placeholder="패스워드"/>'+
+            	            		'	</td>'+
+            	            		'	<td align="center">'+
+            	            		'       <button name="reply_reply" reply_id = "'+reply_id+'">댓글</button>'+
+                                    '       <button name="reply_modify" r_type = "main" parent_id = "0" reply_id = "'+reply_id+'">수정</button>      '+
+                                    '       <button name="reply_del" r_type = "main" reply_id = "'+reply_id+'">삭제</button>      '+
+            	            		'	</td>'+
+            	            		'</tr>';
+            	            		
+            	            		if ($('#reply_area').children('tr').length === 0) {
+            	                        $("#reply_area").append(reply); // 빈 경우 추가
+            	                    } else {
+            	                        $('#reply_area tr:last').after(reply); // 마지막 행 뒤에 추가
+            	                    }
+
+                        		//댓글 초기화
+                				$("#reply_password").val("");
+                				$("#reply_content").val("");
             				}
             				
             			},
@@ -76,36 +105,7 @@
             			}
             		});
             		
-            		var reply_area = $("#reply_area");
             		
-            		var reply = 
-            			'<tr reply_type="main">'+
-	            		'	<td width="400px">'+
-	            		reply_content+
-	            		'	</td>'+
-	            		'	<td width="70px">'+
-	            		$("#reply_writer").val()+
-	            		'	</td>'+
-	            		'	<td width="50px">'+
-	            		'		<input type="password" id="reply_password_'+reply_id+'" style="width:100px;" maxlength="10" placeholder="패스워드"/>'+
-	            		'	</td>'+
-	            		'	<td align="center">'+
-	            		'       <button name="reply_reply" reply_id = "'+reply_id+'">댓글</button>'+
-                        '       <button name="reply_modify" r_type = "main" parent_id = "0" reply_id = "'+reply_id+'">수정</button>      '+
-                        '       <button name="reply_del" r_type = "main" reply_id = "'+reply_id+'">삭제</button>      '+
-	            		'	</td>'+
-	            		'</tr>';
-	            		
-            		 if($('#reply_area').contents().size()==0){
-                         $('#reply_area').append(reply);
-                     }else{
-                         $('#reply_area tr:last').after(reply);
-                     }
-
-            		//댓글 초기화
-            		$("#reply_writer").val("");
-    				$("#reply_password").val("");
-    				$("#reply_content").val("");
     				
             	});
             	
@@ -831,8 +831,7 @@
     	<input type="hidden" id="x" name="x" value="${boardView.x}" />
     	<input type="hidden" id="y" name="y" value="${boardView.y}" />
     	<div align="center">
-    		</br>
-    		</br>
+    		<br><br>
    			<table border="1" width="100%" >
    				<tr>
    					<td colspan="2" align="right">
@@ -856,7 +855,7 @@
 					</td>
    				</tr>
    				<tr height="500px">
-   					<td colspan="2" valign="top">
+   					<td colspan="2" style="text-align: left;" valign="top">
    						${boardView.content}
    					</td>
    				</tr>

@@ -50,6 +50,7 @@ public class MainController extends BaseController {
 	    List<GoodsVO> goodsList = goodsService.getAllGoods(limit, offset);
 	    model.addAttribute("goodsList", goodsList);
 	    model.addAttribute("currentPage", page);
+	    session.setAttribute("goodsList", goodsList);
 	    
 	 // View 설정
 	    ModelAndView mav = new ModelAndView();

@@ -1,5 +1,7 @@
-<%@ page language="java" contentType="text/html; charset=utf-8"
-    pageEncoding="utf-8" isELIgnored="false" %>
+<%@ page language="java" contentType="text/html; charset=utf-8" 
+	pageEncoding="utf-8" 
+	isELIgnored="false" 
+%>
 <%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
@@ -119,39 +121,13 @@
 $(document).ready(function() {
     $('#checkHoroscopeBtn').click(function() {
         var sign = $('#sign').val();  // 선택된 별자리 값을 가져옴
+       
 
         // 별자리가 선택되지 않은 경우
         if (sign === "") {
             alert("별자리를 선택해주세요.");
             return;
         }
-
-        // AJAX 요청 보내기
-        $.ajax({
-            url: 'https://horoscope-astrology.p.rapidapi.com/horoscope',  // RapidAPI 엔드포인트 URL
-            type: 'GET',
-            data: {
-                day: 'today',  // 오늘의 운세를 가져옵니다
-                sunsign: sign  // 선택된 별자리 정보 전달
-            },
-            headers: {
-                'x-rapidapi-host': 'horoscope-astrology.p.rapidapi.com',  // RapidAPI 호스트
-                'x-rapidapi-key': '9c5819e8a9msh27cec47277983a8p15ee97jsn0f8fb0fd3a60'  // 본인의 RapidAPI 키로 교체
-            },
-            success: function(response) {
-
-                // 운세가 정상적으로 반환되었으면 운세 내용 표시
-                
-                if (response) {
-                    translateText(response.horoscope);  // 응답에서 운세 내용을 번역
-                } else {
-                    $('#horoscopeDescription').html("운세를 가져올 수 없습니다.");
-                }
-            },
-            error: function() {
-                $('#horoscopeDescription').html("운세를 가져오는 중 오류가 발생했습니다.");
-            }
-
             // AJAX 요청 보내기
             $.ajax({
                 url: 'https://horoscope-astrology.p.rapidapi.com/horoscope', // RapidAPI 엔드포인트 URL
@@ -167,7 +143,7 @@ $(document).ready(function() {
                 success: function(response) {
                     // 운세가 정상적으로 반환되었으면 운세 내용 표시
                     if (response) {
-                        $('#horoscopeDescription').html(response.horoscope); // 응답에서 운세 내용 가져오기
+                        translateText(response.horoscope); // 응답에서 운세 내용 가져오기
                     } else {
                         $('#horoscopeDescription').html("운세를 가져올 수 없습니다.");
                     }
@@ -176,9 +152,9 @@ $(document).ready(function() {
                     $('#horoscopeDescription').html("운세를 가져오는 중 오류가 발생했습니다.");
                 }
             });
-        });
-    });
+       
     // 번역 요청 함수
+        	
     function translateText(text) {
         $.ajax({
             url: 'https://translate.googleapis.com/translate_a/single',  // 구글 번역 API URL
@@ -203,6 +179,7 @@ $(document).ready(function() {
             }
         });
     }
+    });
 });
 </script>
 
