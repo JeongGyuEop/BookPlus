@@ -1,5 +1,6 @@
 package com.bookplus.mypage.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.bookplus.common.base.BaseController;
+import com.bookplus.goods.service.GoodsService;
+import com.bookplus.goods.vo.GoodsVO;
 import com.bookplus.member.vo.MemberVO;
 import com.bookplus.mypage.service.MyPageService;
 import com.bookplus.order.service.PaymentServiceImpl;
@@ -34,6 +37,9 @@ import com.bookplus.order.vo.PaymentVO;
 public class MyPageControllerImpl extends BaseController implements MyPageController {
 	@Autowired
 	private MyPageService myPageService;
+	
+	@Autowired
+	private GoodsService goodsService;
 
 	@Autowired
 	private PaymentServiceImpl paymentService;
@@ -72,24 +78,6 @@ public class MyPageControllerImpl extends BaseController implements MyPageContro
 
 		return mav;
 	}
-	// 마이페이지 최초 화면을 요청합니다.
-		@Override
-		@RequestMapping(value="/deleteInfo.do" ,method = RequestMethod.GET)
-									   //주문 취소시 결과 메세지를 매개변수로 받습니다. 
-		public ModelAndView deleteInfo(HttpServletRequest request, 
-										HttpServletResponse response)  throws Exception {
-			
-			HttpSession session=request.getSession(true);
-			
-			//마이페이지 왼쪽 화면 메뉴를 보여주기 위해 조건값 저장 
-			session.setAttribute("side_menu", "my_page"); 
-			
-		//  /mypage/myPageMain
-			String viewName=(String)request.getAttribute("viewName");
-			ModelAndView mav = new ModelAndView(viewName);
-
-			return mav;
-		}
 	//==========
 	//주문 후 주문 내역을 조회하기 위해 호출하는 함
 	@Override
@@ -102,19 +90,33 @@ public class MyPageControllerImpl extends BaseController implements MyPageContro
 		HttpSession session=request.getSession(true);
 		MemberVO orderer=(MemberVO)session.getAttribute("memberInfo");
 		
-		List<OrderVO> myOrderList = myPageService.findMyOrderInfo(order_id);
+
+		List<OrderVO> myOrderList=myPageService.findMyOrderInfo(order_id);
+		
+	    List<Map<String, Object>> goodsList = new ArrayList<>();
 		// 로그로 출력
 		for (OrderVO order : myOrderList) {
 		    System.out.println(order.toString());
+		    String goodsIds = order.getGoodsId(); // goodsId 필드 값 (콤마로 구분된 문자열)
+	        String[] goodsIdArray = goodsIds.split(","); // 콤마를 기준으로 분리
+	        
+	        for (String goodsId : goodsIdArray) {
+	            Map<String, Object> goodsMap = goodsService.goodsDetail(goodsId.trim()); // 각 goods_id로 책 정보 조회
+	            if (goodsMap != null && !goodsMap.isEmpty()) {
+	                goodsList.add(goodsMap); // 리스트에 추가
+	            }
+	        }
 		}
-		
 		// 결제 정보 조회
-	    PaymentVO paymentInfo = paymentService.findPaymentByOrderId(order_id); // 결제 서비스 호출
-	    
+	    PaymentVO paymentInfo = paymentService.findPaymentByOrderId(order_id);
+
+	    // ModelAndView에 데이터 추가
 	    mav.addObject("paymentInfo", paymentInfo);
-		mav.addObject("orderer", orderer);
-		mav.addObject("myOrderList", myOrderList);
-		return mav;
+	    mav.addObject("orderer", orderer);
+	    mav.addObject("myOrderList", myOrderList);
+	    mav.addObject("goodsList", goodsList); // 조회한 책 정보 리스트 추가
+
+	    return mav;
 	}
 
 	@Override
@@ -150,9 +152,9 @@ public class MyPageControllerImpl extends BaseController implements MyPageContro
 		return mav;
 	}
 
+	//==========
 	// 주문 취소 버튼을 눌러 주문 취소 요청이 들어오면 주문한 상품들의 주문번호를 매개변수로 받아서
 	// 주문번호에 대한 상품정보들을 DB에서 삭제!
-	// mypage/cancelMyOrder.do
 	@Override
 	@RequestMapping(value = "/cancelMyOrder.do", method = RequestMethod.POST)
 	public ModelAndView cancelMyOrder(@RequestParam("order_id") String order_id, HttpServletRequest request,
@@ -166,7 +168,18 @@ public class MyPageControllerImpl extends BaseController implements MyPageContro
 		mav.setViewName("redirect:/mypage/myPageMain.do");
 		return mav;
 	}
+	
+//	@Override -> 진행 중
+//	@RequestMapping(value = "/deleteMyOrder.do", method = RequestMethod.POST)
+//	public ModelAndView deleteMyOrder(@RequestParam("order_id") String order_id, HttpServletRequest request,
+//			HttpServletResponse response) throws Exception {
+//		ModelAndView mav = new ModelAndView();
+//		myPageService.deleteOrder(order_id);
+//
+//	}
 
+	
+	
 	// side.jsp페이지 화면에서 회원정보관리 <a>태그를 클릭하면 호출되는 메소드
 	@Override
 	@RequestMapping(value = "/myDetailInfo.do", method = RequestMethod.GET)

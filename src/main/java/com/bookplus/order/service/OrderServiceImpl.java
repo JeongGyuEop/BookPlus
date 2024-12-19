@@ -44,45 +44,74 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	@Transactional
-    @Override
-    public boolean processOrderAndPayment(Map<String, Object> requestData) {
-        try {
-            // 주문 정보 생성
-            OrderVO orderVO = new OrderVO();
-            orderVO.setOrderId(Long.parseLong(requestData.get("order_id").toString()));
-            orderVO.setOrderMemberId((String) requestData.get("order_member_id"));
-            orderVO.setOrderMemberName((String) requestData.get("order_member_name"));
-            orderVO.setGoodsId((String) requestData.get("goods_id").toString());
-            orderVO.setGoodsTitle((String) requestData.get("goods_title"));
-            orderVO.setOrderGoodsQty(Integer.parseInt(requestData.get("order_goods_qty").toString()));
-            orderVO.setReceiverName((String) requestData.get("receiver_name"));
-            orderVO.setReceiverHp1((String) requestData.get("receiver_hp1"));
-            orderVO.setReceiverHp2((String) requestData.get("receiver_hp2"));
-            orderVO.setReceiverHp3((String) requestData.get("receiver_hp3"));
-            orderVO.setDeliveryAddress((String) requestData.get("delivery_address"));
-            orderVO.setDeliveryMessage((String) requestData.get("delivery_message"));
-            orderVO.setTotalPrice(Integer.parseInt(requestData.get("amount").toString()));
-            orderVO.setPayMethod((String) requestData.get("pay_method"));
-            orderVO.setPaymentStatus((String) requestData.get("status"));
+	@Override
+	public boolean processOrderAndPayment(Map<String, Object> requestData) {
+	    try {
+	        // 주문 정보 공통 데이터 생성
+	        String orderId = requestData.get("order_id").toString();
+	        String orderMemberId = (String) requestData.get("order_member_id");
+	        String orderMemberName = (String) requestData.get("order_member_name");
+	        String receiverName = (String) requestData.get("receiver_name");
+	        String receiverHp1 = (String) requestData.get("receiver_hp1");
+	        String receiverHp2 = (String) requestData.get("receiver_hp2");
+	        String receiverHp3 = (String) requestData.get("receiver_hp3");
+	        String deliveryAddress = (String) requestData.get("delivery_address");
+	        String deliveryMessage = (String) requestData.get("delivery_message");
+	        int amount = Integer.parseInt(requestData.get("amount").toString());
+	        String payMethod = (String) requestData.get("pay_method");
+	        String paymentStatus = (String) requestData.get("status");
+	        String impUid = (String) requestData.get("imp_uid");
 
-            // 결제 정보 생성
-            PaymentVO paymentVO = new PaymentVO();
-            paymentVO.setImpUid((String) requestData.get("imp_uid"));
-            paymentVO.setMerchantUid((String) requestData.get("order_id"));
-            paymentVO.setAmount(Integer.parseInt(requestData.get("amount").toString()));
-            paymentVO.setPayMethod((String) requestData.get("pay_method"));
-            paymentVO.setPaymentStatus((String) requestData.get("status"));
-            paymentVO.setOrderId(orderVO.getOrderId());
+	        // goods_list 처리
+	        List<Map<String, Object>> goodsList = (List<Map<String, Object>>) requestData.get("goods_list");
 
-            // 주문 및 결제 처리
-            orderDAO.insertOrder(orderVO);
-            paymentDAO.insertPayment(paymentVO);
+	        for (Map<String, Object> goodsData : goodsList) {
+	            // 개별 책 정보
+	            String goodsId = goodsData.get("goods_id").toString();
+	            String goodsTitle = goodsData.get("goods_title").toString();
+	            int orderGoodsQty = Integer.parseInt(goodsData.get("order_goods_qty").toString());
+	            int totalPrice = Integer.parseInt(goodsData.get("total_price").toString());
 
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException("주문 및 결제 처리 중 오류 발생: " + e.getMessage());
-        }
-    }
+	            // 주문 정보 생성
+	            OrderVO orderVO = new OrderVO();
+	            orderVO.setOrderId(Long.parseLong(orderId));
+	            orderVO.setOrderMemberId(orderMemberId);
+	            orderVO.setOrderMemberName(orderMemberName);
+	            orderVO.setGoodsId(goodsId);
+	            orderVO.setGoodsTitle(goodsTitle);
+	            orderVO.setOrderGoodsQty(orderGoodsQty);
+	            orderVO.setReceiverName(receiverName);
+	            orderVO.setReceiverHp1(receiverHp1);
+	            orderVO.setReceiverHp2(receiverHp2);
+	            orderVO.setReceiverHp3(receiverHp3);
+	            orderVO.setDeliveryAddress(deliveryAddress);
+	            orderVO.setDeliveryMessage(deliveryMessage);
+	            orderVO.setTotalPrice(totalPrice);
+	            orderVO.setPayMethod(payMethod);
+	            orderVO.setPaymentStatus(paymentStatus);
+
+	            // 주문 정보 저장
+	            orderDAO.insertOrder(orderVO);
+	        }
+
+	        // 결제 정보 생성
+	        PaymentVO paymentVO = new PaymentVO();
+	        paymentVO.setImpUid(impUid);
+	        paymentVO.setMerchantUid(orderId);
+	        paymentVO.setAmount(amount);
+	        paymentVO.setPayMethod(payMethod);
+	        paymentVO.setPaymentStatus(paymentStatus);
+	        paymentVO.setOrderId(Long.parseLong(orderId));
+
+	        // 결제 정보 저장
+	        paymentDAO.insertPayment(paymentVO);
+
+	        return true;
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        throw new RuntimeException("주문 및 결제 처리 중 오류 발생: " + e.getMessage());
+	    }
+	}
+
 	
 }

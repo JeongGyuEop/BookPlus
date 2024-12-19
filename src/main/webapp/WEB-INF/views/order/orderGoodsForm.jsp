@@ -91,26 +91,27 @@
 	        var goodsIdElems    = document.getElementsByName("h_goods_id_");       // 여러 개
 	        var goodsTitleElems = document.getElementsByName("h_goods_title_");    // 여러 개
 	        var goodsQtyElems   = document.getElementsByName("h_order_goods_qty_");// 여러 개
+	        var goodsTotalPrice  = document.getElementsByName("h_total_price_");// 여러 개
 
-	        var goodsIdList   = [];
-	        var totalQty      = 0;
-
+	        var goodsDataList = [];
 	        for (var i = 0; i < goodsIdElems.length; i++) {
-	            goodsIdList.push(goodsIdElems[i].value);
-	            totalQty += parseInt(goodsQtyElems[i].value, 10);
+	            goodsDataList.push({
+	                goods_id: goodsIdElems[i].value,
+	                goods_title: goodsTitleElems[i].value,
+	                order_goods_qty: parseInt(goodsQtyElems[i].value, 10),
+	                total_price: parseInt(goodsTotalPrice[i].value, 10)
+	                
+	            });
 	        }
-
-	        // 책 제목 가공: "첫 번째 제목" + " 외 n권"
+	        
+	    	 // 상품 제목 가공
 	        var goodsTitle = "";
 	        if (goodsTitleElems.length === 1) {
-	            goodsTitle = goodsTitleElems[0].value; 
+	            goodsTitle = goodsTitleElems[0].value;
 	        } else if (goodsTitleElems.length > 1) {
 	            goodsTitle = goodsTitleElems[0].value + " 외 " + (goodsTitleElems.length - 1) + "권";
 	        }
-
-	        // 쉼표 연결된 goods_id 문자열
-	        var goodsIdCsv = goodsIdList.join(",");
-
+	        
 	        // 디버그 출력
 	        console.log("buyerName:", buyerName);
 	        console.log("buyerEmail:", buyerEmail);
@@ -120,16 +121,14 @@
 	        console.log("merchantUid:", merchantUid);
 	        console.log("amount:", amount);
 
-        	console.log("=== 다중 상품 정보 ===");
-        	console.log("goodsIdCsv        :", goodsIdCsv);
-        	console.log("goodsTitle        :", goodsTitle);
-        	console.log("totalQty(합산)    :", totalQty);
+	        console.log("=== 개별 책 정보 ===");
+	        console.log(goodsDataList);
 
 		    IMP.request_pay({
 		        pg: "html5_inicis",
 		        pay_method: "card",
 		        merchant_uid: merchantUid,
-		        name: goodsTitle,    // 여러 권이면 "첫권 제목 + 외 n권"
+		        name: goodsTitle,    
 		        amount: amount,
 		        buyer_email: buyerEmail,
 		        buyer_name: buyerName,
@@ -157,10 +156,8 @@
 		                	order_member_id    : document.getElementById("order_member_id").value,
 		                	order_member_name  : document.getElementById("order_member_name").value,
 
-		                    // 여러 책 정보를 합쳐 전달 (CSV / 총수량)
-		                    goods_id          : goodsIdCsv,  
-		                    goods_title       : goodsTitle,   
-		                    order_goods_qty   : totalQty,  // 모든 책 수량 합
+		                	 // 개별 책 정보 전송
+		                    goods_list: goodsDataList,
 
 		                    // 배송 관련 정보
 		                    receiver_name     : document.getElementById("receiver_name").value,
@@ -389,6 +386,7 @@
 					    <input type="hidden" id="h_goods_id_${status.index}" name="h_goods_id_" value="${item.goods_id}">
 					    <input type="hidden" id="h_goods_title_${status.index}" name="h_goods_title_" value="${item.goods_title}">
 					    <input type="hidden" id="h_order_goods_qty_${status.index}" name="h_order_goods_qty_" value="${orderQtyList[status.index]}">
+					    <input type="hidden" id="h_total_price_${status.index}" name="h_total_price_" value="${total_price}">
 					</c:if>
 
 				</c:forEach>

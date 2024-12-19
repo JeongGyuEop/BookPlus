@@ -177,26 +177,18 @@ public class AdminMemberControllerImpl extends BaseController  implements AdminM
 		HashMap<String,String> memberMap=new HashMap<String,String>();
 		String member_id=request.getParameter("member_id");
 		String del_yn=request.getParameter("del_yn");
+		System.out.println(member_id);
+		System.out.println(del_yn);
 		memberMap.put("del_yn", del_yn);
 		memberMap.put("member_id", member_id);
 		
 		adminMemberService.modifyMemberInfo(memberMap);
-		mav.setViewName("redirect:/"+request.getContextPath()+"/main/main.do");
+		mav.setViewName("redirect:/member/logout.do");
 		return mav;
 		
 	}
 		
-	@RequestMapping(value = "/deleteRealMember.do", method = RequestMethod.POST)
-	public ModelAndView deleteRealMember(HttpServletRequest request, HttpServletResponse response) throws Exception {
-	    ModelAndView mav = new ModelAndView();
-	    String member_id = request.getParameter("member_id");
 
-	    // 실제 회원 삭제 처리
-	    adminMemberService.deleteRealMember(member_id);
-
-	    mav.setViewName("redirect:/admin/member/adminMemberMain.do"); // 삭제 후 메인 화면으로 리다이렉트
-	    return mav;
-	}
 
 	
 }

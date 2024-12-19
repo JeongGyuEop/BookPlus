@@ -30,9 +30,9 @@
 </head>
 <body>
 	<div>
-		<h1>정말로 회원 탈퇴를 하시겠습니까?</h1>
-			<input type>
-			<button onClick="fn_delete_member('${member_info.member_id}','Y')">탈퇴하기</button>
+		<form name="frm_mod_member">
+			<h1>정말로 회원 탈퇴를 하시겠습니까?</h1>
+			<button onClick="fn_delete_member('${memberInfo.member_id}','Y')">탈퇴하기</button>
 			<a href="${contextPath}/mypage/myPageMain.do">취소</a>
 		</form>
 	</div>

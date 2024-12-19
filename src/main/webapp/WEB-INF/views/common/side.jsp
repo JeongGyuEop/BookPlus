@@ -21,12 +21,12 @@
 	</c:when>
 	<%-- 일반 계정으로 로그인 했을 경우 메인화면의 왼쪽 사이드 영역!! 일반 사용자를 위한 메뉴 항목 표시 --%>
 	<c:when test="${sessionScope.side_menu=='my_page' }">
-		<li>
+		<%-- <li>
 			<h3>주문내역</h3>
 			<ul>
 				<li><a href="${contextPath}/mypage/listMyOrderHistory.do">주문내역/배송 조회</a></li>
 			</ul>
-		</li>
+		</li> --%>
 		<li>
 			<h3>정보내역</h3>
 			<ul>
