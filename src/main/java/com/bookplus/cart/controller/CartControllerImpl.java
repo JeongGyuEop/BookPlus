@@ -64,14 +64,18 @@ public class CartControllerImpl extends BaseController implements CartController
 	@RequestMapping(value="/addGoodsInCart.do" ,method = RequestMethod.POST,produces = "application/text; charset=utf8")
 	public  @ResponseBody String addGoodsInCart(//전송된 상품 번호를 받습니다.
 												@RequestParam("goods_id") String goods_id,
+												@RequestParam("order_goods_qty") int order_goods_qty,
 			                                    HttpServletRequest request, 
 			                                    HttpServletResponse response)  throws Exception{
+		
+		System.out.println(order_goods_qty);
 		
 		HttpSession session=request.getSession();
 		memberVO=(MemberVO)session.getAttribute("memberInfo");
 		String member_id=memberVO.getMember_id();
 	
 		cartVO.setGoods_id(goods_id);
+		cartVO.setCart_goods_qty(order_goods_qty);
 		cartVO.setMember_id(member_id);
 		
 		//도서 상품 번호가 장바구니 테이블에 있는지 조회 합니다.  

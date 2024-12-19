@@ -106,7 +106,7 @@ public class MyPageControllerImpl extends BaseController implements MyPageContro
 			HttpServletResponse response) throws Exception {
 		String viewName = (String) request.getAttribute("viewName");
 		ModelAndView mav = new ModelAndView(viewName);
-		HttpSession session = request.getSession();
+		HttpSession session = request.getSession(true);
 		memberVO = (MemberVO) session.getAttribute("memberInfo");
 		String member_id = memberVO.getMember_id();
 
