@@ -4,6 +4,7 @@
 %>
 <%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<% String contextPath = request.getContextPath(); %>
 
 <c:set var="contextPath" value="${pageContext.request.contextPath}" />
 <link rel="stylesheet" type="text/css" href="<c:url value='/resources/css/horoscope.css' />">
@@ -22,22 +23,17 @@
 	</c:when>
 	<%-- 일반 계정으로 로그인 했을 경우 메인화면의 왼쪽 사이드 영역!! 일반 사용자를 위한 메뉴 항목 표시 --%>
 	<c:when test="${sessionScope.side_menu=='my_page' }">
-		<li>
+		<%-- <li>
 			<h3>주문내역</h3>
 			<ul>
 				<li><a href="${contextPath}/mypage/listMyOrderHistory.do">주문내역/배송 조회</a></li>
-				<li><a href="#">반품/교환 신청 및 조회</a></li>
-				<li><a href="#">취소 주문 내역</a></li>
-				<li><a href="#">세금 계산서</a></li>
 			</ul>
-		</li>
+		</li> --%>
 		<li>
 			<h3>정보내역</h3>
 			<ul>
 				<li><a href="${contextPath}/mypage/myDetailInfo.do">회원정보관리</a></li>
-				<li><a href="#">나의 주소록</a></li>
-				<li><a href="#">개인정보 동의내역</a></li>
-				<li><a href="#">회원탈퇴</a></li>
+				<li><a href="${contextPath}/mypage/deleteInfo.do">회원탈퇴</a></li>
 			</ul>
 		</li>
 	</c:when>
@@ -60,7 +56,7 @@
 			<ul>
 				<li><a href="${contextPath}/board/boardList.do">자유게시판</a></li>
 				<li><a href="${contextPath}/book/kakaobook.do">도서 검색</a></li>
-				<li><a href="#">날씨별 추천</a></li>
+				<li><a href="${contextPath}/API/weather/weather">날씨별 추천</a></li>
 				<li><a href="#">오늘의 운세</a></li>
 			</ul>
 		</li>

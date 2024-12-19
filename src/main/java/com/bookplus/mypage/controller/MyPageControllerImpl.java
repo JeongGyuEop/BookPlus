@@ -24,7 +24,6 @@ import com.bookplus.goods.service.GoodsService;
 import com.bookplus.goods.vo.GoodsVO;
 import com.bookplus.member.vo.MemberVO;
 import com.bookplus.mypage.service.MyPageService;
-import com.bookplus.order.service.OrderService;
 import com.bookplus.order.service.PaymentServiceImpl;
 import com.bookplus.order.vo.OrderVO;
 import com.bookplus.order.vo.PaymentVO;
@@ -66,7 +65,7 @@ public class MyPageControllerImpl extends BaseController implements MyPageContro
 
 		// 로그인한 상품 구매자의 정보를 session에서 얻는다.
 		memberVO = (MemberVO) session.getAttribute("memberInfo");
-		System.out.println("로그인 값 가져오기 전!: " + memberVO);
+		System.out.println("로그인 값 가져오기 전!: " + memberVO.getMember_id());
 		String member_id = memberVO.getMember_id();
 
 		// 로그인한 회원 ID를 이용해 주문한 상품을 조회 합니다.
@@ -79,7 +78,6 @@ public class MyPageControllerImpl extends BaseController implements MyPageContro
 
 		return mav;
 	}
-	
 	//==========
 	//주문 후 주문 내역을 조회하기 위해 호출하는 함
 	@Override
@@ -92,6 +90,7 @@ public class MyPageControllerImpl extends BaseController implements MyPageContro
 		HttpSession session=request.getSession(true);
 		MemberVO orderer=(MemberVO)session.getAttribute("memberInfo");
 		
+
 		List<OrderVO> myOrderList=myPageService.findMyOrderInfo(order_id);
 		
 	    List<Map<String, Object>> goodsList = new ArrayList<>();
@@ -126,7 +125,7 @@ public class MyPageControllerImpl extends BaseController implements MyPageContro
 			HttpServletResponse response) throws Exception {
 		String viewName = (String) request.getAttribute("viewName");
 		ModelAndView mav = new ModelAndView(viewName);
-		HttpSession session = request.getSession();
+		HttpSession session = request.getSession(true);
 		memberVO = (MemberVO) session.getAttribute("memberInfo");
 		String member_id = memberVO.getMember_id();
 
@@ -238,7 +237,6 @@ public class MyPageControllerImpl extends BaseController implements MyPageContro
 
 		memberMap.put("member_id", member_id);
 
-		// ������ ȸ�� ������ �ٽ� ���ǿ� �����Ѵ�.
 		memberVO = (MemberVO) myPageService.modifyMyInfo(memberMap);
 		session.removeAttribute("memberInfo");
 		session.setAttribute("memberInfo", memberVO);

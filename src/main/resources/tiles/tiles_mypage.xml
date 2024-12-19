@@ -19,5 +19,9 @@
        <put-attribute name="title" value="내 정보 상세 페이지" />
        <put-attribute name="body" value="/WEB-INF/views/mypage/myDetailInfo.jsp" />
      </definition>
+     <definition name="/mypage/deleteInfo" extends="baseLayout">
+       <put-attribute name="title" value="회월탈퇴" />
+       <put-attribute name="body" value="/WEB-INF/views/mypage/deleteInfo.jsp" />
+     </definition>
 </tiles-definitions>
 

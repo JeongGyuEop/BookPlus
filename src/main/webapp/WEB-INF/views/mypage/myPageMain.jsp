@@ -9,14 +9,14 @@
 <head>
 <meta charset="utf-8">
 <script>
-function fn_cancel_order(order_id){
+function fn_cancel_order(orderId){
 	var answer=confirm("주문을 취소하시겠습니까?");
 	if(answer==true){
 		var formObj=document.createElement("form");
-		var i_order_id=document.createElement("input");
-		i_order_id.name="order_id";
-		i_order_id.value=order_id;
-		formObj.appendChild(i_order_id);
+		var i_orderId=document.createElement("input");
+		i_orderId.name="orderId";
+		i_orderId.value=orderId;
+		formObj.appendChild(i_orderId);
 		document.body.appendChild(formObj); 
 		formObj.method="post";
 		formObj.action="${contextPath}/mypage/cancelMyOrder.do";
