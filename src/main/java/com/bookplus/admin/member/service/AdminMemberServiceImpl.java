@@ -31,9 +31,5 @@ public class AdminMemberServiceImpl implements AdminMemberService {
 		 adminMemberDAO.modifyMemberInfo(memberMap);
 	}
 
-	@Override
-	public void deleteRealMember(String member_id) throws Exception {
-		adminMemberDAO.deleteRealMember(member_id);
-		
-	}
+
 }

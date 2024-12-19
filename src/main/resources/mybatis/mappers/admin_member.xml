@@ -112,10 +112,7 @@
         WHERE member_id = #{member_id};
     </update>
     
-    <delete id="deleteRealMember" parameterType="string">
-	    DELETE FROM t_shopping_member
-	    WHERE member_id = #{member_id};
-	</delete>
+
     
     
 </mapper>
