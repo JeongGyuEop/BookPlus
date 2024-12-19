@@ -57,7 +57,6 @@
 				<li><a href="${contextPath}/board/boardList.do">자유게시판</a></li>
 				<li><a href="${contextPath}/book/kakaobook.do">도서 검색</a></li>
 				<li><a href="${contextPath}/API/weather/weather">날씨별 추천</a></li>
-				<li><a href="#">오늘의 운세</a></li>
 			</ul>
 		</li>
 
