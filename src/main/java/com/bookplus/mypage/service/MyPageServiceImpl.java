@@ -52,6 +52,13 @@ public class MyPageServiceImpl  implements MyPageService{
 	public MemberVO myDetailInfo(String member_id) throws Exception{
 		return myPageDAO.selectMyDetailInfo(member_id);
 	}
+	
+	//==========
+	// 주문 삭제 -> 진행중 
+//	@Override
+//	public void deleteOrder(String order_id) throws Exception {
+//		myPageDAO.deleteMyOrder(order_id);
+//	}
 }
 
 

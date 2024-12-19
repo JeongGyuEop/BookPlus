@@ -153,9 +153,9 @@ public class MyPageControllerImpl extends BaseController implements MyPageContro
 		return mav;
 	}
 
+	//==========
 	// 주문 취소 버튼을 눌러 주문 취소 요청이 들어오면 주문한 상품들의 주문번호를 매개변수로 받아서
 	// 주문번호에 대한 상품정보들을 DB에서 삭제!
-	// mypage/cancelMyOrder.do
 	@Override
 	@RequestMapping(value = "/cancelMyOrder.do", method = RequestMethod.POST)
 	public ModelAndView cancelMyOrder(@RequestParam("order_id") String order_id, HttpServletRequest request,
@@ -169,7 +169,18 @@ public class MyPageControllerImpl extends BaseController implements MyPageContro
 		mav.setViewName("redirect:/mypage/myPageMain.do");
 		return mav;
 	}
+	
+//	@Override -> 진행 중
+//	@RequestMapping(value = "/deleteMyOrder.do", method = RequestMethod.POST)
+//	public ModelAndView deleteMyOrder(@RequestParam("order_id") String order_id, HttpServletRequest request,
+//			HttpServletResponse response) throws Exception {
+//		ModelAndView mav = new ModelAndView();
+//		myPageService.deleteOrder(order_id);
+//
+//	}
 
+	
+	
 	// side.jsp페이지 화면에서 회원정보관리 <a>태그를 클릭하면 호출되는 메소드
 	@Override
 	@RequestMapping(value = "/myDetailInfo.do", method = RequestMethod.GET)

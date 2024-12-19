@@ -24,6 +24,21 @@ function fn_cancel_order(order_id){
 	}
 }
 
+function fn_delete_order(order_id){
+	var answer=confirm("주문을 삭제하시겠습니까?");
+	if(answer==true){
+		var formObj=document.createElement("form");
+		var i_order_id=document.createElement("input");
+		i_order_id.name="order_id";
+		i_order_id.value=order_id;
+		formObj.appendChild(i_order_id);
+		document.body.appendChild(formObj); 
+		formObj.method="post";
+		formObj.action="${contextPath}/mypage/deleteMyOrder.do";
+		formObj.submit();	
+	}
+}
+
 function submitPost(orderId) {
     // 폼 객체 생성
     var form = document.createElement("form");
@@ -124,8 +139,11 @@ window.onload=function(){
 									<c:when test="${item.deliveryState=='delivery_prepared'}">
 										<input type="button" onClick="fn_cancel_order('${item.orderId}')" value="주문취소"/>
 									</c:when>
+									<c:when test="${item.deliveryState=='cancel_order'}">
+										<input type="button" onClick="fn_delete_order('${item.orderId}')" value="주문삭제"/>
+									</c:when>
 									<c:otherwise>
-										<input type="button" onClick="fn_cancel_order('${item.orderId}')" value="주문취소" disabled/>
+										<!-- No button -->
 									</c:otherwise>
 								</c:choose>
 							</td> 
