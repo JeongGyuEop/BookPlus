@@ -9,7 +9,7 @@
 <script src="https://apis.openapi.sk.com/tmap/jsv2?version=1&appKey=3yUCZPlQLSXrUVYnaBC07pB2LIkjQD43OUfAR85i"></script>
 <script type="text/javascript">
     var map;
-    var marker_s, marker_e, marker_p1, marker_p2;
+    var marker_s, marker_e;
     var totalMarkerArr = [];
     var drawInfoArr = [];
     var resultdrawArr = [];
@@ -50,6 +50,12 @@
                     iconSize: new Tmapv2.Size(24, 38),
                     map: map
                 });
+
+                // [수정된 부분] 지도 중심과 범위 설정
+                var bounds = new Tmapv2.LatLngBounds(); // LatLngBounds 객체 생성
+                bounds.extend(new Tmapv2.LatLng(userLat, userLng)); // 현위치 추가
+                bounds.extend(new Tmapv2.LatLng(destLat, destLng)); // 도착지 추가
+                map.fitBounds(bounds); // 지도를 두 좌표가 포함되도록 설정
 
                 // 경로 탐색
                 findRoute(userLat, userLng, destLat, destLng);

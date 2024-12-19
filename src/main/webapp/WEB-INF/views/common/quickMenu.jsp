@@ -10,7 +10,7 @@
 
 	var array_index = 0; // 이변수는 현재 표시 중인 상품의 배열 인덱스위치가 저장됩니다. 초기값으로 0으로 설정 했습니다.
 
-	var SERVER_URL = "${contextPath}/thumbnails.do";//이변수는 FileDownLoadController에서 썸네일이미지를 만들고 가져오기 위한 URL을 설정합니다.
+	//var SERVER_URL = "${contextPath}/thumbnails.do";//이변수는 FileDownLoadController에서 썸네일이미지를 만들고 가져오기 위한 URL을 설정합니다.
 
 	//다음 을 클릭하면 호출되는 함수로
 	//빠른 퀵 메뉴에서 <hidden>태그에 저장된 상품들의 정보를 가져와 이미지를 표시합니다. 
@@ -84,8 +84,7 @@
 				 src="${contextPath}/thumbnails.do?goods_id=${item.goods_id}&fileName=${item.goods_fileName}">
 						   
 		 */
-		img_sticky.src = SERVER_URL + "?goods_id=" + goods_id + "&fileName="
-				+ fileName;
+		img_sticky.src = fileName;
 		//				   = "${contextPath}/thumbnails.do?goods_id=" + goods_id + "&fileName="+ fileName"
 
 		cur_goods_num.innerHTML = array_index + 1;
@@ -108,8 +107,7 @@
 		var goods_id = _h_goods_id[array_index].value;
 		var fileName = _h_goods_fileName[array_index].value;
 
-		img_sticky.src = SERVER_URL + "?goods_id=" + goods_id + "&fileName="
-				+ fileName;
+		img_sticky.src = fileName;
 
 		cur_goods_num.innerHTML = array_index + 1;
 

@@ -45,13 +45,20 @@
 
     //장바구니 버튼을 클릭하면 호출되는 함수
 	function add_cart(goods_id) {
+
+		// 선택된 수량 확인
+	    var order_goods_qty = document.getElementById("order_goods_qty").value;
+		
 		$.ajax({
 			type : "post",
 			async : false, //false인 경우 동기식으로 처리한다.
-			
+		
 			//Ajax를 이용해 장바구니에 추가할 상품 번호를 전송 하여 장바구니에 상품 추가 요청을 합니다. 
 			url : "${contextPath}/cart/addGoodsInCart.do",
-			data : { goods_id:goods_id },
+			data : { 
+					goods_id:goods_id,
+					order_goods_qty: order_goods_qty
+			},
 			success : function(data, textStatus) {
 // 						장바구니테이블에 추가할 상품이 이미 존재하면? "already_existed" 메세지를 받고
 // 						존재하지 않으면? 장바구니 테이블에 새 상품을 추가INSERT하고 나서?
