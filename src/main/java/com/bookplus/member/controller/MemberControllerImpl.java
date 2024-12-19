@@ -58,10 +58,7 @@ public class MemberControllerImpl extends BaseController implements MemberContro
 			HttpSession session=request.getSession();
 			session.setAttribute("isLogOn", true);
 			session.setAttribute("memberInfo",memberVO);
-			
-			
 
-		   
 			//상품 주문 과정에서 로그인 했으면 로그인 후 다시 주문 화면으로 진행하고  그외에 는 메인페이지를 표시합니다. 
 			String action=(String)session.getAttribute("action");
 			
