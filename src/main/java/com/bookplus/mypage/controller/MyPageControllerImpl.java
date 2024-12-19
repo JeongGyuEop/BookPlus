@@ -72,7 +72,24 @@ public class MyPageControllerImpl extends BaseController implements MyPageContro
 
 		return mav;
 	}
-	
+	// 마이페이지 최초 화면을 요청합니다.
+		@Override
+		@RequestMapping(value="/deleteInfo.do" ,method = RequestMethod.GET)
+									   //주문 취소시 결과 메세지를 매개변수로 받습니다. 
+		public ModelAndView deleteInfo(HttpServletRequest request, 
+										HttpServletResponse response)  throws Exception {
+			
+			HttpSession session=request.getSession(true);
+			
+			//마이페이지 왼쪽 화면 메뉴를 보여주기 위해 조건값 저장 
+			session.setAttribute("side_menu", "my_page"); 
+			
+		//  /mypage/myPageMain
+			String viewName=(String)request.getAttribute("viewName");
+			ModelAndView mav = new ModelAndView(viewName);
+
+			return mav;
+		}
 	//==========
 	//주문 후 주문 내역을 조회하기 위해 호출하는 함
 	@Override

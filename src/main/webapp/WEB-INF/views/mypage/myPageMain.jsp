@@ -8,14 +8,14 @@
 <head>
 <meta charset="utf-8">
 <script>
-function fn_cancel_order(order_id){
+function fn_cancel_order(orderId){
 	var answer=confirm("주문을 취소하시겠습니까?");
 	if(answer==true){
 		var formObj=document.createElement("form");
-		var i_order_id=document.createElement("input");
-		i_order_id.name="order_id";
-		i_order_id.value=order_id;
-		formObj.appendChild(i_order_id);
+		var i_orderId=document.createElement("input");
+		i_orderId.name="orderId";
+		i_orderId.value=orderId;
+		formObj.appendChild(i_orderId);
 		document.body.appendChild(formObj); 
 		formObj.method="post";
 		formObj.action="${contextPath}/mypage/cancelMyOrder.do";
@@ -53,7 +53,7 @@ window.onload=function(){
 			<c:otherwise>
 				<c:forEach var="item" items="${myOrderList}" varStatus="i">
 					<c:choose>
-						<c:when test="${pre_order_id != item.order_id}">
+						<c:when test="${pre_orderId != item.orderId}">
 							<c:choose>
 								<c:when test="${item.delivery_state=='delivery_prepared'}">
 									<tr bgcolor="lightgreen">
@@ -66,15 +66,15 @@ window.onload=function(){
 								</c:otherwise>
 							</c:choose>
 							<td>
-								<a href="${contextPath}/mypage/myOrderDetail.do?order_id=${item.order_id}">
-									<span>${item.order_id}</span>
+								<a href="${contextPath}/mypage/myOrderDetail.do?orderId=${item.orderId}">
+									<span>${item.orderId}</span>
 								</a>
 							</td>
 							<td><span>${item.pay_order_time}</span></td>
 							<td align="left">
 								<strong>
 									<c:forEach var="item2" items="${myOrderList}" varStatus="j">
-										<c:if test="${item.order_id == item2.order_id}">
+										<c:if test="${item.orderId == item2.orderId}">
 											<a href="${contextPath}/goods/goodsDetail.do?goods_id=${item2.goods_id}">
 												${item2.goods_title}/${item.order_goods_qty}개
 											</a><br>
@@ -94,15 +94,15 @@ window.onload=function(){
 							<td>
 								<c:choose>
 									<c:when test="${item.delivery_state=='delivery_prepared'}">
-										<input type="button" onClick="fn_cancel_order('${item.order_id}')" value="주문취소"/>
+										<input type="button" onClick="fn_cancel_order('${item.orderId}')" value="주문취소"/>
 									</c:when>
 									<c:otherwise>
-										<input type="button" onClick="fn_cancel_order('${item.order_id}')" value="주문취소" disabled/>
+										<input type="button" onClick="fn_cancel_order('${item.orderId}')" value="주문취소" disabled/>
 									</c:otherwise>
 								</c:choose>
 							</td>
 							</tr>
-							<c:set var="pre_order_id" value="${item.order_id}"/>
+							<c:set var="pre_orderId" value="${item.orderId}"/>
 						</c:when>
 					</c:choose>
 				</c:forEach>
