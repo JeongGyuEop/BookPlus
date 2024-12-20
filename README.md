@@ -128,11 +128,12 @@
 
 ## 📌 참여 인원
 
-| ![JeongGyuEop](#) | [정규업](https://github.com/JeongGyuEop) |
-| ![co2636](#) | [이준희](https://github.com/co2636) |
-| ![quweryti](https://avatars.githubusercontent.com/u/187270066?v=4&s=50) | [권유진](https://github.com/quweryti) |
-| ![1minkyeong1](#) | [강민경](https://github.com/1minkyeong1) |
-| ![seunghyun113](#) | [이승현](https://github.com/seunghyun113) |
+| :---: | :---: |
+| <img src="https://github.com/JeongGyuEop.png?size=50" alt="JeongGyuEop" width="50"/> | [정규업](https://github.com/JeongGyuEop) |
+| <img src="https://github.com/co2636.png?size=50" alt="co2636" width="50"/> | [이준희](https://github.com/co2636) |
+| <img src="https://avatars.githubusercontent.com/u/187270066?v=4&s=50" alt="quweryti" width="50"/> | [권유진](https://github.com/quweryti) |
+| <img src="https://github.com/1minkyeong1.png?size=50" alt="1minkyeong1" width="50"/> | [강민경](https://github.com/1minkyeong1) |
+| <img src="https://github.com/seunghyun113.png?size=50" alt="seunghyun113" width="50"/> | [이승현](https://github.com/seunghyun113) |
 
 ---
 
