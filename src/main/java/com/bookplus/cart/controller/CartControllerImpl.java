@@ -35,7 +35,7 @@ public class CartControllerImpl extends BaseController implements CartController
 	private MemberVO memberVO;
 	
 	//   /cart/myCartList.do 장바구니 테이블에 저장된 상품 목록 조회요청을 받으면 호출되는 메소드로!
-	//   장바구니 테이블에서 조회한  장바구니 목록과 상품 정보 목록을  Map에 저장합니다. 
+	//   장바구니 테이블에서 조회한  장바구니 목록과 상품 정보 목록을  Map에 저장합니다.
 	//   그리고 장바구니 목록을 표시하는 페이지에서 상품을  주문을 할 경우에 대비해 상품 정보를 미리 세션영역에 저장(바인딩) 합니다.
 	@RequestMapping(value="/myCartList.do" ,method = RequestMethod.GET)
 	public ModelAndView myCartMain(HttpServletRequest request, HttpServletResponse response)  throws Exception {
@@ -44,12 +44,14 @@ public class CartControllerImpl extends BaseController implements CartController
 		
 		ModelAndView mav = new ModelAndView(viewName); // 위 /cart/myCartList 뷰 주소 저장 	
 		
-		HttpSession session=request.getSession();		
+		HttpSession session=request.getSession(true);		
 		MemberVO memberVO=(MemberVO)session.getAttribute("memberInfo");	
 		String member_id=memberVO.getMember_id();
+		System.out.println(member_id);
 	
 		cartVO.setMember_id(member_id);	
 		Map<String ,List> cartMap=cartService.myCartList(cartVO);
+		
 		
 		//장바구니 목록을 세션에 저장합니다.
 		session.setAttribute("cartMap", cartMap);

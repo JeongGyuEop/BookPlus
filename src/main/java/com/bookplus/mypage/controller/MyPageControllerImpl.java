@@ -105,6 +105,7 @@ public class MyPageControllerImpl extends BaseController implements MyPageContro
 	            if (goodsMap != null && !goodsMap.isEmpty()) {
 	                goodsList.add(goodsMap); // 리스트에 추가
 	            }
+	            System.out.println(goodsMap);
 	        }
 		}
 		// 결제 정보 조회

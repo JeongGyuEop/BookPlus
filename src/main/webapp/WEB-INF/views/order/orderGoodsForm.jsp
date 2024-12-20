@@ -339,16 +339,16 @@
 					<tr>
 						<td class="goods_image" colspan="3">
 							<a href="${contextPath}/goods/goodsDetail.do?goods_id=${item.goods_id }">
-								<img width="75" alt=""  src="${contextPath}/thumbnails.do?goods_id=${item.goods_id}&fileName=${item.goods_fileName}">
+								<img width="75" alt="" src="${item.goods_fileName}" />
 							</a>
 						</td>
 						
-						<td>
+						<td width="200px">
 							<span>${item.goods_title}</span>
 						</td>
 						
 						<td>
-							<h2>${orderQtyList[status.index]}개</h2>
+							<strong>${orderQtyList[status.index]}개</strong>
 						</td>
 
 						<td class="price">
@@ -357,11 +357,12 @@
 						
 						<td>
 						    <fmt:formatNumber  value="${item.goods_price * (100 - item.goods_sales_price) / 100}" type="number" var="discounted_price" />
-							<h2>${discounted_price}원( ${item.goods_sales_price}% 할인)</h2>
+							<strong>${discounted_price}원</strong><br>
+							<strong>(${item.goods_sales_price}% 할인)</strong>
 						</td>
 
 						<td>
-							<h2>${item.goods_delivery_price }원</h2>
+							<strong>${item.goods_delivery_price }원</strong>
 						</td>
 
 						<td>
@@ -393,9 +394,36 @@
 			</tbody>
 		</table>
 		<div class="clear"></div>
-
+	<br><br>
+	<h1>2. 주문 고객</h1>
+	<div class="detail_table">
+		<table>
+			<tbody>
+				<tr class="dot_line">
+					<td class="fixed_join">이름</td>
+					<td>
+						${memberInfo.member_name}
+						<input type="hidden" id="order_member_id" value="${memberInfo.member_id}" />
+						<input type="hidden" id="order_member_name" value="${memberInfo.member_name}" />
+				    </td>
+				</tr>
+				<tr class="dot_line">
+					<td class="fixed_join">휴대폰 번호</td>
+					<td>
+						${memberInfo.hp1}-${memberInfo.hp2}-${memberInfo.hp3}
+					</td>
+				</tr>
+				<tr class="dot_line">
+					<td class="fixed_join">이메일</td>
+					<td>
+					  ${memberInfo.email1}@${memberInfo.email2}</td>
+				  </tr>
+			</tbody>
+		</table>
+	</div>
+	<div class="clear"></div>
 		<br> <br>
-		<H1>2.배송지 정보</H1>
+		<H1>3.배송지 정보</H1>
 		<DIV class="detail_table">
 			<table>
 				<tbody>
@@ -486,36 +514,11 @@
 				</tbody>
 			</table>
 		</DIV>
-
-		<div>
-			<br><br>
-			<h2>주문고객</h2>
-			<table>
-				<tbody>
-					<tr class="dot_line">
-						<td><h2>이름</h2></td>
-						<td>
-							<input type="text" id="order_name" value="${memberInfo.member_name}" size="15" />
-							<input type="hidden" id="order_member_id" value="${memberInfo.member_id}" />
-							<input type="hidden" id="order_member_name" value="${memberInfo.member_name}" />
-						</td>
-					</tr>
-					<tr class="dot_line">
-						<td><h2>핸드폰</h2></td>
-						<td>
-							<input type="text" id="order_phone" value="${memberInfo.hp1}-${memberInfo.hp2}-${memberInfo.hp3}" size="15" />
-						</td>
-					</tr>
-					<tr class="dot_line">
-						<td><h2>이메일</h2></td>
-						<td>
-							<input type="text" id="order_email" value="${memberInfo.email1}@${memberInfo.email2}" size="15" />
-						</td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
-		
+		<input type="hidden" id="order_name" value="${memberInfo.member_name}" size="15" />
+		<input type="hidden" id="order_member_id" value="${memberInfo.member_id}" />
+		<input type="hidden" id="order_member_name" value="${memberInfo.member_name}" />
+		<input type="hidden" id="order_phone" value="${memberInfo.hp1}-${memberInfo.hp2}-${memberInfo.hp3}" size="15" />
+		<input type="hidden" id="order_email" value="${memberInfo.email1}@${memberInfo.email2}" size="15" />
 		<div class="clear"></div>
 		
 		<table width=80% class="list_view" style="background: #ccffff">
