@@ -99,9 +99,9 @@
 	                goods_id: goodsIdElems[i].value,
 	                goods_title: goodsTitleElems[i].value,
 	                order_goods_qty: parseInt(goodsQtyElems[i].value, 10),
-	                total_price: parseInt(goodsTotalPrice[i].value, 10)
-	                
+	                total_price: parseInt(goodsTotalPrice[i].value.replace(/,/g, ''), 10)
 	            });
+	            console.log(parseInt(goodsTotalPrice[i].value.replace(/,/g, ''), 10));
 	        }
 	        
 	    	 // 상품 제목 가공

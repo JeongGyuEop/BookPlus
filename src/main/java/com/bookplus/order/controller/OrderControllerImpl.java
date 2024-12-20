@@ -98,7 +98,7 @@ public class OrderControllerImpl extends BaseController implements OrderControll
 	//  /order/orderAllCartGoods.do 요청 주소를 받으면 호출되는 메소드 
 	@RequestMapping(value = "/orderAllCartGoods.do", method = RequestMethod.POST)
 	public ModelAndView orderAllCartGoods(
-	        @RequestParam("cart_goods_qty") String[] cart_goods_qty,
+	        @RequestParam("cart_goods_qty2") String[] cart_goods_qty,
 	        HttpServletRequest request, HttpServletResponse response) throws Exception {
 
 	    String viewName = (String) request.getAttribute("viewName"); // /order/orderAllCartGoods
@@ -119,8 +119,10 @@ public class OrderControllerImpl extends BaseController implements OrderControll
 
 	    // 체크된 상품 수량 배열 반복
 	    for (String cartGoods : cart_goods_qty) {
+	        System.out.println(cartGoods);
 	        // 상품 번호와 주문 수량 분리
 	        String[] cart_goods = cartGoods.split(":");
+	        System.out.println();
 	        String goodsIdFromRequest = cart_goods[0];
 	        int orderQty = Integer.parseInt(cart_goods[1]);
 	        

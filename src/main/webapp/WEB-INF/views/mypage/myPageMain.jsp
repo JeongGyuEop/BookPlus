@@ -128,16 +128,33 @@ function submitPost(orderId) {
 							    </span>
 							</td>
 							<td align="left" width="250px">
-								<strong>
-									<c:forEach var="item2" items="${myOrderList}" varStatus="j">
-										<c:if test="${item.orderId == item2.orderId}">
-												${item2.goodsTitle}<br>
-										</c:if>
-									</c:forEach>
-								</strong>
+								<c:set var="bookCount" value="0" />
+							    <c:set var="firstBookTitle" value="" />
+							    <c:forEach var="item2" items="${myOrderList}" varStatus="j">
+							        <c:if test="${item.orderId == item2.orderId}">
+							            <c:choose>
+							                <c:when test="${bookCount == 0}">
+							                    <c:set var="firstBookTitle" value="${item2.goodsTitle}" />
+							                </c:when>
+							            </c:choose>
+							            <c:set var="bookCount" value="${bookCount + 1}" />
+							        </c:if>
+							    </c:forEach>
+							    <strong>
+							        <span>${firstBookTitle}</span><br>
+							        <c:if test="${bookCount > 1}">
+							            <span> 외 ${bookCount - 1}개</span>
+							        </c:if>
+							    </strong>
 							</td>
 							<td>
-								<span>${item.orderGoodsQty}개</span>
+								<c:set var="totalQty" value="0" />
+							    <c:forEach var="item2" items="${myOrderList}" varStatus="j">
+							        <c:if test="${item.orderId == item2.orderId}">
+							            <c:set var="totalQty" value="${totalQty + item2.orderGoodsQty}" />
+							        </c:if>
+							    </c:forEach>
+							    <span>${totalQty}개</span>
 							</td>
 							<td>
 								<c:choose>

@@ -2,6 +2,7 @@
     pageEncoding="utf-8"
     isELIgnored="false"%> 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %> 
 <c:set var="contextPath" value="${pageContext.request.contextPath}" />
 <c:set var="goodsList" value="${goodsList}" />
 
@@ -33,7 +34,8 @@
 			            <h2>${order.orderGoodsQty}개</h2>
 			        </td>
 			        <td>
-			            <h2>${order.totalPrice}원</h2>
+			        <fmt:formatNumber value="${order.totalPrice}" type="number" var="total_price" />
+			            <h2>${total_price}원</h2>
 			        </td>
 			    </tr>
 			</c:forEach>

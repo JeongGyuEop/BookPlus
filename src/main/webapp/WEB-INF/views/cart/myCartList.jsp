@@ -21,34 +21,6 @@
 
 <head>
 <script type="text/javascript">
-function calcGoodsPrice(bookPrice,obj){
-	var totalPrice,final_total_price,totalNum;
-	var goods_qty=document.getElementById("select_goods_qty");
-	var p_totalNum=document.getElementById("p_totalNum");
-	var p_totalPrice=document.getElementById("p_totalPrice");
-	var p_final_totalPrice=document.getElementById("p_final_totalPrice");
-	var h_totalNum=document.getElementById("h_totalNum");
-	var h_totalPrice=document.getElementById("h_totalPrice");
-	var h_totalDelivery=document.getElementById("h_totalDelivery");
-	var h_final_totalPrice=document.getElementById("h_final_totalPrice");
-	if(obj.checked==true){
-		totalNum=Number(h_totalNum.value)+Number(goods_qty.value);
-		totalPrice=Number(h_totalPrice.value)+Number(goods_qty.value*bookPrice);
-		final_total_price=totalPrice+Number(h_totalDelivery.value);
-	}else{
-		totalNum=Number(h_totalNum.value)-Number(goods_qty.value);
-		totalPrice=Number(h_totalPrice.value)-Number(goods_qty.value)*bookPrice;
-		final_total_price=totalPrice-Number(h_totalDelivery.value);
-	}
-	
-	h_totalNum.value=totalNum;
-	h_totalPrice.value=totalPrice;
-	h_final_totalPrice.value=final_total_price;
-	
-	p_totalNum.innerHTML=totalNum;
-	p_totalPrice.innerHTML=totalPrice;
-	p_final_totalPrice.innerHTML=final_total_price;
-}
 
 //수량 입력후 [변경] 버튼을 클릭했을때 호출되는 함수 
 //상품번호, 상품가격, 장바구니 목록에서 체크한 상품의 행 위치 index
@@ -123,7 +95,7 @@ function fn_order_each_goods(goods_id) {
     }
 
     // 선택된 수량 확인
-    var order_goods_qty = document.getElementById("cart_goods_qty").value;
+    var order_goods_qty = document.getElementById("cart_goods_qty_" + goods_id).value;
     if (!order_goods_qty || isNaN(order_goods_qty) || order_goods_qty <= 0) {
         alert("유효한 수량을 입력해 주세요.");
         return; // 함수 실행 종료
@@ -165,47 +137,41 @@ function fn_order_each_goods(goods_id) {
 function fn_order_all_cart_goods(){
 	var objForm=document.frm_order_all_cart;
 	var cart_goods_qty=objForm.cart_goods_qty;
-	var checked_goods=objForm.checked_goods;  
-	var length=checked_goods.length;
-	var h_order_each_goods_qty=objForm.h_order_each_goods_qty;
+	var length=document.getElementById("h_totalGoodsNum").value;  
 	
-/* 	
-	<input type="checkbox" 
-        name="checked_goods"  
-        value="${item.goods_id }"  
-        checked="checked"
-        onClick="calcGoodsPrice(${item.goods_sales_price },this)">
-     
-        <input type="checkbox" 
-	           name="checked_goods"  
-	           value="${item.goods_id }"  
-	           checked="checked"
-	           onClick="calcGoodsPrice(${item.goods_sales_price },this)">   
-    
-	           
-	장바구니에 저장된 상품이 2개라면?  checked_goods배열에 위 <input type="checkbox">태그가 2개 저장되어 있고
-	checked_goods배열을     checked_goods변수에 저장   		   
- */	var checked_goods=objForm.checked_goods;  //요약 : 상품 주문 여부를 체크하는 체크박스 들을 checked_goods 배열에 담아  checked_goods배열을 선택해 옵니다. 
- 
+	 // 숨겨진 필드 생성용 배열
+    var hiddenFields = [];
 
-	var length=checked_goods.length; //요약 : 주문용으로 선택한(체크한) 총 상품 개수를 가져옵니다. 
-	
-	//요약 : 여러 상품을 주문할 경우  하나의 상품에 대해 '상품번호:주문수량' 문자열로 만든 후 전체 상품 정보를 배열로 전송합니다. 
-	//장바구니 목록화면에서 구매할 상품을 체크하는  <input type="checkbox">태그가  여러개 라면?
-	if(length>1){
-		for(var i=0; i<length;i++){
-			if(checked_goods[i].checked==true){
-				order_goods_id=checked_goods[i].value;
-				order_goods_qty=cart_goods_qty[i].value;
-				cart_goods_qty[i].value=order_goods_id+":"+order_goods_qty;
-			}
-		}
-	}else{
-		order_goods_id=checked_goods.value;
-		order_goods_qty=cart_goods_qty.value;
-		cart_goods_qty.value=order_goods_id+":"+order_goods_qty;
-	}
+    if (length > 1) {
+        for (var i = 0; i < length; i++) {
+            var order_goods_id = cart_goods_qty[i].getAttribute("data-goods-id");
+            var order_goods_qty = cart_goods_qty[i].value;
+
+            // 숨겨진 필드 추가
+            var hiddenField = document.createElement("input");
+            hiddenField.type = "hidden";
+            hiddenField.name = "cart_goods_qty2"; // 서버에서 배열로 수신
+            hiddenField.value = order_goods_id + ":" + order_goods_qty; // '상품번호:수량' 형식
+            hiddenFields.push(hiddenField);
+            
+        }
+    } else {
+        var order_goods_id = cart_goods_qty.getAttribute("data-goods-id");
+        var order_goods_qty = cart_goods_qty.value;
+        
+        var hiddenField = document.createElement("input");
+        hiddenField.type = "hidden";
+        hiddenField.name = "cart_goods_qty2"; // 서버에서 배열로 수신
+        hiddenField.value = order_goods_id + ":" + order_goods_qty; // '상품번호:수량' 형식
+        hiddenFields.push(hiddenField);
+    }
+
+    // 숨겨진 필드 추가
+    hiddenFields.forEach(function (field) {
+        objForm.appendChild(field);
+    });
 		
+    console.log(hiddenFields);
  	objForm.method="post";
  	objForm.action="${contextPath}/order/orderAllCartGoods.do"; 
  	objForm.submit();
@@ -216,7 +182,6 @@ function fn_order_all_cart_goods(){
 	<table class="list_view">
 		<tbody align=center>
 			<tr style="background: #33ff00">
-				<td class="fixed">구분</td>
 				<td colspan=2 class="fixed">상품명</td>
 				<td>정가</td>
 				<td>판매가</td>
@@ -238,10 +203,7 @@ function fn_order_all_cart_goods(){
 			                    <c:set var="cart_goods_qty" value="${myCartList[cnt.count-1].cart_goods_qty}" />
 			                    <c:set var="cart_id" value="${myCartList[cnt.count-1].cart_id}" />
 			                    
-			                    <td>
-			                        <input type="checkbox" name="checked_goods" value="${item.goods_id}" checked="checked" 
-			                               onClick="calcGoodsPrice(${item.goods_sales_price}, this)">
-			                    </td>
+			                   
 			                    <td class="goods_image">
 			                        <a href="${contextPath}/goods/goodsDetail.do?goods_id=${item.goods_id}">
 			                            <img width="75" alt="" src="${item.goods_fileName}" />
@@ -264,7 +226,8 @@ function fn_order_all_cart_goods(){
 			                        </strong>
 			                    </td>
 			                    <td>
-			                        <input type="text" id="cart_goods_qty" name="cart_goods_qty" size="3" value="${cart_goods_qty}">
+			                        <input type="hidden" id="cart_goods_qty_${item.goods_id}" name="cart_goods_qty_${item.goods_id}" size="3" value="${cart_goods_qty}" data-goods-id="${item.goods_id}">
+			                        <input type="text" id="cart_goods_qty" name="cart_goods_qty" size="3" value="${cart_goods_qty}" data-goods-id="${item.goods_id}">
 			                        <a href="javascript:modify_cart_qty(${item.goods_id}, ${item.goods_sales_price}, ${cnt.count-1});">
 			                            <img width="25" alt="" src="${contextPath}/resources/image/btn_modify_qty.jpg">
 			                        </a>
@@ -290,6 +253,7 @@ function fn_order_all_cart_goods(){
 			                <!-- 누적 합산 -->
 			                <c:set var="totalGoodsNum" value="${totalGoodsNum + 1}" />
 			                <c:set var="totalGoodsPrice" value="${totalGoodsPrice + (item.goods_price * cart_goods_qty)}" />
+			                <c:set var="totalCartGoodsQty" value="${totalCartGoodsQty + cart_goods_qty}" />
 			                <c:set var="totalDiscountedPrice" value="${totalDiscountedPrice + ((item.goods_price - (item.goods_price * (100 - item.goods_sales_price) / 100)) * cart_goods_qty)}" />
 			                <c:set var="totalDeliveryPrice" value="${totalDeliveryPrice + item.goods_delivery_price}" />
 			            </c:forEach>
@@ -304,8 +268,8 @@ function fn_order_all_cart_goods(){
 	<table width=80% class="list_view" style="background: #cacaff">
 		<tbody>
 			<tr align=center class="fixed">
-				<td class="fixed">상품명</td>
-				<td>구매 할 상품수</td>
+				<td class="fixed">책 종류 수</td>
+				<td>구매할 총 상품수</td>
 				<td>총 상품금액</td>
 				<td></td>
 				<td>총 배송비</td>
@@ -320,8 +284,8 @@ function fn_order_all_cart_goods(){
 					id="h_totalGoodsNum" type="hidden" value="${totalGoodsNum}" />
 				</td>
 				<td id="">
-					<p id="p_buyGoods">${cart_goods_qty}개</p> <input
-					id="h_totalGoodsNum" type="hidden" value="${cart_goods_qty}" />
+					<p id="p_totalGoodsQty">${totalCartGoodsQty}개</p> <input
+					id="h_totalGoodsQty" type="hidden" value="${totalCartGoodsQty}" />
 				</td>
 
 				<td>
