@@ -22,5 +22,5 @@ public interface GoodsService {
 	// DB 업데이트
 	public boolean updateDatabase(List<GoodsVO> fetchBookDetails) throws Exception;
 
-	public List<GoodsVO> getAllGoods(int limit, int offset) throws Exception;
+	public List<GoodsVO> getAllGoods(String category, int limit, int offset) throws Exception;
 }

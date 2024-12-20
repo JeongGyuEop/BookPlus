@@ -93,7 +93,7 @@
     <!-- 장바구니에서 상품 삭제 -->
     <delete id="deleteCartGoods" parameterType="int">
         <![CDATA[
-        delete from T_SHOPPING_CART
+        delete from t_shopping_cart
         where cart_id=#{cart_id}
         ]]>
     </delete>
@@ -101,7 +101,7 @@
     <!-- 장바구니의 최대 cart_id를 조회 -->
     <select id="selectMaxCartId" resultType="int">
         <![CDATA[
-        select IFNULL(max(cart_id), 0) + 1 from T_SHOPPING_CART
+        select IFNULL(max(cart_id), 0) + 1 from t_shopping_cart
         ]]>
     </select>
 

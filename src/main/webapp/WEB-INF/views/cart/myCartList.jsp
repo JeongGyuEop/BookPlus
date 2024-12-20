@@ -349,7 +349,7 @@ function fn_order_all_cart_goods(){
 	<br><br> 
 		<a href="javascript:fn_order_all_cart_goods()"> 
 		<img width="75" alt="" src="${contextPath}/resources/image/btn_order_final.jpg"> <!-- 주문하기 -->
-		</a> <a href="#"> <img width="75" alt="" src="${contextPath}/resources/image/btn_shoping_continue.jpg">
+		</a> <a href="${contextPath}/main/main.do"> <img width="75" alt="" src="${contextPath}/resources/image/btn_shoping_continue.jpg">
 			<!-- 쇼핑 계속하기 -->
 		</a>
 		

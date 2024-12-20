@@ -1,6 +1,7 @@
 package com.bookplus.goods.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.dao.DataAccessException;
 
@@ -14,5 +15,5 @@ public interface GoodsDAO {
 	GoodsVO selectGoodsByISBN(String isbn); // ISBN으로 책 조회
     int updateGoods(GoodsVO goodsVO); // 책 정보 업데이트
     int insertGoods(GoodsVO goodsVO); // 새 책 정보 삽입	
-	public List<GoodsVO> selectAllGoods(int limit, int offset) throws Exception;
+	public List<GoodsVO> selectAllGoods(Map<String, Object> params) throws Exception;
 }

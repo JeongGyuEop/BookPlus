@@ -139,56 +139,6 @@ function prepareFormData() {
     }
 }
 
-function fn_overlapped(){
-	var _id=$("#_member_id").val();
-	if(_id==''){
-		alert("ID를 입력하세요");
-		return;
-	}
-	$.ajax({
-		type:"post",
-		async:false,
-		url:"${contextPath}/member/overlapped.do",
-		dataType:"text",
-		data: {id:_id},
-		success:function(data,textStatus){
-			if(data=='false'){
-				alert("사용할 수 있는 ID입니다.");
-				$('#btnOverlapped').prop("disabled", true);
-				$('#_member_id').prop("disabled", true);
-				$('#member_id').val(_id);
-			}else{
-				alert("사용할 수 없는 ID입니다.");
-			}
-		},
-		error:function(data,textStatus){
-			alert("에러가 발생했습니다.");
-		}
-	});
-}
-
-function updateEmailDomain() {
-	var select = document.getElementById('email2Select');
-	var emailInput = document.getElementById('email2Input');
-	emailInput.value = select.value;
-}
-
-function prepareFormData() {
-	const smsCheckbox = document.getElementById('smsstsCheckbox');
-	const emailCheckbox = document.getElementById('emailstsCheckbox');
-
-	if (smsCheckbox.checked) {
-		document.getElementById('smsHidden').disabled = true;
-	} else {
-		document.getElementById('smsHidden').disabled = false;
-	}
-
-	if (emailCheckbox.checked) {
-		document.getElementById('emailHidden').disabled = true;
-	} else {
-		document.getElementById('emailHidden').disabled = false;
-	}
-}
 </script>
 </head>
 <body>
