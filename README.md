@@ -128,11 +128,11 @@
 
 ## 📌 참여 인원
 
-| ![JeongGyuEop](https://avatars.githubusercontent.com/u/00000000?v=1) | [정규업](https://github.com/JeongGyuEop) |
-| ![co2636](https://avatars.githubusercontent.com/u/00000000?v=1) | [이준희](https://github.com/co2636) |
-| ![quweryti](https://avatars.githubusercontent.com/u/00000000?v=1) | [권유진](https://github.com/quweryti) |
-| ![1minkyeong1](https://avatars.githubusercontent.com/u/00000000?v=1) | [강민경](https://github.com/1minkyeong1) |
-| ![seunghyun113](https://avatars.githubusercontent.com/u/00000000?v=1) | [이승현](https://github.com/seunghyun113) |
+| ![JeongGyuEop](#) | [정규업](https://github.com/JeongGyuEop) |
+| ![co2636](#) | [이준희](https://github.com/co2636) |
+| ![quweryti](https://github.com/account) | [권유진](https://github.com/quweryti) |
+| ![1minkyeong1](#) | [강민경](https://github.com/1minkyeong1) |
+| ![seunghyun113](#) | [이승현](https://github.com/seunghyun113) |
 
 ---
 
