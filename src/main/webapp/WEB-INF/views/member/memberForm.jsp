@@ -69,7 +69,6 @@ function execDaumPostcode() {
 	  }).open(); // 팝업 창 열기 (기본 동작으로 닫힘)
 }
 
-
 //아이디 중복 확인
 function fn_overlapped(){
 	
@@ -139,56 +138,6 @@ function prepareFormData() {
     }
 }
 
-function fn_overlapped(){
-	var _id=$("#_member_id").val();
-	if(_id==''){
-		alert("ID를 입력하세요");
-		return;
-	}
-	$.ajax({
-		type:"post",
-		async:false,
-		url:"${contextPath}/member/overlapped.do",
-		dataType:"text",
-		data: {id:_id},
-		success:function(data,textStatus){
-			if(data=='false'){
-				alert("사용할 수 있는 ID입니다.");
-				$('#btnOverlapped').prop("disabled", true);
-				$('#_member_id').prop("disabled", true);
-				$('#member_id').val(_id);
-			}else{
-				alert("사용할 수 없는 ID입니다.");
-			}
-		},
-		error:function(data,textStatus){
-			alert("에러가 발생했습니다.");
-		}
-	});
-}
-
-function updateEmailDomain() {
-	var select = document.getElementById('email2Select');
-	var emailInput = document.getElementById('email2Input');
-	emailInput.value = select.value;
-}
-
-function prepareFormData() {
-	const smsCheckbox = document.getElementById('smsstsCheckbox');
-	const emailCheckbox = document.getElementById('emailstsCheckbox');
-
-	if (smsCheckbox.checked) {
-		document.getElementById('smsHidden').disabled = true;
-	} else {
-		document.getElementById('smsHidden').disabled = false;
-	}
-
-	if (emailCheckbox.checked) {
-		document.getElementById('emailHidden').disabled = true;
-	} else {
-		document.getElementById('emailHidden').disabled = false;
-	}
-}
 </script>
 </head>
 <body>
@@ -220,7 +169,7 @@ function prepareFormData() {
 		        </c:choose>
 				<tr class="dot_line">
 					<td class="fixed_join">비밀번호</td>
-					<td><input name="member_pw" type="password" size="20" /></td>
+					<td><input id="member_pw" name="member_pw" type="password" size="20" /></td>
 				</tr>
 				<tr class="dot_line">
 					<td class="fixed_join">이름</td>
@@ -229,7 +178,7 @@ function prepareFormData() {
 						<td><input type="text" name="member_name" value="${requestScope.name}"  readonly style="color:gray;"/></td> 
 		            </c:when>
 		            <c:otherwise>
-						<td><input type="text" name="member_name" size="20" /></td>
+						<td><input id="member_name" type="text" name="member_name" size="20" /></td>
 		            </c:otherwise>
 		        </c:choose>
 				</tr>
@@ -238,12 +187,12 @@ function prepareFormData() {
 					 <td>
 				        <c:choose>
 				            <c:when test="${not empty requestScope.gender}">
-				                <input type="radio" name="member_gender" value="female" 
+				                <input type="radio" id="member_gender" name="member_gender" value="female" 
 				                       <c:if test="${requestScope.gender == '102'}">checked</c:if> disabled />여성
 				                <span style="padding-left:120px"></span>
-				                <input type="radio" name="member_gender" value="male" 
+				                <input type="radio" id="member_gender" name="member_gender" value="male" 
 				                       <c:if test="${requestScope.gender == '101'}">checked</c:if> disabled />남성
-				                <input type="hidden" name="member_gender" value="${requestScope.gender}" />
+				                <input type="hidden" id="member_gender" name="member_gender" value="${requestScope.gender}" />
 				            </c:when>
 				
 				            <c:otherwise>
@@ -260,13 +209,13 @@ function prepareFormData() {
 				        <!-- 연도 -->
 				        <c:choose>
 				            <c:when test="${not empty requestScope.birthyear}">
-				                <input type="text" name="member_birth_y" 
+				                <input type="text" name="member_birth_y" id="member_birth_y"
 				                       value="${requestScope.birthyear}" 
 				                       readonly 
 				                       style="font-size:12px; color:gray; width:50px;" />년
 				            </c:when>
 				            <c:otherwise>
-				                <select name="member_birth_y" style="font-size:12px; color:gray; width:60px;">
+				                <select name="member_birth_y", style="font-size:12px; color:gray; width:60px;">
 				                    <c:forEach var="year" begin="1920" end="2020">
 				                        <option value="${year}" 
 				                                <c:if test="${year == 1980}">selected</c:if>>${year}</option>
@@ -278,7 +227,7 @@ function prepareFormData() {
 				        <!-- 월 -->
 				        <c:choose>
 				            <c:when test="${not empty requestScope.birthday}">
-				                <input type="text" name="member_birth_m" 
+				                <input type="text" name="member_birth_m" id="member_birth_m"
 				                       value="${requestScope.birthday.substring(0, 2)}" 
 				                       readonly 
 				                       style="font-size:12px; color:gray; width:30px;" />월
@@ -296,7 +245,7 @@ function prepareFormData() {
 				        <!-- 일 -->
 				        <c:choose>
 				            <c:when test="${not empty requestScope.birthday}">
-				                <input type="text" name="member_birth_d" 
+				                <input type="text" name="member_birth_d" id="member_birth_d"
 				                       value="${requestScope.birthday.substring(2, 4)}" 
 				                       readonly 
 				                       style="font-size:12px; color:gray; width:30px;" />일
@@ -316,13 +265,13 @@ function prepareFormData() {
 				        <!-- 양력/음력 -->
 				        <c:choose>
 				            <c:when test="${not empty requestScope.birth_gn}">
-				                <input type="radio" name="member_birth_gn" 
+				                <input type="radio" name="member_birth_gn" id="member_birth_gn"
 				                       value="2" 
 				                       <c:if test="${requestScope.birth_gn == '2'}">checked</c:if> 
 				                       disabled 
 				                       style="font-size:12px; color:gray;" />양력
 				                <span style="padding-left:20px;"></span>
-				                <input type="radio" name="member_birth_gn" 
+				                <input type="radio" name="member_birth_gn" id="member_birth_gn"
 				                       value="1" 
 				                       <c:if test="${request.birth_gn == '1'}">checked</c:if> 
 				                       disabled 
@@ -349,7 +298,7 @@ function prepareFormData() {
 				            </c:when>
 				            
 				            <c:otherwise>
-				                <select name="hp1">
+				                <select name="hp1" id="hp1">
 				                    <option>없음</option>
 				                    <option value="010" selected>010</option>
 				                    <option value="011">011</option>
@@ -358,7 +307,7 @@ function prepareFormData() {
 				                    <option value="018">018</option>
 				                    <option value="019">019</option>
 				                </select> - 
-				                <input size="10px" type="text" name="hp2"> - <input size="10px" type="text" name="hp3">
+				                <input size="10px" type="text" name="hp2" id="hp2"> - <input size="10px" type="text" name="hp3" id="hp3">
 				            </c:otherwise>
 				        </c:choose>
 				        <br><br>
@@ -378,9 +327,9 @@ function prepareFormData() {
 				            </c:when>
 				
 				            <c:otherwise>
-				                <input size="10px" type="text" name="email1" /> @ 
-				                <input size="10px" type="text" name="email2" /> 
-				                <select name="email2" onChange="" title="직접입력">
+				                <input size="10px" type="text" name="email1" id="email1" /> @ 
+				                <input size="10px" type="text" name="email2" id="email2Input" /> 
+				                <select id="email2Select" name="email2Select" onChange="updateEmailDomain()" title="직접입력">
 				                    <option value="non">직접입력</option>
 				                    <option value="hanmail.net">hanmail.net</option>
 				                    <option value="naver.com">naver.com</option>
@@ -423,12 +372,13 @@ function prepareFormData() {
 		<table align=center>
 		<tr >
 			<td >
-				<input type="submit"  value="회원 가입">
+				<input type="submit" value="회원 가입">
 				<input  type="reset"  value="다시입력">
 			</td>
 		</tr>
 	</table>
 </div>
 </form>
+
 </body>
 </html>

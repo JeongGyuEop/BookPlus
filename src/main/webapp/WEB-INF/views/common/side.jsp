@@ -30,7 +30,7 @@
 		<li>
 			<h3>정보내역</h3>
 			<ul>
-				<li><a href="${contextPath}/mypage/myDetailInfo.do">회원정보관리</a></li>
+				<li><a href="${contextPath}/mypage/myInfoModify.do">회원정보관리</a></li>
 				<li><a href="${contextPath}/mypage/deleteInfo.do">회원탈퇴</a></li>
 			</ul>
 		</li>
@@ -98,18 +98,6 @@
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-<script type="text/javascript">
-    function googleTranslateElementInit() {
-        new google.translate.TranslateElement({
-            pageLanguage: 'en',
-            includedLanguages: 'ko,en', // 번역할 언어 목록
-            layout: google.translate.TranslateElement.InlineLayout.VERTICAL
-        }, 'google_translate_element');
-    }
-    /* VERTICAL 드롭다운(*Google 번역에서 제공* 수직으로 출력), HORIZONTAL 드롭다운(*Google 번역에서 제공* 수평으로 출력) */
-</script>
-<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
 <script type="text/javascript">
 $(document).ready(function() {

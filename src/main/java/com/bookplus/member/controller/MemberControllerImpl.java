@@ -1,6 +1,7 @@
 package com.bookplus.member.controller;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -119,7 +120,8 @@ public class MemberControllerImpl extends BaseController implements MemberContro
 			apiLoginVO.setSocialProvider(socialProvider);
 			_memberVO.setAPILoginVO(apiLoginVO);
 		}
-
+		
+		//회원가입처리
 		String message = null;
 		HttpHeaders responseHeaders = new HttpHeaders();
 		responseHeaders.add("Content-Type", "text/html; charset=utf-8"); // 저장해서 보여줄 값도 아래에 작성 보여줄 수 있음.

@@ -182,16 +182,16 @@ public class MyPageControllerImpl extends BaseController implements MyPageContro
 	
 	// side.jsp페이지 화면에서 회원정보관리 <a>태그를 클릭하면 호출되는 메소드
 	@Override
-	@RequestMapping(value = "/myDetailInfo.do", method = RequestMethod.GET)
+	@RequestMapping(value = "/myInfoModify.do", method = RequestMethod.GET)
 	public ModelAndView myDetailInfo(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-		String viewName = (String) request.getAttribute("viewName"); // /mypage/myDetailInfo
+		String viewName = (String) request.getAttribute("viewName"); // /mypage//myInfoModify
 		ModelAndView mav = new ModelAndView(viewName);
 		return mav;
 	}
 
 	@Override
-	@RequestMapping(value = "/modifyMyInfo.do", method = RequestMethod.POST)
+	@RequestMapping(value = "/myInfoModify.do", method = RequestMethod.POST)
 	public ResponseEntity modifyMyInfo(@RequestParam("attribute") String attribute, @RequestParam("value") String value,
 			HttpServletRequest request, HttpServletResponse response) throws Exception {
 		Map<String, String> memberMap = new HashMap<String, String>();
