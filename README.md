@@ -128,14 +128,32 @@
 
 ## 📌 참여 인원
 
-| :---: | :---: |
-| <img src="https://github.com/JeongGyuEop.png?size=50" alt="JeongGyuEop" width="50"/> | [정규업](https://github.com/JeongGyuEop) |
-| <img src="https://github.com/co2636.png?size=50" alt="co2636" width="50"/> | [이준희](https://github.com/co2636) |
-| <img src="https://avatars.githubusercontent.com/u/187270066?v=4&s=50" alt="quweryti" width="50"/> | [권유진](https://github.com/quweryti) |
-| <img src="https://github.com/1minkyeong1.png?size=50" alt="1minkyeong1" width="50"/> | [강민경](https://github.com/1minkyeong1) |
-| <img src="https://github.com/seunghyun113.png?size=50" alt="seunghyun113" width="50"/> | [이승현](https://github.com/seunghyun113) |
-
----
+<table>
+  <tr>
+    <th>이미지</th>
+    <th>이름</th>
+  </tr>
+  <tr>
+    <td><img src="https://avatars.githubusercontent.com/u/12345678?v=4&s=50" alt="JeongGyuEop" width="50"/></td>
+    <td><a href="https://github.com/JeongGyuEop">정규업</a></td>
+  </tr>
+  <tr>
+    <td><img src="https://avatars.githubusercontent.com/u/87654321?v=4&s=50" alt="co2636" width="50"/></td>
+    <td><a href="https://github.com/co2636">이준희</a></td>
+  </tr>
+  <tr>
+    <td><img src="https://avatars.githubusercontent.com/u/187270066?v=4&s=50" alt="quweryti" width="50"/></td>
+    <td><a href="https://github.com/quweryti">권유진</a></td>
+  </tr>
+  <tr>
+    <td><img src="https://avatars.githubusercontent.com/u/23456789?v=4&s=50" alt="1minkyeong1" width="50"/></td>
+    <td><a href="https://github.com/1minkyeong1">강민경</a></td>
+  </tr>
+  <tr>
+    <td><img src="https://avatars.githubusercontent.com/u/34567890?v=4&s=50" alt="seunghyun113" width="50"/></td>
+    <td><a href="https://github.com/seunghyun113">이승현</a></td>
+  </tr>
+</table>
 
 ## 📄 라이선스
 
