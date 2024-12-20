@@ -130,7 +130,7 @@
 
 | ![JeongGyuEop](#) | [정규업](https://github.com/JeongGyuEop) |
 | ![co2636](#) | [이준희](https://github.com/co2636) |
-| ![quweryti](https://avatars.githubusercontent.com/u/187270066?s=50&v=4) | [권유진](https://github.com/quweryti) |
+| ![quweryti](https://avatars.githubusercontent.com/u/187270066?v=4&s=50) | [권유진](https://github.com/quweryti) |
 | ![1minkyeong1](#) | [강민경](https://github.com/1minkyeong1) |
 | ![seunghyun113](#) | [이승현](https://github.com/seunghyun113) |
 
