@@ -18,12 +18,10 @@ public class GoodsDAOImpl implements GoodsDAO{
 	private SqlSession sqlSession;
 
 	@Override
-	public List<GoodsVO> selectAllGoods(int limit, int offset) throws Exception {
-		Map<String, Integer> params = new HashMap<>();
-	    params.put("limit", limit);
-	    params.put("offset", offset);
-	    return sqlSession.selectList("mapper.goods.selectAllGoods", params);	
+	public List<GoodsVO> selectAllGoods(Map<String, Object> params) throws Exception {
+	    return sqlSession.selectList("mapper.goods.selectAllGoods", params);
 	}
+
 
 //주제 : Ajax 이용해 입력한 검색어 관련  데이터 자동으로 표시하기
 	//<input>에 검색 키워드를 입력하기 위해 키보드의 키를 눌렀다가 떼면 ~

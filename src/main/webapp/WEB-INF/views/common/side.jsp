@@ -1,5 +1,7 @@
-<%@ page language="java" contentType="text/html; charset=utf-8"
-    pageEncoding="utf-8" isELIgnored="false" %>
+<%@ page language="java" contentType="text/html; charset=utf-8" 
+	pageEncoding="utf-8" 
+	isELIgnored="false" 
+%>
 <%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <% String contextPath = request.getContextPath(); %>
@@ -41,12 +43,13 @@
 		<li>
 			<h3>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;국내외 도서</h3>
 			<ul>
-				<li><a href="${contextPath}/goods/goodsList.do">IT/인터넷</a></li>
-				<li><a href="#">경제/경영</a></li>
-				<li><a href="#">대학교재</a></li>
-				<li><a href="#">자기계발</a></li>
-				<li><a href="#">자연과학/공학</a></li>
-				<li><a href="#">역사/인문학</a></li>
+				<li><a href="${contextPath}/main/main.do?category=컴퓨터/모바일">컴퓨터/모바일</a></li>
+				<li><a href="${contextPath}/main/main.do?category=경제/경영">경제/경영</a></li>
+				<li><a href="${contextPath}/main/main.do?category=대학교재/과학">대학교재/과학</a></li>
+				<li><a href="${contextPath}/main/main.do?category=자기계발/자격증">자기계발/자격증</a></li>
+				<li><a href="${contextPath}/main/main.do?category=예술/대중문화">예술/대중문화</a></li>
+				<li><a href="${contextPath}/main/main.do?category=에세이/인문학">에세이/인문학</a></li>
+				<li><a href="${contextPath}/main/main.do?category=어린이/만화">어린이/만화</a></li>
 			</ul>
 		</li>
 		<li>
@@ -55,7 +58,6 @@
 				<li><a href="${contextPath}/board/boardList.do">자유게시판</a></li>
 				<li><a href="${contextPath}/book/kakaobook.do">도서 검색</a></li>
 				<li><a href="${contextPath}/API/weather/weather">날씨별 추천</a></li>
-				<li><a href="#">오늘의 운세</a></li>
 			</ul>
 		</li>
 
@@ -103,39 +105,13 @@
 $(document).ready(function() {
     $('#checkHoroscopeBtn').click(function() {
         var sign = $('#sign').val();  // 선택된 별자리 값을 가져옴
+       
 
         // 별자리가 선택되지 않은 경우
         if (sign === "") {
             alert("별자리를 선택해주세요.");
             return;
         }
-
-        // AJAX 요청 보내기
-        $.ajax({
-            url: 'https://horoscope-astrology.p.rapidapi.com/horoscope',  // RapidAPI 엔드포인트 URL
-            type: 'GET',
-            data: {
-                day: 'today',  // 오늘의 운세를 가져옵니다
-                sunsign: sign  // 선택된 별자리 정보 전달
-            },
-            headers: {
-                'x-rapidapi-host': 'horoscope-astrology.p.rapidapi.com',  // RapidAPI 호스트
-                'x-rapidapi-key': '9c5819e8a9msh27cec47277983a8p15ee97jsn0f8fb0fd3a60'  // 본인의 RapidAPI 키로 교체
-            },
-            success: function(response) {
-
-                // 운세가 정상적으로 반환되었으면 운세 내용 표시
-                
-                if (response) {
-                    translateText(response.horoscope);  // 응답에서 운세 내용을 번역
-                } else {
-                    $('#horoscopeDescription').html("운세를 가져올 수 없습니다.");
-                }
-            },
-            error: function() {
-                $('#horoscopeDescription').html("운세를 가져오는 중 오류가 발생했습니다.");
-            }
-
             // AJAX 요청 보내기
             $.ajax({
                 url: 'https://horoscope-astrology.p.rapidapi.com/horoscope', // RapidAPI 엔드포인트 URL
@@ -151,7 +127,7 @@ $(document).ready(function() {
                 success: function(response) {
                     // 운세가 정상적으로 반환되었으면 운세 내용 표시
                     if (response) {
-                        $('#horoscopeDescription').html(response.horoscope); // 응답에서 운세 내용 가져오기
+                        translateText(response.horoscope); // 응답에서 운세 내용 가져오기
                     } else {
                         $('#horoscopeDescription').html("운세를 가져올 수 없습니다.");
                     }
@@ -160,9 +136,9 @@ $(document).ready(function() {
                     $('#horoscopeDescription').html("운세를 가져오는 중 오류가 발생했습니다.");
                 }
             });
-        });
-    });
+       
     // 번역 요청 함수
+        	
     function translateText(text) {
         $.ajax({
             url: 'https://translate.googleapis.com/translate_a/single',  // 구글 번역 API URL
@@ -187,6 +163,7 @@ $(document).ready(function() {
             }
         });
     }
+    });
 });
 </script>
 

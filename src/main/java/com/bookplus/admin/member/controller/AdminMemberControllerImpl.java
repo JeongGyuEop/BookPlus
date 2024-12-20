@@ -189,6 +189,5 @@ public class AdminMemberControllerImpl extends BaseController  implements AdminM
 	}
 		
 
-
 	
 }

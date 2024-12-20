@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.bookplus.member.vo.MemberVO;
 import com.bookplus.mypage.dao.MyPageDAO;
 import com.bookplus.mypage.vo.MyPageVO;
+import com.bookplus.order.dao.PaymentDAO;
 import com.bookplus.order.vo.OrderVO;
 
 @Service("myPageService")
@@ -21,7 +22,8 @@ import com.bookplus.order.vo.OrderVO;
 public class MyPageServiceImpl  implements MyPageService{
 	@Autowired
 	private MyPageDAO myPageDAO;
-
+	@Autowired
+	private PaymentDAO paymentDAO;
 
 	//로그인한 회원 ID를 이용해 주문한 상품을 조회 합니다. 
 	public List<OrderVO> listMyOrderGoods(String member_id) throws Exception{
@@ -54,11 +56,12 @@ public class MyPageServiceImpl  implements MyPageService{
 	}
 	
 	//==========
-	// 주문 삭제 -> 진행중 
-//	@Override
-//	public void deleteOrder(String order_id) throws Exception {
-//		myPageDAO.deleteMyOrder(order_id);
-//	}
+	// 주문 삭제
+	@Override
+	public void deleteOrder(String order_id) throws Exception {
+		paymentDAO.deleteMyOrder(order_id);
+		myPageDAO.deleteMyOrder(order_id);
+	}
 }
 
 

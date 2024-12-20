@@ -34,4 +34,10 @@
             WHERE order_id = #{orderId}
         ]]>
     </select>
+    <delete id="deleteMyOrder" parameterType="String">
+    	<![CDATA[
+        DELETE FROM t_shopping_payment
+        WHERE order_id = #{order_id}
+        ]]>
+    </delete>
 </mapper>

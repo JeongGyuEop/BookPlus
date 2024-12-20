@@ -21,7 +21,7 @@
             #{content},
             #{writer},
             #{password},
-            NOW(),
+            CONVERT_TZ(NOW(), 'UTC', 'Asia/Seoul'),
             #{place_name},
             #{road_address_name},
             #{place_url},

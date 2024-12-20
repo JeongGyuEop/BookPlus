@@ -33,6 +33,17 @@ public class CartServiceImpl  implements CartService{
 		
 //장바구니 페이지에 표시할 장바구니테이블에 저장된 상품 정보를 조회 합니다. 
 		List<CartVO> myCartList=cartDAO.selectCartList(cartVO);
+		// 리스트가 비어 있으면 출력 메시지
+		if (myCartList.isEmpty()) {
+		    System.out.println("장바구니가 비어 있습니다.");
+		} else {
+		    // 장바구니 리스트 출력
+		    System.out.println("장바구니 목록:");
+		    for (CartVO cart : myCartList) {
+		        System.out.println(cart.toString()); // CartVO의 toString() 메서드 호출
+		    }
+		}
+		
 
 //t_shopping_cart(장바구니 테이블)에서 조회한 주문상품 정보들		
 //	CART_ID GOODS_ID	MEMBER_ID	CART_GOODS_QTY		CREDATE

@@ -52,8 +52,9 @@ public class GoodsServiceImpl implements GoodsService {
 
 				for (int j = 1; j <= maxPages; j++) { // 페이지 순회
 					// API URL 동적 생성
+					// 카테고리 날씨 >> 51210, 28465, 8435
 					String requestUrl = String.format(
-							"http://www.aladin.co.kr/ttb/api/ItemList.aspx?ttbkey=%s&querytype=%s&searchtarget=book&start=%d&maxresults=%d&cover=big&categoryid=351&output=xml&inputencoding=utf-8&version=20131101",
+							"http://www.aladin.co.kr/ttb/api/ItemList.aspx?ttbkey=%s&querytype=%s&searchtarget=book&start=%d&maxresults=%d&cover=big&categoryid=28465&output=xml&inputencoding=utf-8&version=20131101",
 							API_KEY, queryType, j, maxResults);
 					System.out.println(requestUrl);
 					// API 호출 및 응답 처리
@@ -174,9 +175,16 @@ public class GoodsServiceImpl implements GoodsService {
 	}
 
 	@Override
-	public List<GoodsVO> getAllGoods(int limit, int offset) throws Exception {
-		return goodsDAO.selectAllGoods(limit, offset);
+	public List<GoodsVO> getAllGoods(String category, int limit, int offset) throws Exception {
+	    // DAO에 전달할 파라미터 구성
+	    Map<String, Object> params = new HashMap<>();
+	    params.put("category", category); // 카테고리 추가
+	    params.put("limit", limit);
+	    params.put("offset", offset);
+	    System.out.println(params);
+	    return goodsDAO.selectAllGoods(params);
 	}
+
 
 	// 상품아이디를 매개변수로 전달 받아 도서상품정보 + 도서이미지정보를 GoodsDAOImpl의 메소드로 조회 명령 하는 메소드
 	public Map goodsDetail(String goods_id) throws Exception {

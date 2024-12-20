@@ -5,6 +5,7 @@
 
 <c:set var="contextPath" value="${pageContext.request.contextPath}" />
 
+<c:set var="isLogOn" value="${sessionScope.isLogOn}" />
 <c:set var="myCartList" value="${sessionScope.cartMap.myCartList}" />
 <c:set var="myGoodsList" value="${sessionScope.cartMap.myGoodsList}" />
 
@@ -115,18 +116,24 @@ function delete_cart_goods(cart_id){
 
 function fn_order_each_goods(goods_id) {
     // 로그인 여부 확인
-    var isLogOn = document.getElementById("isLogOn").value; 
+    var isLogOn = '${isLogOn}'; 
     if (isLogOn === "false" || isLogOn === '') {
         alert("로그인 후 주문이 가능합니다!!!");
+       	return;
     }
 
     // 선택된 수량 확인
-    var order_goods_qty = document.getElementById("order_goods_qty").value;
+    var order_goods_qty = document.getElementById("cart_goods_qty").value;
+    if (!order_goods_qty || isNaN(order_goods_qty) || order_goods_qty <= 0) {
+        alert("유효한 수량을 입력해 주세요.");
+        return; // 함수 실행 종료
+    }
 
     // 폼 생성 및 데이터 추가
+    var contextPath = '${contextPath}';
     var formObj = document.createElement("form");
     formObj.method = "post";
-    formObj.action = "${contextPath}/order/orderEachGoods.do";
+    formObj.action = contextPath + "/order/orderEachGoods.do";
 
     // 폼 데이터 배열
     var formData = [
@@ -149,7 +156,9 @@ function fn_order_each_goods(goods_id) {
     // 폼 제출
     document.body.appendChild(formObj);
     formObj.submit();
-    document.body.removeChild(formObj);
+    setTimeout(function() {
+        document.body.removeChild(formObj);
+    }, 0);
 }
 
 //장바구니 목록 화면의 주문하기 이미지를 클릭했을때.... 호출되는 함수
@@ -219,7 +228,7 @@ function fn_order_all_cart_goods(){
 			<c:choose>
 			    <c:when test="${empty myCartList}">
 			        <tr>
-			            <td colspan=8 class="fixed"><strong>장바구니에 상품이 없습니다.</strong></td>
+			            <td colspan=9 class="fixed"><strong>장바구니에 상품이 없습니다.</strong></td>
 			        </tr>
 			    </c:when>
 			    <c:otherwise>
@@ -238,7 +247,7 @@ function fn_order_all_cart_goods(){
 			                            <img width="75" alt="" src="${item.goods_fileName}" />
 			                        </a>
 			                    </td>
-			                    <td>
+			                    <td width="200px">
 			                        <h2>
 			                            <a href="${contextPath}/goods/goodsDetail.do?goods_id=${item.goods_id}">${item.goods_title}</a>
 			                        </h2>
@@ -248,7 +257,10 @@ function fn_order_all_cart_goods(){
 			                        <strong>
 			                            <fmt:formatNumber value="${item.goods_price * (100 - item.goods_sales_price) / 100}" 
 			                                              type="number" var="discounted_price" />
-			                            ${discounted_price}원(${item.goods_sales_price}% 할인)
+			                            ${discounted_price}원
+			                        </strong><br>
+			                        <strong>
+			                        	(${item.goods_sales_price}% 할인)
 			                        </strong>
 			                    </td>
 			                    <td>
@@ -349,7 +361,8 @@ function fn_order_all_cart_goods(){
 	<br><br> 
 		<a href="javascript:fn_order_all_cart_goods()"> 
 		<img width="75" alt="" src="${contextPath}/resources/image/btn_order_final.jpg"> <!-- 주문하기 -->
-		</a> <a href="#"> <img width="75" alt="" src="${contextPath}/resources/image/btn_shoping_continue.jpg">
+		</a> 
+		<a href="${contextPath}/main/main.do"> <img width="75" alt="" src="${contextPath}/resources/image/btn_shoping_continue.jpg">
 			<!-- 쇼핑 계속하기 -->
 		</a>
 		

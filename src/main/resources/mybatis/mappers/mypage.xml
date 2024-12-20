@@ -130,5 +130,12 @@
         WHERE order_id = #{order_id}
         ]]>
     </update>
+    
+    <delete id="deleteMyOrder" parameterType="String">
+    	<![CDATA[
+        DELETE FROM t_shopping_order
+        WHERE order_id = #{order_id}
+        ]]>
+    </delete>
 
 </mapper>

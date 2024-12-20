@@ -13,6 +13,91 @@
 <meta charset="utf-8">
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script>
+
+function validateForm() {
+    // 아이디 확인
+    var memberId = document.getElementById("_member_id");
+    if (memberId && memberId.value.trim() === "") {
+        alert("아이디를 입력하세요.");
+        memberId.focus();
+        return false;
+    }
+
+    // 비밀번호 확인
+    var password = document.getElementsByName("member_pw")[0];
+    if (password && password.value.trim() === "") {
+        alert("비밀번호를 입력하세요.");
+        password.focus();
+        return false;
+    }
+
+    // 이름 확인
+    var memberName = document.getElementsByName("member_name")[0];
+    if (memberName && memberName.value.trim() === "") {
+        alert("이름을 입력하세요.");
+        memberName.focus();
+        return false;
+    }
+
+    // 휴대폰 번호 확인
+    var phone1 = document.getElementsByName("hp1")[0];
+    var phone2 = document.getElementsByName("hp2")[0];
+    var phone3 = document.getElementsByName("hp3")[0];
+    if (phone1 && phone2 && phone3) {
+        if (phone1.value.trim() === "" || phone2.value.trim() === "" || phone3.value.trim() === "") {
+            alert("휴대폰 번호를 입력하세요.");
+            phone1.focus();
+            return false;
+        }
+        if (isNaN(phone2.value) || isNaN(phone3.value)) {
+            alert("휴대폰 번호는 숫자만 입력해야 합니다.");
+            phone2.focus();
+            return false;
+        }
+    }
+
+    // 이메일 확인
+    var email1 = document.getElementsByName("email1")[0];
+    var email2 = document.getElementsByName("email2")[0];
+    if (email1 && email2) {
+        if (email1.value.trim() === "" || email2.value.trim() === "") {
+            alert("이메일을 입력하세요.");
+            email1.focus();
+            return false;
+        }
+    }
+
+    // 주소 확인
+    var roadAddress = document.getElementById("roadAddress");
+    if (roadAddress && roadAddress.value.trim() === "") {
+        alert("도로명 주소를 입력하세요.");
+        roadAddress.focus();
+        return false;
+    }
+    
+    const smsCheckbox = document.getElementById('smsstsCheckbox');
+    const smsHidden = document.getElementById('smsHidden');
+    const emailCheckbox = document.getElementById('emailstsCheckbox');
+    const emailHidden = document.getElementById('emailHidden');
+
+    // SMS 수신 동의 여부
+    if (smsCheckbox.checked) {
+        smsHidden.disabled = true; // hidden input 비활성화
+    } else {
+        smsHidden.disabled = false; // hidden input 활성화
+    }
+
+    // 이메일 수신 동의 여부
+    if (emailCheckbox.checked) {
+        emailHidden.disabled = true; // hidden input 비활성화
+    } else {
+        emailHidden.disabled = false; // hidden input 활성화
+    }
+    
+    // 모든 유효성 검사를 통과하면 true 반환
+    return true;
+}
+
 function execDaumPostcode() {
 	new daum.Postcode({
 		oncomplete: function(data) {
@@ -138,6 +223,42 @@ function prepareFormData() {
     }
 }
 
+function fn_overlapped(){
+	var _id=$("#_member_id").val();
+	if(_id==''){
+		alert("ID를 입력하세요");
+		return;
+	}
+	$.ajax({
+		type:"post",
+		async:false,
+		url:"${contextPath}/member/overlapped.do",
+		dataType:"text",
+		data: {id:_id},
+		success:function(data,textStatus){
+			if(data=='false'){
+				alert("사용할 수 있는 ID입니다.");
+				$('#btnOverlapped').prop("disabled", true);
+				$('#_member_id').prop("disabled", true);
+				$('#member_id').val(_id);
+			}else{
+				alert("사용할 수 없는 ID입니다.");
+				// 입력 필드 초기화
+				$('#_member_id').val('').focus();
+			}
+		},
+		error:function(data,textStatus){
+			alert("에러가 발생했습니다.");
+		}
+	});
+}
+
+function updateEmailDomain() {
+	var select = document.getElementById('email2Select');
+	var emailInput = document.getElementById('email2Input');
+	emailInput.value = select.value;
+}
+
 </script>
 </head>
 <body>
@@ -145,7 +266,7 @@ function prepareFormData() {
     JSONObject userProfile = (JSONObject) request.getAttribute("userProfile");
 %>
 	<h3>필수입력사항</h3>
-	<form action="${contextPath}/member/addMember.do" method="post" onsubmit="prepareFormData()">
+	<form action="${contextPath}/member/addMember.do" method="post" onsubmit="return validateForm();">>
 	<input type="hidden" name="socialProvider" value="${requestScope.socialProvider}"> 	
 	<div id="detail_table">
 		<table>

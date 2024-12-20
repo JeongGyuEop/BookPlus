@@ -61,13 +61,27 @@ function submitPost(orderId) {
     document.body.removeChild(form);
 }
 </script>
-<c:if test="${message=='cancel_order'}">
-<script>
-window.onload=function(){
-	alert("주문을 취소했습니다.");
-}
-</script>
-</c:if>
+
+<c:choose>
+    <c:when test="${message == 'cancel_order'}">
+        <script>
+        window.onload = function() {
+            alert("주문을 취소했습니다.");
+        }
+        </script>
+    </c:when>
+    <c:when test="${message == 'delete_order'}">
+        <script>
+        window.onload = function() {
+            alert("주문을 삭제했습니다.");
+        }
+        </script>
+    </c:when>
+    <c:otherwise>
+        <!-- 다른 메시지에 대한 처리 필요시 여기에 작성 -->
+    </c:otherwise>
+</c:choose>
+
 </head>
 <body>
 <h1>최근주문내역</h1>
