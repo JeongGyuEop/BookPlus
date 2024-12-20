@@ -13,9 +13,6 @@
         <result property="member_birth_m" column="member_birth_m" />
         <result property="member_birth_d" column="member_birth_d" />
         <result property="member_birth_gn" column="member_birth_gn" />
-        <result property="tel1" column="tel1" />
-        <result property="tel2" column="tel2" />
-        <result property="tel3" column="tel3" />
         <result property="hp1" column="hp1" />
         <result property="hp2" column="hp2" />
         <result property="hp3" column="hp3" />
@@ -31,21 +28,10 @@
         <result property="del_yn" column="del_yn" />
     </resultMap>
 
-
-
-
-<!-- 
-테스트 예시
-예를 들어, chapter = 2이고, pageNum = 3이라면:
-
-시작 위치 = (2-1)*100 + (3-1)*10 = 110
-가져올 데이터 개수 = 10
-결과적으로 LIMIT 110, 10이 적용됩니다.
-
- -->
+    <!-- 테스트 예시 -->
     <select id="listMember" resultMap="memberResult" parameterType="java.util.HashMap">
 	    SELECT * 
-	    FROM T_SHOPPING_MEMBER
+	    FROM t_shopping_member
 	    WHERE DATE_FORMAT(joinDate, '%Y-%m-%d') BETWEEN #{beginDate} AND #{endDate}
 	    <if test="search_type == 'member_id'">
 	        AND member_id = #{search_word}
@@ -57,20 +43,19 @@
 	        AND CONCAT(hp1, hp2, hp3) = #{search_word}
 	    </if>
 	    ORDER BY joinDate DESC
-	    LIMIT (#{chapter}-1)*100 + (#{pageNum}-1)*10, 10;
+	    LIMIT #{pageSection}, 10;
 	</select>
-
 
     <select id="memberDetail" resultMap="memberResult" parameterType="String">
         <![CDATA[
-        SELECT * 
-        FROM T_SHOPPING_MEMBER
+        SELECT *
+        FROM t_shopping_member
         WHERE member_id = #{member_id}
         ]]>
     </select>
 
     <update id="modifyMemberInfo" parameterType="java.util.HashMap">
-        UPDATE T_SHOPPING_MEMBER
+        UPDATE t_shopping_member
         <set>
             <if test="member_pw != '' and member_pw != null">
                 member_pw = #{member_pw},
@@ -87,15 +72,6 @@
             <if test="member_birth_d != '' and member_birth_d != null">
                 member_birth_d = #{member_birth_d},
             </if>
-            <if test="tel1 != '' and tel1 != null">
-                tel1 = #{tel1},
-            </if>
-            <if test="tel2 != '' and tel2 != null">
-                tel2 = #{tel2},
-            </if>
-            <if test="tel3 != '' and tel3 != null">
-                tel3 = #{tel3},
-            </if>
             <if test="hp1 != '' and hp1 != null">
                 hp1 = #{hp1},
             </if>
@@ -104,7 +80,7 @@
             </if>
             <if test="hp3 != '' and hp3 != null">
                 hp3 = #{hp3},
-            </if>
+            </if>   
             <if test="smssts_yn != '' and smssts_yn != null">
                 smssts_yn = #{smssts_yn},
             </if>
@@ -135,4 +111,8 @@
         </set>
         WHERE member_id = #{member_id};
     </update>
+    
+
+    
+    
 </mapper>
