@@ -114,6 +114,26 @@
 			</tbody>
 		</table>
 	</div>
+	<%-- <div>
+		<br><br>
+		<h2>주문고객</h2>
+		<table>
+			<tbody>
+				<tr class="dot_line">
+					<td><h2>이름</h2></td>
+					<td><input type="text" value="${orderer.member_name}" size="15" disabled /></td>
+				</tr>
+				<tr class="dot_line">
+					<td><h2>핸드폰</h2></td>
+					<td><input type="text" value="${orderer.hp1}-${orderer.hp2}-${orderer.hp3}" size="15" disabled /></td>
+				</tr>
+				<tr class="dot_line">
+					<td><h2>이메일</h2></td>
+					<td><input type="text" value="${orderer.email1}@${orderer.email2}" size="15" disabled /></td>
+				</tr>
+			</tbody>
+		</table>
+	</div> --%>
 	<div class="clear"></div>
 	<br><br>
 	<h1>4.결제정보</h1>
