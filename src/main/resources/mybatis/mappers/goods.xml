@@ -23,12 +23,44 @@
         <result property="goods_fileName" column="goods_fileName" />
     </resultMap>
 
-	<select id="selectAllGoods" resultMap="goodsResult">
+<!-- 	<select id="selectAllGoods" resultMap="goodsResult">
 		SELECT * 
 	    FROM t_shopping_goods
 	    ORDER BY goods_credate DESC
 	    LIMIT #{limit} OFFSET #{offset};
-	</select>
+	</select> -->
+<select id="selectAllGoods" resultMap="goodsResult" parameterType="map">
+    SELECT * 
+    FROM t_shopping_goods
+    <where>
+        <if test="category != null and category != ''">
+            <if test="category == '컴퓨터/모바일'">
+                (goods_sort LIKE '%컴퓨터%' OR goods_sort LIKE '%모바일%')
+            </if>
+            <if test="category == '경제/경영'">
+                (goods_sort LIKE '%경제%' OR goods_sort LIKE '%경영%')
+            </if>
+            <if test="category == '예술/대중문화'">
+                (goods_sort LIKE '%예술%' OR goods_sort LIKE '%대중문화%')
+            </if>
+            <if test="category == '대학교재/과학'">
+                (goods_sort LIKE '%대학교재%' OR goods_sort LIKE '%과학%')
+            </if>
+            <if test="category == '자기계발/자격증'">
+                (goods_sort LIKE '%자기계발%' OR goods_sort LIKE '%자격증%')
+            </if>
+            <if test="category == '에세이/인문학'">
+                (goods_sort LIKE '%에세이%' OR goods_sort LIKE '%인문학%')
+            </if>
+            <if test="category == '어린이/만화'">
+                (goods_sort LIKE '%어린이%' OR goods_sort LIKE '%만화%' OR goods_sort LIKE '%좋은 부모%')
+            </if>
+        </if>
+    </where>
+    ORDER BY goods_credate DESC
+    LIMIT #{limit} OFFSET #{offset};
+</select>
+
 
     <!-- 상품 상세 정보 조회 -->
     <select id="selectGoodsDetail" resultMap="goodsResult" parameterType="String">

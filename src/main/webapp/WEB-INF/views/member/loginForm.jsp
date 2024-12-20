@@ -67,32 +67,48 @@
             font-size: 14px;
         }
         .form-group input {
-            width: 100%;
+            width: 95%;
             padding: 8px;
             border: 1px solid #ccc;
             border-radius: 4px;
             font-size: 14px;
         }
         .btn-group {
-            display: flex;
-            justify-content: space-between;
-        }
-        .btn {
-            width: 100%;
-            padding: 10px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 14px;
-        }
-        .btn-primary {
-            background-color: #007bff;
-            color: white;
-        }
-        .btn-secondary {
-            background-color: #6c757d;
-            color: white;
-        }
+        display: flex;
+        justify-content: space-between;
+        gap: 10px; /* 버튼 간격 추가 */
+	    }
+	    .btn-primary {
+	        flex: 1;
+	        text-align: center;
+	        padding: 10px;
+	        background-color: #007bff;
+	        color: white;
+	        border: none;
+	        border-radius: 4px;
+	        cursor: pointer;
+	    }
+	    .btn-secondary {
+	        flex: 1;
+	        text-align: center;
+	        padding: 10px;
+	        background-color: white; /* 회원가입 버튼 색상 */
+	        color: #007bff;
+	        border: none;
+	        border-radius: 4px;
+	        cursor: pointer;
+	    }
+        
+        .btn-link {
+	        flex: 1;
+	        text-align: center;
+	        padding: 10px;
+	        color: #007bff;
+	        border: 1px solid #007bff;
+	        border-radius: 4px;
+	        cursor: pointer;
+    	}
+    	
         .social-login {
             text-align: center;
             margin-top: 10px;
@@ -101,16 +117,6 @@
             width: 40px;
             height: 40px;
             margin: 0 3px;
-        }
-        .links {
-            text-align: center;
-            margin-top: 20px;
-            font-size: 14px;
-        }
-        .links a {
-            color: #007bff;
-            text-decoration: none;
-            margin: 0 5px;
         }
     </style>
 </head>
@@ -126,9 +132,11 @@
                 <label for="member_pw">비밀번호</label>
                 <input type="password" id="member_pw" name="member_pw" placeholder="비밀번호를 입력하세요">
             </div>
-            <div class="btn-group">
-                <button type="submit" class="btn btn-primary">로그인</button>
-            </div>
+           <div class="btn-group">
+			    <button type="submit" class="btn btn-primary">로그인</button>
+			    <button onclick="location.href='${contextPath}/member/memberForm.do'" type="button" class="btn-secondary btn-link">회원가입</button>
+			</div>
+
         </form>
         <br><br><hr>
         <div class="social-login">
@@ -140,12 +148,12 @@
                 <img src="${contextPath}/resources/image/kakao_login_simple/kakao_login_circle.png" alt="카카오 로그인">
             </a>
         </div>
-        <div class="links">
+        <%-- div class="links">
             <a href="#">아이디 찾기</a> | 
             <a href="#">비밀번호 찾기</a> | 
             <a href="${contextPath}/member/addMember.do">회원가입</a> | 
             <a href="#">고객 센터</a>
-        </div>
+        </div> --%>
     </div>
 </body>
 </html>
