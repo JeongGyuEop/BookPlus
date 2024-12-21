@@ -1,53 +1,39 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="mapper.mypage">
     <!-- 리절트 맵 정의 -->
-    <resultMap id="orderGoodsResult" type="orderVO">
-        <result property="order_id" column="order_id" />
-        <result property="member_id" column="member_id" />
-        <result property="goods_id" column="goods_id" />
-        <result property="goods_title" column="goods_title" />
-        <result property="goods_sales_price" column="goods_sales_price" />
-        <result property="order_total_price" column="order_total_price" />
-        <result property="order_goods_qty" column="order_goods_qty" />
-        
-        <result property="orderer_name" column="orderer_name" />
-        <result property="receiver_name" column="receiver_name" />
-        <result property="receiver_hp1" column="receiver_hp1" />
-        <result property="receiver_hp2" column="receiver_hp2" />
-        <result property="receiver_hp3" column="receiver_hp3" />
-        
-        <result property="receiver_tel1" column="receiver_tel1" />
-        <result property="receiver_tel2" column="receiver_tel2" />
-        <result property="receiver_tel3" column="receiver_tel3" />
-        <result property="delivery_address" column="delivery_address" />
-        <result property="delivery_message" column="delivery_message" />
-        
-        <result property="delivery_method" column="delivery_method" />
-        <result property="gift_wrapping" column="gift_wrapping" />
-        <result property="pay_method" column="pay_method" />
-        <result property="card_com_name" column="card_com_name" />
-        <result property="card_pay_month" column="card_pay_month" />
-        
-        <result property="pay_orderer_hp_num" column="pay_orderer_hp_num" />
-        <result property="pay_order_time" column="pay_order_time" />
-        <result property="delivery_state" column="delivery_state" />
-        <result property="final_total_price" column="final_total_price" />
-        <result property="goods_qty" column="goods_qty" />
-        
-        <result property="goods_fileName" column="goods_fileName" />
-    </resultMap> 
+    <resultMap id="orderGoodsResult" type="OrderVO">
+        <result property="orderSeqNum" column="order_seq_num" />
+        <result property="orderId" column="order_id" />
+        <result property="orderMemberId" column="order_member_id" />
+        <result property="orderMemberName" column="order_member_name" />
+        <result property="goodsId" column="goods_id" />
+        <result property="goodsTitle" column="goods_title" />
+        <result property="orderGoodsQty" column="order_goods_qty" />
+        <result property="receiverName" column="receiver_name" />
+        <result property="receiverHp1" column="receiver_hp1" />
+        <result property="receiverHp2" column="receiver_hp2" />
+        <result property="receiverHp3" column="receiver_hp3" />
+        <result property="deliveryAddress" column="delivery_address" />
+        <result property="deliveryMessage" column="delivery_message" />
+        <result property="deliveryMethod" column="delivery_method" />
+        <result property="deliveryState" column="delivery_state" />
+        <result property="totalPrice" column="total_price" />
+        <result property="payMethod" column="pay_method" />
+        <result property="paymentStatus" column="payment_status" />
+        <result property="orderDate" column="order_date" />
+	</resultMap>
 
-    <!-- 로그인한 회원의 아이디를 이용해 장바구니 테이블에 담아 구매한 상품 정보들을 최근에 주문한 일자를 기준으로 내림차순 정렬하여 조회 -->
+    <!-- 로그인한 회원의 아이디로 주문 정보 조회 -->
     <select id="selectMyOrderGoodsList" resultMap="orderGoodsResult" parameterType="String">
         <![CDATA[
         SELECT * 
-        FROM T_SHOPPGING_ORDER
-        WHERE member_id = #{member_id}
-        ORDER BY pay_order_time DESC
+        FROM t_shopping_order
+        WHERE order_member_id = #{member_id}
+        ORDER BY order_seq_num DESC
         ]]>
     </select>
     
@@ -55,7 +41,7 @@
     <select id="selectMyOrderInfo" resultMap="orderGoodsResult" parameterType="String">
         <![CDATA[
         SELECT * 
-        FROM T_SHOPPGING_ORDER
+        FROM t_shopping_order
         WHERE order_id = #{order_id}
         ]]>
     </select>
@@ -64,8 +50,8 @@
     <select id="selectMyOrderHistoryList" resultMap="orderGoodsResult" parameterType="java.util.Map">
         <![CDATA[
         SELECT * 
-        FROM T_SHOPPGING_ORDER
-        WHERE member_id = #{member_id}
+        FROM t_shopping_order
+        WHERE order_member_id = #{orderMemberId}
         AND DATE_FORMAT(pay_order_time, '%Y-%m-%d') BETWEEN #{beginDate} AND #{endDate}
         ORDER BY pay_order_time DESC
         ]]>
@@ -73,7 +59,7 @@
     
     <!-- 회원 정보 업데이트 -->
     <update id="updateMyInfo" parameterType="java.util.HashMap">
-        UPDATE T_SHOPPING_MEMBER
+        UPDATE t_shopping_member
         <set>
             <if test="member_pw != '' and member_pw != null">
                 member_pw = #{member_pw},
@@ -89,15 +75,6 @@
             </if>
             <if test="member_birth_d != '' and member_birth_d != null">
                 member_birth_d = #{member_birth_d},
-            </if>
-            <if test="tel1 != '' and tel1 != null">
-                tel1 = #{tel1},
-            </if>
-            <if test="tel2 != '' and tel2 != null">
-                tel2 = #{tel2},
-            </if>
-            <if test="tel3 != '' and tel3 != null">
-                tel3 = #{tel3},
             </if>
             <if test="hp1 != '' and hp1 != null">
                 hp1 = #{hp1},
@@ -139,16 +116,26 @@
     <!-- 회원 상세 정보 조회 -->
     <select id="selectMyDetailInfo" resultType="memberVO" parameterType="String">
         <![CDATA[
-        SELECT * 
-        FROM T_SHOPPING_MEMBER
-        WHERE member_id = #{member_id}
+        SELECT *
+        FROM t_shopping_member
+        WHERE order_member_id = #{orderMemberId}
         ]]>
     </select>
     
     <!-- 주문 취소 처리 -->
     <update id="updateMyOrderCancel" parameterType="String">
-        UPDATE T_SHOPPGING_ORDER
+        <![CDATA[
+        UPDATE t_shopping_order
         SET delivery_state = 'cancel_order'
         WHERE order_id = #{order_id}
+        ]]>
     </update>
+    
+    <delete id="deleteMyOrder" parameterType="String">
+    	<![CDATA[
+        DELETE FROM t_shopping_order
+        WHERE order_id = #{order_id}
+        ]]>
+    </delete>
+
 </mapper>
