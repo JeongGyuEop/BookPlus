@@ -266,7 +266,7 @@ function updateEmailDomain() {
     JSONObject userProfile = (JSONObject) request.getAttribute("userProfile");
 %>
 	<h3>필수입력사항</h3>
-	<form action="${contextPath}/member/addMember.do" method="post" onsubmit="return validateForm();">>
+	<form action="${contextPath}/member/addMember.do" method="post" onsubmit="return validateForm();">
 	<input type="hidden" name="socialProvider" value="${requestScope.socialProvider}"> 	
 	<div id="detail_table">
 		<table>
