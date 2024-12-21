@@ -35,7 +35,7 @@ public class MemberServiceImpl implements MemberService {
 	private static final Map<String, String> API_CONFIG = Map.of(
         "kakao_token_url", "https://kauth.kakao.com/oauth/token",
         "kakao_user_info_url", "https://kapi.kakao.com/v2/user/me",
-        "kakao_client_id", "f6d8eb0ebbe1cc122b97b3f7be2a2b1a",
+        "kakao_client_id", "279e4cf54e1d0711b4748cd1ffb04c56",
         "kakao_redirect_uri", "http://localhost:8090/BookPlus/member/kakao/callback",
         "naver_token_url", "https://nid.naver.com/oauth2.0/token",
         "naver_user_info_url", "https://openapi.naver.com/v1/nid/me",
