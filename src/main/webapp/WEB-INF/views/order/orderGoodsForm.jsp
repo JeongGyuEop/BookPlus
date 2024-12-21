@@ -579,10 +579,13 @@
 
 	
 	<!-- 결제하기 버튼 -->
-	<button onclick="requestPay()">결제하기</button>
+	<a href="javascript:requestPay();">
+	    <img width="100" height="30" alt="" src="${contextPath}/resources/image/btn_gulje.jpg">
+	</a>
+
 	<!-- 쇼핑 계속 하기 -->
 	<a href="${contextPath}/main/main.do">
-	    <img width="75" alt="" src="${contextPath}/resources/image/btn_shoping_continue.jpg">
+	    <img width="100" height="30" alt="" src="${contextPath}/resources/image/btn_shoping_continue.jpg">
 	</a>
 		
 </body>
