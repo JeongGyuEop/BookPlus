@@ -6,24 +6,25 @@
 <mapper namespace="mapper.mypage">
     <!-- 리절트 맵 정의 -->
     <resultMap id="orderGoodsResult" type="OrderVO">
-	    <result property="orderId" column="order_id" />
-	    <result property="orderMemberId" column="member_id" />
-	    <result property="goodsId" column="goods_id" />
-	    <result property="goodsTitle" column="goods_title" />
-	    <result property="orderGoodsQty" column="order_goods_qty" />
-	    
-	    <result property="receiverName" column="receiver_name" />
-	    <result property="receiverHp1" column="receiver_hp1" />
-	    <result property="receiverHp2" column="receiver_hp2" />
-	    <result property="receiverHp3" column="receiver_hp3" />
-	    
-	    <result property="deliveryAddress" column="delivery_address" />
-	    <result property="deliveryMessage" column="delivery_message" />
-	    <result property="deliveryMethod" column="delivery_method" />
-	    <result property="payMethod" column="pay_method" />
-	    <result property="paymentStatus" column="payment_status" />
-	    <result property="totalPrice" column="total_price" />
-	    <result property="orderDate" column="pay_order_time" />
+        <result property="orderSeqNum" column="order_seq_num" />
+        <result property="orderId" column="order_id" />
+        <result property="orderMemberId" column="order_member_id" />
+        <result property="orderMemberName" column="order_member_name" />
+        <result property="goodsId" column="goods_id" />
+        <result property="goodsTitle" column="goods_title" />
+        <result property="orderGoodsQty" column="order_goods_qty" />
+        <result property="receiverName" column="receiver_name" />
+        <result property="receiverHp1" column="receiver_hp1" />
+        <result property="receiverHp2" column="receiver_hp2" />
+        <result property="receiverHp3" column="receiver_hp3" />
+        <result property="deliveryAddress" column="delivery_address" />
+        <result property="deliveryMessage" column="delivery_message" />
+        <result property="deliveryMethod" column="delivery_method" />
+        <result property="deliveryState" column="delivery_state" />
+        <result property="totalPrice" column="total_price" />
+        <result property="payMethod" column="pay_method" />
+        <result property="paymentStatus" column="payment_status" />
+        <result property="orderDate" column="order_date" />
 	</resultMap>
 
     <!-- 로그인한 회원의 아이디로 주문 정보 조회 -->
@@ -31,7 +32,7 @@
         <![CDATA[
         SELECT * 
         FROM t_shopping_order
-        WHERE order_member_id = #{orderMemberId}
+        WHERE order_member_id = #{member_id}
         ORDER BY order_seq_num DESC
         ]]>
     </select>
@@ -129,5 +130,12 @@
         WHERE order_id = #{order_id}
         ]]>
     </update>
+    
+    <delete id="deleteMyOrder" parameterType="String">
+    	<![CDATA[
+        DELETE FROM t_shopping_order
+        WHERE order_id = #{order_id}
+        ]]>
+    </delete>
 
 </mapper>

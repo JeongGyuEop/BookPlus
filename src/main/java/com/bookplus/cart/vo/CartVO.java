@@ -11,6 +11,14 @@ public class CartVO {
 	private int cart_goods_qty;
 	private String creDate;
 	
+	@Override
+	public String toString() {
+	    return "CartVO [cart_id=" + cart_id + 
+	           ", goods_id=" + goods_id + 
+	           ", member_id=" + member_id + 
+	           ", cart_goods_qty=" + cart_goods_qty + 
+	           ", creDate=" + creDate + "]";
+	}
 	
 	public int getCart_id() {
 		return cart_id;

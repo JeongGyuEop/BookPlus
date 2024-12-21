@@ -171,6 +171,23 @@ public class AdminMemberControllerImpl extends BaseController  implements AdminM
 		return mav;
 		
 	}
+	@RequestMapping(value="/deleteInfo.do" ,method={RequestMethod.POST})
+	public ModelAndView deleteInfo(HttpServletRequest request, HttpServletResponse response)  throws Exception {
+		ModelAndView mav = new ModelAndView();
+		HashMap<String,String> memberMap=new HashMap<String,String>();
+		String member_id=request.getParameter("member_id");
+		String del_yn=request.getParameter("del_yn");
+		System.out.println(member_id);
+		System.out.println(del_yn);
+		memberMap.put("del_yn", del_yn);
+		memberMap.put("member_id", member_id);
+		
+		adminMemberService.modifyMemberInfo(memberMap);
+		mav.setViewName("redirect:/member/logout.do");
+		return mav;
+		
+	}
+		
 
 	
 }

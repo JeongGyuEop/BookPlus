@@ -41,11 +41,19 @@ request.setCharacterEncoding("UTF-8");
 <div id="moreButton" style="text-align: center;">
     <button id="loadMore" onclick="loadMoreGoods()" class="more-button">more</button>
 </div>
+
 <style>
+	#moreButton {
+		margin: 50px auto;
+        width: 100%; /* 너비 */
+        height: 50px; /* 높이 */
+		display: inline-block;
+		
+	}
     /* 버튼 크기 및 스타일 설정 */
     .more-button {
-        width: 121px; /* 너비 */
-        height: 154px; /* 높이 */
+        width: 100%; /* 너비 */
+        height: 50px; /* 높이 */
         background-color: #f5f5f5; /* 배경색 */
         border: 1px solid #ccc; /* 테두리 */
         border-radius: 4px; /* 모서리 둥글게 */
@@ -65,7 +73,7 @@ request.setCharacterEncoding("UTF-8");
 </style>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-	/* $(document).ready(function() {
+	 /* $(document).ready(function() {
 		console.log("updating");
 		// 페이지 로딩 후 DB 갱신을 위한 AJAX 요청
 		$.ajax({
@@ -75,11 +83,11 @@ request.setCharacterEncoding("UTF-8");
 		    success: function(response) {
 		        console.log(response.message);
 		    },
-		    error: function(xhr, status, error) {
+		    error: function(xhr, status, error) {	
 		        console.error("DB 갱신 실패:", error);
 		    }
 		});
-	}); */
+	});  */
     let currentPage = 1; // 현재 페이지 번호
     const contextPath = "${contextPath}";
 
@@ -91,7 +99,7 @@ request.setCharacterEncoding("UTF-8");
 
         // AJAX 요청으로 다음 페이지 데이터를 불러옴
         $.ajax({
-            url: contextPath + "/main/main.do", // 컨트롤러 URL
+            url: contextPath + "/main/main.do?category=${selectedCategory}", // 컨트롤러 URL
             type: "GET",
             data: { page: currentPage }, // 요청 데이터: 페이지 번호
             success: function (response) {
@@ -104,7 +112,7 @@ request.setCharacterEncoding("UTF-8");
                 $('#goodsContainer').append(newBooks);
 
                 // 데이터 개수가 15개 미만이면 더 이상 불러올 데이터가 없음
-                if (doc.querySelectorAll('.book').length < 15) {
+                if (doc.querySelectorAll('.book').length < 12) {
                     $('#moreButton').html('더 이상 상품이 없습니다.');
                 }
             },

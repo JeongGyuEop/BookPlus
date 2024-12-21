@@ -13,6 +13,91 @@
 <meta charset="utf-8">
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script>
+
+function validateForm() {
+    // 아이디 확인
+    var memberId = document.getElementById("_member_id");
+    if (memberId && memberId.value.trim() === "") {
+        alert("아이디를 입력하세요.");
+        memberId.focus();
+        return false;
+    }
+
+    // 비밀번호 확인
+    var password = document.getElementsByName("member_pw")[0];
+    if (password && password.value.trim() === "") {
+        alert("비밀번호를 입력하세요.");
+        password.focus();
+        return false;
+    }
+
+    // 이름 확인
+    var memberName = document.getElementsByName("member_name")[0];
+    if (memberName && memberName.value.trim() === "") {
+        alert("이름을 입력하세요.");
+        memberName.focus();
+        return false;
+    }
+
+    // 휴대폰 번호 확인
+    var phone1 = document.getElementsByName("hp1")[0];
+    var phone2 = document.getElementsByName("hp2")[0];
+    var phone3 = document.getElementsByName("hp3")[0];
+    if (phone1 && phone2 && phone3) {
+        if (phone1.value.trim() === "" || phone2.value.trim() === "" || phone3.value.trim() === "") {
+            alert("휴대폰 번호를 입력하세요.");
+            phone1.focus();
+            return false;
+        }
+        if (isNaN(phone2.value) || isNaN(phone3.value)) {
+            alert("휴대폰 번호는 숫자만 입력해야 합니다.");
+            phone2.focus();
+            return false;
+        }
+    }
+
+    // 이메일 확인
+    var email1 = document.getElementsByName("email1")[0];
+    var email2 = document.getElementsByName("email2")[0];
+    if (email1 && email2) {
+        if (email1.value.trim() === "" || email2.value.trim() === "") {
+            alert("이메일을 입력하세요.");
+            email1.focus();
+            return false;
+        }
+    }
+
+    // 주소 확인
+    var roadAddress = document.getElementById("roadAddress");
+    if (roadAddress && roadAddress.value.trim() === "") {
+        alert("도로명 주소를 입력하세요.");
+        roadAddress.focus();
+        return false;
+    }
+    
+    const smsCheckbox = document.getElementById('smsstsCheckbox');
+    const smsHidden = document.getElementById('smsHidden');
+    const emailCheckbox = document.getElementById('emailstsCheckbox');
+    const emailHidden = document.getElementById('emailHidden');
+
+    // SMS 수신 동의 여부
+    if (smsCheckbox.checked) {
+        smsHidden.disabled = true; // hidden input 비활성화
+    } else {
+        smsHidden.disabled = false; // hidden input 활성화
+    }
+
+    // 이메일 수신 동의 여부
+    if (emailCheckbox.checked) {
+        emailHidden.disabled = true; // hidden input 비활성화
+    } else {
+        emailHidden.disabled = false; // hidden input 활성화
+    }
+    
+    // 모든 유효성 검사를 통과하면 true 반환
+    return true;
+}
+
 function execDaumPostcode() {
 	new daum.Postcode({
 		oncomplete: function(data) {
@@ -68,7 +153,6 @@ function execDaumPostcode() {
 	    }
 	  }).open(); // 팝업 창 열기 (기본 동작으로 닫힘)
 }
-
 
 //아이디 중복 확인
 function fn_overlapped(){
@@ -159,6 +243,8 @@ function fn_overlapped(){
 				$('#member_id').val(_id);
 			}else{
 				alert("사용할 수 없는 ID입니다.");
+				// 입력 필드 초기화
+				$('#_member_id').val('').focus();
 			}
 		},
 		error:function(data,textStatus){
@@ -173,22 +259,6 @@ function updateEmailDomain() {
 	emailInput.value = select.value;
 }
 
-function prepareFormData() {
-	const smsCheckbox = document.getElementById('smsstsCheckbox');
-	const emailCheckbox = document.getElementById('emailstsCheckbox');
-
-	if (smsCheckbox.checked) {
-		document.getElementById('smsHidden').disabled = true;
-	} else {
-		document.getElementById('smsHidden').disabled = false;
-	}
-
-	if (emailCheckbox.checked) {
-		document.getElementById('emailHidden').disabled = true;
-	} else {
-		document.getElementById('emailHidden').disabled = false;
-	}
-}
 </script>
 </head>
 <body>
@@ -196,7 +266,7 @@ function prepareFormData() {
     JSONObject userProfile = (JSONObject) request.getAttribute("userProfile");
 %>
 	<h3>필수입력사항</h3>
-	<form action="${contextPath}/member/addMember.do" method="post" onsubmit="prepareFormData()">
+	<form action="${contextPath}/member/addMember.do" method="post" onsubmit="return validateForm();">>
 	<input type="hidden" name="socialProvider" value="${requestScope.socialProvider}"> 	
 	<div id="detail_table">
 		<table>
@@ -220,7 +290,7 @@ function prepareFormData() {
 		        </c:choose>
 				<tr class="dot_line">
 					<td class="fixed_join">비밀번호</td>
-					<td><input name="member_pw" type="password" size="20" /></td>
+					<td><input id="member_pw" name="member_pw" type="password" size="20" /></td>
 				</tr>
 				<tr class="dot_line">
 					<td class="fixed_join">이름</td>
@@ -229,7 +299,7 @@ function prepareFormData() {
 						<td><input type="text" name="member_name" value="${requestScope.name}"  readonly style="color:gray;"/></td> 
 		            </c:when>
 		            <c:otherwise>
-						<td><input type="text" name="member_name" size="20" /></td>
+						<td><input id="member_name" type="text" name="member_name" size="20" /></td>
 		            </c:otherwise>
 		        </c:choose>
 				</tr>
@@ -238,12 +308,12 @@ function prepareFormData() {
 					 <td>
 				        <c:choose>
 				            <c:when test="${not empty requestScope.gender}">
-				                <input type="radio" name="member_gender" value="female" 
+				                <input type="radio" id="member_gender" name="member_gender" value="female" 
 				                       <c:if test="${requestScope.gender == '102'}">checked</c:if> disabled />여성
 				                <span style="padding-left:120px"></span>
-				                <input type="radio" name="member_gender" value="male" 
+				                <input type="radio" id="member_gender" name="member_gender" value="male" 
 				                       <c:if test="${requestScope.gender == '101'}">checked</c:if> disabled />남성
-				                <input type="hidden" name="member_gender" value="${requestScope.gender}" />
+				                <input type="hidden" id="member_gender" name="member_gender" value="${requestScope.gender}" />
 				            </c:when>
 				
 				            <c:otherwise>
@@ -260,13 +330,13 @@ function prepareFormData() {
 				        <!-- 연도 -->
 				        <c:choose>
 				            <c:when test="${not empty requestScope.birthyear}">
-				                <input type="text" name="member_birth_y" 
+				                <input type="text" name="member_birth_y" id="member_birth_y"
 				                       value="${requestScope.birthyear}" 
 				                       readonly 
 				                       style="font-size:12px; color:gray; width:50px;" />년
 				            </c:when>
 				            <c:otherwise>
-				                <select name="member_birth_y" style="font-size:12px; color:gray; width:60px;">
+				                <select name="member_birth_y", style="font-size:12px; color:gray; width:60px;">
 				                    <c:forEach var="year" begin="1920" end="2020">
 				                        <option value="${year}" 
 				                                <c:if test="${year == 1980}">selected</c:if>>${year}</option>
@@ -278,7 +348,7 @@ function prepareFormData() {
 				        <!-- 월 -->
 				        <c:choose>
 				            <c:when test="${not empty requestScope.birthday}">
-				                <input type="text" name="member_birth_m" 
+				                <input type="text" name="member_birth_m" id="member_birth_m"
 				                       value="${requestScope.birthday.substring(0, 2)}" 
 				                       readonly 
 				                       style="font-size:12px; color:gray; width:30px;" />월
@@ -296,7 +366,7 @@ function prepareFormData() {
 				        <!-- 일 -->
 				        <c:choose>
 				            <c:when test="${not empty requestScope.birthday}">
-				                <input type="text" name="member_birth_d" 
+				                <input type="text" name="member_birth_d" id="member_birth_d"
 				                       value="${requestScope.birthday.substring(2, 4)}" 
 				                       readonly 
 				                       style="font-size:12px; color:gray; width:30px;" />일
@@ -316,13 +386,13 @@ function prepareFormData() {
 				        <!-- 양력/음력 -->
 				        <c:choose>
 				            <c:when test="${not empty requestScope.birth_gn}">
-				                <input type="radio" name="member_birth_gn" 
+				                <input type="radio" name="member_birth_gn" id="member_birth_gn"
 				                       value="2" 
 				                       <c:if test="${requestScope.birth_gn == '2'}">checked</c:if> 
 				                       disabled 
 				                       style="font-size:12px; color:gray;" />양력
 				                <span style="padding-left:20px;"></span>
-				                <input type="radio" name="member_birth_gn" 
+				                <input type="radio" name="member_birth_gn" id="member_birth_gn"
 				                       value="1" 
 				                       <c:if test="${request.birth_gn == '1'}">checked</c:if> 
 				                       disabled 
@@ -349,7 +419,7 @@ function prepareFormData() {
 				            </c:when>
 				            
 				            <c:otherwise>
-				                <select name="hp1">
+				                <select name="hp1" id="hp1">
 				                    <option>없음</option>
 				                    <option value="010" selected>010</option>
 				                    <option value="011">011</option>
@@ -358,7 +428,7 @@ function prepareFormData() {
 				                    <option value="018">018</option>
 				                    <option value="019">019</option>
 				                </select> - 
-				                <input size="10px" type="text" name="hp2"> - <input size="10px" type="text" name="hp3">
+				                <input size="10px" type="text" name="hp2" id="hp2"> - <input size="10px" type="text" name="hp3" id="hp3">
 				            </c:otherwise>
 				        </c:choose>
 				        <br><br>
@@ -378,9 +448,9 @@ function prepareFormData() {
 				            </c:when>
 				
 				            <c:otherwise>
-				                <input size="10px" type="text" name="email1" /> @ 
-				                <input size="10px" type="text" name="email2" /> 
-				                <select name="email2" onChange="" title="직접입력">
+				                <input size="10px" type="text" name="email1" id="email1" /> @ 
+				                <input size="10px" type="text" name="email2" id="email2Input" /> 
+				                <select id="email2Select" name="email2Select" onChange="updateEmailDomain()" title="직접입력">
 				                    <option value="non">직접입력</option>
 				                    <option value="hanmail.net">hanmail.net</option>
 				                    <option value="naver.com">naver.com</option>
@@ -423,12 +493,13 @@ function prepareFormData() {
 		<table align=center>
 		<tr >
 			<td >
-				<input type="submit"  value="회원 가입">
+				<input type="submit" value="회원 가입">
 				<input  type="reset"  value="다시입력">
 			</td>
 		</tr>
 	</table>
 </div>
 </form>
+
 </body>
 </html>

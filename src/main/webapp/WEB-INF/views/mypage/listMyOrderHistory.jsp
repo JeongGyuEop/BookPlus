@@ -20,14 +20,14 @@ function search_order_history(fixedSearchPeriod){
 	formObj.submit();
 }
 
-function fn_cancel_order(order_id){
+function fn_cancel_order(orderId){
 	var answer = confirm("주문을 취소하시겠습니까?");
 	if(answer==true){
 		var formObj = document.createElement("form");
-		var i_order_id = document.createElement("input");
-		i_order_id.name="order_id";
-		i_order_id.value=order_id;
-		formObj.appendChild(i_order_id);
+		var i_orderId = document.createElement("input");
+		i_orderId.name="orderId";
+		i_orderId.value=orderId;
+		formObj.appendChild(i_orderId);
 		document.body.appendChild(formObj);
 		formObj.method="post";
 		formObj.action="${contextPath}/mypage/cancelMyOrder.do";
@@ -146,15 +146,15 @@ function fn_cancel_order(order_id){
 	 <c:otherwise>
      <c:forEach var="item" items="${myOrderHistList}" varStatus="i">
         <c:choose>
-          <c:when test="${item.order_id != pre_order_id}">
+          <c:when test="${item.orderId != pre_orderId}">
             <tr>
-				<td><a href="${contextPath}/mypage/myOrderDetail.do?order_id=${item.order_id}"><strong>${item.order_id}</strong></a></td>
-				<td><strong>${item.pay_order_time}</strong></td>
+				<td><a href="${contextPath}/mypage/myOrderDetail.do?orderId=${item.orderId}"><strong>${item.orderId}</strong></a></td>
+				<td><strong>${item.orderDate}</strong></td>
 				<td>
 				  <strong>
 				  <c:forEach var="item2" items="${myOrderHistList}" varStatus="j">
-				    <c:if test="${item.order_id == item2.order_id}">
-				      <a href="${contextPath}/goods/goodsDetail.do?goods_id=${item2.goods_id}">${item2.goods_title}</a><br>
+				    <c:if test="${item.orderId == item2.orderId}">
+				      <a href="${contextPath}/goods/goodsDetail.do?goodsId=${item2.goodsId}">${item2.goodsTitle}</a><br>
 				    </c:if>
 				  </c:forEach>
 				  </strong>
@@ -162,8 +162,8 @@ function fn_cancel_order(order_id){
 				<td>
 				   <strong>
 				   <c:forEach var="item2" items="${myOrderHistList}" varStatus="j">
-				     <c:if test="${item.order_id == item2.order_id}">
-				       ${item.goods_sales_price*item.order_goods_qty}원/${item.order_goods_qty}<br>
+				     <c:if test="${item.orderId == item2.orderId}">
+				       ${item.goods_sales_price*item.orderGoodsQty}원/${item.orderGoodsQty}<br>
 				     </c:if>
 				   </c:forEach>
 				   </strong>
@@ -184,15 +184,15 @@ function fn_cancel_order(order_id){
 				<td>
 			     <c:choose>
 			       <c:when test="${item.delivery_state=='delivery_prepared'}">
-			         <input type="button" onClick="fn_cancel_order('${item.order_id}')" value="주문취소"/>
+			         <input type="button" onClick="fn_cancel_order('${item.orderId}')" value="주문취소"/>
 			       </c:when>
 			       <c:otherwise>
-			         <input type="button" onClick="fn_cancel_order('${item.order_id}')" value="주문취소" disabled/>
+			         <input type="button" onClick="fn_cancel_order('${item.orderId}')" value="주문취소" disabled/>
 			       </c:otherwise>
 			     </c:choose>
 			    </td>
 			</tr>
-			<c:set var="pre_order_id" value="${item.order_id}"/>
+			<c:set var="pre_orderId" value="${item.orderId}"/>
 		  </c:when>
 		</c:choose>
 	 </c:forEach>

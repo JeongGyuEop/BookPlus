@@ -36,6 +36,7 @@ public class MainController extends BaseController {
 	// 메인화면 중앙에 보여줄 베스트셀러, 신간, 스테디 셀러를 조회한후  Map에 저장하여  JSP로 전달합니다.
 	@RequestMapping(value= "/main/main.do" ,method={RequestMethod.POST,RequestMethod.GET})
 	public ModelAndView main( @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+							  @RequestParam(value = "category", required = false) String category, // category 파라미터 추가
 							  Model model, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		
 		//세션영역에 side_menu속성값 user를 저장 해 놓으면
@@ -44,12 +45,15 @@ public class MainController extends BaseController {
 		HttpSession session = request.getSession();
 		session.setAttribute("side_menu", "user");
 		
-		int limit = 15;  // 페이지당 15개
+		int limit = 12;  // 페이지당 15개
 	    int offset = (page - 1) * limit; // 시작 위치
-	    
-	    List<GoodsVO> goodsList = goodsService.getAllGoods(limit, offset);
+	    System.out.println(category);
+	    // category를 그대로 Service로 전달
+	    List<GoodsVO> goodsList = goodsService.getAllGoods(category, limit, offset);
+
 	    model.addAttribute("goodsList", goodsList);
 	    model.addAttribute("currentPage", page);
+	    model.addAttribute("selectedCategory", category); // 선택된 카테고리 전달
 	    session.setAttribute("goodsList", goodsList);
 	    
 	 // View 설정
@@ -58,6 +62,7 @@ public class MainController extends BaseController {
 	    mav.setViewName(viewName);
 	    mav.addObject("goodsList", goodsList);
 	    mav.addObject("currentPage", page);
+	    mav.addObject("selectedCategory", category); // View로 선택된 카테고리 전달
 
 	    return mav;
 	}

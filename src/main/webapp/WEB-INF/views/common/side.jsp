@@ -4,6 +4,7 @@
 %>
 <%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<% String contextPath = request.getContextPath(); %>
 
 <c:set var="contextPath" value="${pageContext.request.contextPath}" />
 <link rel="stylesheet" type="text/css" href="<c:url value='/resources/css/horoscope.css' />">
@@ -22,22 +23,17 @@
 	</c:when>
 	<%-- 일반 계정으로 로그인 했을 경우 메인화면의 왼쪽 사이드 영역!! 일반 사용자를 위한 메뉴 항목 표시 --%>
 	<c:when test="${sessionScope.side_menu=='my_page' }">
-		<li>
+		<%-- <li>
 			<h3>주문내역</h3>
 			<ul>
 				<li><a href="${contextPath}/mypage/listMyOrderHistory.do">주문내역/배송 조회</a></li>
-				<li><a href="#">반품/교환 신청 및 조회</a></li>
-				<li><a href="#">취소 주문 내역</a></li>
-				<li><a href="#">세금 계산서</a></li>
 			</ul>
-		</li>
+		</li> --%>
 		<li>
 			<h3>정보내역</h3>
 			<ul>
-				<li><a href="${contextPath}/mypage/myDetailInfo.do">회원정보관리</a></li>
-				<li><a href="#">나의 주소록</a></li>
-				<li><a href="#">개인정보 동의내역</a></li>
-				<li><a href="#">회원탈퇴</a></li>
+				<li><a href="${contextPath}/mypage/myInfoModify.do">회원정보관리</a></li>
+				<li><a href="${contextPath}/mypage/deleteInfo.do">회원탈퇴</a></li>
 			</ul>
 		</li>
 	</c:when>
@@ -47,12 +43,13 @@
 		<li>
 			<h3>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;국내외 도서</h3>
 			<ul>
-				<li><a href="${contextPath}/goods/goodsList.do">IT/인터넷</a></li>
-				<li><a href="#">경제/경영</a></li>
-				<li><a href="#">대학교재</a></li>
-				<li><a href="#">자기계발</a></li>
-				<li><a href="#">자연과학/공학</a></li>
-				<li><a href="#">역사/인문학</a></li>
+				<li><a href="${contextPath}/main/main.do?category=컴퓨터/모바일">컴퓨터/모바일</a></li>
+				<li><a href="${contextPath}/main/main.do?category=경제/경영">경제/경영</a></li>
+				<li><a href="${contextPath}/main/main.do?category=대학교재/과학">대학교재/과학</a></li>
+				<li><a href="${contextPath}/main/main.do?category=자기계발/자격증">자기계발/자격증</a></li>
+				<li><a href="${contextPath}/main/main.do?category=예술/대중문화">예술/대중문화</a></li>
+				<li><a href="${contextPath}/main/main.do?category=에세이/인문학">에세이/인문학</a></li>
+				<li><a href="${contextPath}/main/main.do?category=어린이/만화">어린이/만화</a></li>
 			</ul>
 		</li>
 		<li>
@@ -60,8 +57,7 @@
 			<ul>
 				<li><a href="${contextPath}/board/boardList.do">자유게시판</a></li>
 				<li><a href="${contextPath}/book/kakaobook.do">도서 검색</a></li>
-				<li><a href="#">날씨별 추천</a></li>
-				<li><a href="#">오늘의 운세</a></li>
+				<li><a href="${contextPath}/API/weather/weather">날씨별 추천</a></li>
 			</ul>
 		</li>
 
@@ -104,18 +100,6 @@
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-<script type="text/javascript">
-    function googleTranslateElementInit() {
-        new google.translate.TranslateElement({
-            pageLanguage: 'en',
-            includedLanguages: 'ko,en', // 번역할 언어 목록
-            layout: google.translate.TranslateElement.InlineLayout.VERTICAL
-        }, 'google_translate_element');
-    }
-    /* VERTICAL 드롭다운(*Google 번역에서 제공* 수직으로 출력), HORIZONTAL 드롭다운(*Google 번역에서 제공* 수평으로 출력) */
-</script>
-<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
 <script type="text/javascript">
 $(document).ready(function() {

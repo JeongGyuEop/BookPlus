@@ -47,20 +47,20 @@
 
     <!-- 장바구니 테이블에 담긴 상품번호를 이용해 도서상품 테이블과 도서이미지정보가저장되는 테이블 두 개를 JOIN하여 
          조회한 결과 데이터를 List 배열에 담아 반환 -->
-    <select id="selectGoodsList" resultMap="goodsResult" parameterType="java.util.Map">
-        <![CDATA[
-        SELECT G.*, C.cart_id
-        FROM t_shopping_goods G
-        JOIN t_shopping_cart C ON G.goods_id = C.goods_id
-        WHERE G.goods_id IN
-        ]]>
-        <foreach item="item" collection="list" open="(" separator="," close=")">
-            #{item.goods_id}
-        </foreach>
-        <![CDATA[
-        ORDER BY C.CART_ID DESC
-        ]]>
-    </select>
+		<select id="selectGoodsList" resultMap="goodsResult" parameterType="java.util.Map">
+		    <![CDATA[
+		    SELECT G.*, C.cart_id
+		    FROM t_shopping_goods G
+		    JOIN t_shopping_cart C ON G.goods_id = C.goods_id
+		    WHERE
+		    ]]>
+		    <foreach item="item" collection="list" open="(" separator=" OR " close=")">
+		        (C.member_id = #{item.member_id} AND G.goods_id = #{item.goods_id})
+		    </foreach>
+		    <![CDATA[
+		    ORDER BY C.CART_ID DESC
+		    ]]>
+		</select>
 
     <!-- 장바구니에 이미 담긴 상품이 있는지 확인 -->
     <select id="selectCountInCart" resultType="String" parameterType="cartVO">
@@ -93,7 +93,7 @@
     <!-- 장바구니에서 상품 삭제 -->
     <delete id="deleteCartGoods" parameterType="int">
         <![CDATA[
-        delete from T_SHOPPING_CART
+        delete from t_shopping_cart
         where cart_id=#{cart_id}
         ]]>
     </delete>
@@ -101,7 +101,7 @@
     <!-- 장바구니의 최대 cart_id를 조회 -->
     <select id="selectMaxCartId" resultType="int">
         <![CDATA[
-        select IFNULL(max(cart_id), 0) + 1 from T_SHOPPING_CART
+        select IFNULL(max(cart_id), 0) + 1 from t_shopping_cart
         ]]>
     </select>
 

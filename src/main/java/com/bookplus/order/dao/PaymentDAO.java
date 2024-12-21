@@ -7,7 +7,7 @@ import com.bookplus.order.vo.PaymentVO;
 
 import org.apache.ibatis.session.SqlSession;
 
-@Repository
+@Repository("paymentDAO")
 public class PaymentDAO {
 	
 	@Autowired
@@ -19,6 +19,11 @@ public class PaymentDAO {
 
 	public PaymentVO selectPaymentByOrderId(String orderId) {
 		return sqlSession.selectOne("mapper.payment.selectPaymentByOrderId", orderId);
+	}
+
+	public void deleteMyOrder(String order_id) {
+        sqlSession.insert("mapper.payment.deleteMyOrder", order_id);
+
 	}
 
 }

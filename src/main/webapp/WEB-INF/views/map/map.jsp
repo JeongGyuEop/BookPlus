@@ -148,7 +148,7 @@
                 query: query,
                 x: userLng, // 현위치 경도
                 y: userLat, // 현위치 위도
-                radius: 5000 // 검색 반경 (단위: 미터)
+                radius: 20000 // 검색 반경 (단위: 미터)
             },
             success: function (response) {
                 // 검색 결과 필터링 및 데이터 저장

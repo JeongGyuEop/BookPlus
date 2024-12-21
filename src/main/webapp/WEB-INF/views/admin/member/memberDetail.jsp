@@ -10,6 +10,8 @@
 <c:set var="contextPath"  value="${pageContext.request.contextPath}"  />
 <c:choose>
 <c:when test='${modified_personal_info==true }'>
+
+
 <script>
 window.onload=function()
 {
@@ -263,9 +265,33 @@ function fn_delete_member(member_id ,del_yn){
     frm_mod_member.action="${contextPath}/admin/member/deleteMember.do";
     frm_mod_member.submit();
 }
-
-
 </script>
+	<style>
+				  .member-btn {
+				    padding: 10px 20px;
+				    font-size: 14px;
+				    font-weight: bold;
+				    border-radius: 5px;
+				    border: none;
+				    cursor: pointer;
+				    margin: 5px;
+				  }
+				  .restore-btn {
+				    background-color: #28a745;
+				    color: white;
+				  }
+				  .restore-btn:hover {
+				    background-color: #218838;
+				  }
+				  .delete-btn {
+				    background-color: #dc3545;
+				    color: white;
+				  }
+				  .delete-btn:hover {
+				    background-color: #c82333;
+				  }
+				</style>
+				
 </head>
 <body>
 	<h3>내 상세 정보</h3>
@@ -462,15 +488,16 @@ function fn_delete_member(member_id ,del_yn){
 		<tr>
 			<td >
 				<input type="hidden" name="command"  value="modify_my_info" /> 
+			
 				<c:choose>
-				  <c:when test="${member_info.del_yn=='Y' }">
-				    <input  type="button"  value="회원복원" onClick="fn_delete_member('${member_info.member_id }','N')">   
+				  <c:when test="${member_info.del_yn=='Y'}">
+				    <input type="button" class="member-btn restore-btn" value="회원복원" onClick="fn_delete_member('${member_info.member_id}','N')">
 				  </c:when>
-				  <c:when  test="${member_info.del_yn=='N' }">
-				    <input  type="button"  value="회원탈퇴" onClick="fn_delete_member('${member_info.member_id }','Y')">
+				  <c:when test="${member_info.del_yn=='N'}">
+				    <input type="button" class="member-btn delete-btn" value="회원탈퇴" onClick="fn_delete_member('${member_info.member_id}','Y')">
 				  </c:when>
-				  
 				</c:choose>
+
 				
 			</td>
 		</tr>

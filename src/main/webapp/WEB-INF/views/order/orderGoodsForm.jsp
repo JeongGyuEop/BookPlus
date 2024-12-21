@@ -91,26 +91,27 @@
 	        var goodsIdElems    = document.getElementsByName("h_goods_id_");       // 여러 개
 	        var goodsTitleElems = document.getElementsByName("h_goods_title_");    // 여러 개
 	        var goodsQtyElems   = document.getElementsByName("h_order_goods_qty_");// 여러 개
+	        var goodsTotalPrice  = document.getElementsByName("h_total_price_");// 여러 개
 
-	        var goodsIdList   = [];
-	        var totalQty      = 0;
-
+	        var goodsDataList = [];
 	        for (var i = 0; i < goodsIdElems.length; i++) {
-	            goodsIdList.push(goodsIdElems[i].value);
-	            totalQty += parseInt(goodsQtyElems[i].value, 10);
+	            goodsDataList.push({
+	                goods_id: goodsIdElems[i].value,
+	                goods_title: goodsTitleElems[i].value,
+	                order_goods_qty: parseInt(goodsQtyElems[i].value, 10),
+	                total_price: parseInt(goodsTotalPrice[i].value.replace(/,/g, ''), 10)
+	            });
+	            console.log(parseInt(goodsTotalPrice[i].value.replace(/,/g, ''), 10));
 	        }
-
-	        // 책 제목 가공: "첫 번째 제목" + " 외 n권"
+	        
+	    	 // 상품 제목 가공
 	        var goodsTitle = "";
 	        if (goodsTitleElems.length === 1) {
-	            goodsTitle = goodsTitleElems[0].value; 
+	            goodsTitle = goodsTitleElems[0].value;
 	        } else if (goodsTitleElems.length > 1) {
 	            goodsTitle = goodsTitleElems[0].value + " 외 " + (goodsTitleElems.length - 1) + "권";
 	        }
-
-	        // 쉼표 연결된 goods_id 문자열
-	        var goodsIdCsv = goodsIdList.join(",");
-
+	        
 	        // 디버그 출력
 	        console.log("buyerName:", buyerName);
 	        console.log("buyerEmail:", buyerEmail);
@@ -120,16 +121,14 @@
 	        console.log("merchantUid:", merchantUid);
 	        console.log("amount:", amount);
 
-        	console.log("=== 다중 상품 정보 ===");
-        	console.log("goodsIdCsv        :", goodsIdCsv);
-        	console.log("goodsTitle        :", goodsTitle);
-        	console.log("totalQty(합산)    :", totalQty);
+	        console.log("=== 개별 책 정보 ===");
+	        console.log(goodsDataList);
 
 		    IMP.request_pay({
 		        pg: "html5_inicis",
 		        pay_method: "card",
 		        merchant_uid: merchantUid,
-		        name: goodsTitle,    // 여러 권이면 "첫권 제목 + 외 n권"
+		        name: goodsTitle,    
 		        amount: amount,
 		        buyer_email: buyerEmail,
 		        buyer_name: buyerName,
@@ -157,10 +156,8 @@
 		                	order_member_id    : document.getElementById("order_member_id").value,
 		                	order_member_name  : document.getElementById("order_member_name").value,
 
-		                    // 여러 책 정보를 합쳐 전달 (CSV / 총수량)
-		                    goods_id          : goodsIdCsv,  
-		                    goods_title       : goodsTitle,   
-		                    order_goods_qty   : totalQty,  // 모든 책 수량 합
+		                	 // 개별 책 정보 전송
+		                    goods_list: goodsDataList,
 
 		                    // 배송 관련 정보
 		                    receiver_name     : document.getElementById("receiver_name").value,
@@ -342,16 +339,16 @@
 					<tr>
 						<td class="goods_image" colspan="3">
 							<a href="${contextPath}/goods/goodsDetail.do?goods_id=${item.goods_id }">
-								<img width="75" alt=""  src="${contextPath}/thumbnails.do?goods_id=${item.goods_id}&fileName=${item.goods_fileName}">
+								<img width="75" alt="" src="${item.goods_fileName}" />
 							</a>
 						</td>
 						
-						<td>
+						<td width="200px">
 							<span>${item.goods_title}</span>
 						</td>
 						
 						<td>
-							<h2>${orderQtyList[status.index]}개</h2>
+							<strong>${orderQtyList[status.index]}개</strong>
 						</td>
 
 						<td class="price">
@@ -360,11 +357,12 @@
 						
 						<td>
 						    <fmt:formatNumber  value="${item.goods_price * (100 - item.goods_sales_price) / 100}" type="number" var="discounted_price" />
-							<h2>${discounted_price}원( ${item.goods_sales_price}% 할인)</h2>
+							<strong>${discounted_price}원</strong><br>
+							<strong>(${item.goods_sales_price}% 할인)</strong>
 						</td>
 
 						<td>
-							<h2>${item.goods_delivery_price }원</h2>
+							<strong>${item.goods_delivery_price }원</strong>
 						</td>
 
 						<td>
@@ -389,15 +387,43 @@
 					    <input type="hidden" id="h_goods_id_${status.index}" name="h_goods_id_" value="${item.goods_id}">
 					    <input type="hidden" id="h_goods_title_${status.index}" name="h_goods_title_" value="${item.goods_title}">
 					    <input type="hidden" id="h_order_goods_qty_${status.index}" name="h_order_goods_qty_" value="${orderQtyList[status.index]}">
+					    <input type="hidden" id="h_total_price_${status.index}" name="h_total_price_" value="${total_price}">
 					</c:if>
 
 				</c:forEach>
 			</tbody>
 		</table>
 		<div class="clear"></div>
-
+	<br><br>
+	<h1>2. 주문 고객</h1>
+	<div class="detail_table">
+		<table>
+			<tbody>
+				<tr class="dot_line">
+					<td class="fixed_join">이름</td>
+					<td>
+						${memberInfo.member_name}
+						<input type="hidden" id="order_member_id" value="${memberInfo.member_id}" />
+						<input type="hidden" id="order_member_name" value="${memberInfo.member_name}" />
+				    </td>
+				</tr>
+				<tr class="dot_line">
+					<td class="fixed_join">휴대폰 번호</td>
+					<td>
+						${memberInfo.hp1}-${memberInfo.hp2}-${memberInfo.hp3}
+					</td>
+				</tr>
+				<tr class="dot_line">
+					<td class="fixed_join">이메일</td>
+					<td>
+					  ${memberInfo.email1}@${memberInfo.email2}</td>
+				  </tr>
+			</tbody>
+		</table>
+	</div>
+	<div class="clear"></div>
 		<br> <br>
-		<H1>2.배송지 정보</H1>
+		<H1>3.배송지 정보</H1>
 		<DIV class="detail_table">
 			<table>
 				<tbody>
@@ -488,36 +514,11 @@
 				</tbody>
 			</table>
 		</DIV>
-
-		<div>
-			<br><br>
-			<h2>주문고객</h2>
-			<table>
-				<tbody>
-					<tr class="dot_line">
-						<td><h2>이름</h2></td>
-						<td>
-							<input type="text" id="order_name" value="${memberInfo.member_name}" size="15" />
-							<input type="hidden" id="order_member_id" value="${memberInfo.member_id}" />
-							<input type="hidden" id="order_member_name" value="${memberInfo.member_name}" />
-						</td>
-					</tr>
-					<tr class="dot_line">
-						<td><h2>핸드폰</h2></td>
-						<td>
-							<input type="text" id="order_phone" value="${memberInfo.hp1}-${memberInfo.hp2}-${memberInfo.hp3}" size="15" />
-						</td>
-					</tr>
-					<tr class="dot_line">
-						<td><h2>이메일</h2></td>
-						<td>
-							<input type="text" id="order_email" value="${memberInfo.email1}@${memberInfo.email2}" size="15" />
-						</td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
-		
+		<input type="hidden" id="order_name" value="${memberInfo.member_name}" size="15" />
+		<input type="hidden" id="order_member_id" value="${memberInfo.member_id}" />
+		<input type="hidden" id="order_member_name" value="${memberInfo.member_name}" />
+		<input type="hidden" id="order_phone" value="${memberInfo.hp1}-${memberInfo.hp2}-${memberInfo.hp3}" size="15" />
+		<input type="hidden" id="order_email" value="${memberInfo.email1}@${memberInfo.email2}" size="15" />
 		<div class="clear"></div>
 		
 		<table width=80% class="list_view" style="background: #ccffff">

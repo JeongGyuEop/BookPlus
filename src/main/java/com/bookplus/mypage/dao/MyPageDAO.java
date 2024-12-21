@@ -15,4 +15,5 @@ public interface MyPageDAO {
 	public void updateMyInfo(Map memberMap) throws DataAccessException;
 	public MemberVO selectMyDetailInfo(String member_id) throws DataAccessException;
 	public void updateMyOrderCancel(String order_id) throws DataAccessException;
+	public void deleteMyOrder(String order_id);
 }
