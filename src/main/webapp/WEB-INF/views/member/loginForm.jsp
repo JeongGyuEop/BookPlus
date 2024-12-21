@@ -144,7 +144,7 @@
             <a href="https://nid.naver.com/oauth2.0/authorize?&client_id=JyvgOzKzRCnvAIRqpVXo&response_type=code&redirect_uri=http://localhost:8090/BookPlus/member/naver/callback&state=<%= URLEncoder.encode(state, "UTF-8") %>">
                 <img src="${contextPath}/resources/image/naverlogin_button/btnG_아이콘원형.png" alt="네이버 로그인">
             </a>
-            <a href="https://kauth.kakao.com/oauth/authorize?client_id=f6d8eb0ebbe1cc122b97b3f7be2a2b1a&redirect_uri=http://localhost:8090/BookPlus/member/kakao/callback&response_type=code">
+            <a href="https://kauth.kakao.com/oauth/authorize?client_id=279e4cf54e1d0711b4748cd1ffb04c56&redirect_uri=http://localhost:8090/BookPlus/member/kakao/callback&response_type=code">
                 <img src="${contextPath}/resources/image/kakao_login_simple/kakao_login_circle.png" alt="카카오 로그인">
             </a>
         </div>
