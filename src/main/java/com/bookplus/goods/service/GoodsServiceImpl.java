@@ -54,7 +54,7 @@ public class GoodsServiceImpl implements GoodsService {
 					// API URL 동적 생성
 					// 카테고리 날씨 >> 51210, 28465, 8435
 					String requestUrl = String.format(
-							"http://www.aladin.co.kr/ttb/api/ItemList.aspx?ttbkey=%s&querytype=%s&searchtarget=book&start=%d&maxresults=%d&cover=big&categoryid=28465&output=xml&inputencoding=utf-8&version=20131101",
+							"http://www.aladin.co.kr/ttb/api/ItemList.aspx?ttbkey=%s&querytype=%s&searchtarget=book&start=%d&maxresults=%d&cover=big&categoryid=105991&output=xml&inputencoding=utf-8&version=20131101",
 							API_KEY, queryType, j, maxResults);
 					System.out.println(requestUrl);
 					// API 호출 및 응답 처리

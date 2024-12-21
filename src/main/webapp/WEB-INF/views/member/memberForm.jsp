@@ -223,42 +223,6 @@ function prepareFormData() {
     }
 }
 
-function fn_overlapped(){
-	var _id=$("#_member_id").val();
-	if(_id==''){
-		alert("ID를 입력하세요");
-		return;
-	}
-	$.ajax({
-		type:"post",
-		async:false,
-		url:"${contextPath}/member/overlapped.do",
-		dataType:"text",
-		data: {id:_id},
-		success:function(data,textStatus){
-			if(data=='false'){
-				alert("사용할 수 있는 ID입니다.");
-				$('#btnOverlapped').prop("disabled", true);
-				$('#_member_id').prop("disabled", true);
-				$('#member_id').val(_id);
-			}else{
-				alert("사용할 수 없는 ID입니다.");
-				// 입력 필드 초기화
-				$('#_member_id').val('').focus();
-			}
-		},
-		error:function(data,textStatus){
-			alert("에러가 발생했습니다.");
-		}
-	});
-}
-
-function updateEmailDomain() {
-	var select = document.getElementById('email2Select');
-	var emailInput = document.getElementById('email2Input');
-	emailInput.value = select.value;
-}
-
 </script>
 </head>
 <body>
@@ -266,7 +230,7 @@ function updateEmailDomain() {
     JSONObject userProfile = (JSONObject) request.getAttribute("userProfile");
 %>
 	<h3>필수입력사항</h3>
-	<form action="${contextPath}/member/addMember.do" method="post" onsubmit="return validateForm();">>
+	<form action="${contextPath}/member/addMember.do" method="post" onsubmit="return validateForm();">
 	<input type="hidden" name="socialProvider" value="${requestScope.socialProvider}"> 	
 	<div id="detail_table">
 		<table>
