@@ -82,17 +82,17 @@
 	</select>
 
 	<!-- 상품 상세 이미지 정보 조회 -->
-	<select id="selectGoodsDetailImage" resultMap="goodsResult" parameterType="String">
+<!-- 	<select id="selectGoodsDetailImage" resultMap="goodsResult" parameterType="String">
         <![CDATA[
         SELECT d.goods_isbn, d.filename AS fileName
         FROM t_goods_detail_image d
         WHERE d.filetype != 'main_image'
         AND d.goods_isbn = #{goods_isbn}
         ]]>
-	</select>
+	</select> -->
 
 	<!-- 상품 검색 -->
-	<select id="selectGoodsBySearchWord" resultMap="goodsResult" parameterType="String">
+<!-- 	<select id="selectGoodsBySearchWord" resultMap="goodsResult" parameterType="String">
         <![CDATA[
         SELECT g.*, d.filename AS fileName
         FROM t_shopping_goods g
@@ -101,7 +101,7 @@
         AND g.goods_title LIKE CONCAT('%', #{searchWord}, '%')
         ORDER BY g.goods_credate DESC
         ]]>
-	</select>
+	</select> -->
 
 	<!-- ISBN으로 책 조회 -->
     <select id="selectGoodsByISBN" parameterType="string" resultType="GoodsVO">
