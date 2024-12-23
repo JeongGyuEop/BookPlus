@@ -80,7 +80,7 @@
 <details>
   <summary>📈 ERD 보기</summary>
   <div markdown="1" style="padding-left: 15px;">
-    <img src="path_to_erd_image.png" alt="ERD" width="800px"/>
+    <img src="https://github.com/JeongGyuEop/FullStack-Image/blob/main/bookplusERD.png?raw=true" alt="ERD" width="800px"/>
   </div>
 </details>
 
