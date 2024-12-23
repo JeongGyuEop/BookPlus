@@ -58,7 +58,7 @@
 
 ### 서버
 
-- **웹 서버:** Apache Tomcat
+- **웹 서버:** Apache Tomcat, Amazon Web Service
 
 ### 라이브러리
 
