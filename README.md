@@ -117,12 +117,8 @@
 
 ## 📕 기타 자료
 
-### 1. 📄 기능 요구 사항 정리
+### 1. 📄 작업 분배 및 배정
 
-- **링크:** [BookPlus - Notion](https://www.notion.so/1523334795ae8036b65edca8cb363214?pvs=4)
-
-### 2. 📂 추가 자료
-
-- **링크:** [Travel Recommendation 프로젝트](https://github.com/kimphysicsman/Travel_recommedation)
+- **링크:** [BookPlus - Notion](https://www.notion.so/14d3334795ae8075a400c6f4fd2805f0?pvs=4)
 
 ---
