@@ -1,6 +1,6 @@
 # 📚 BookPlus+
 
-[![Website](https://github.com/JeongGyuEop/BookPlus/blob/main/src/main/webapp/resources/image/bookplus.png?raw=true)]
+(https://github.com/JeongGyuEop/BookPlus/blob/main/src/main/webapp/resources/image/bookplus.png?raw=true)
 
 ---
 
