@@ -1,6 +1,6 @@
 # 📚 BookPlus+
 
-[![Website](#)]
+[![Website](https://github.com/JeongGyuEop/BookPlus/blob/main/src/main/webapp/resources/image/bookplus.png?raw=true)]
 
 ---
 
@@ -19,7 +19,7 @@
 ### 📅 제작 기간
 
 - **시작일:** 2024년 12월 05일
-- **종료일:** 2024년 12월 26일
+- **종료일:** 2024년 12월 23일
 
 ### 👥 참여 인원
 
