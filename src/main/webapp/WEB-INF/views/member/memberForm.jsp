@@ -479,8 +479,8 @@ function updateEmailDomain() {
 					  <br>
 					  <p> 
 					  도로명 주소:<br><input type="text" id="roadAddress"  name="roadAddress" size="50"><br><br>
-					  지번 주소: <input type="text" id="jibunAddress" name="jibunAddress" size="50"><br><br>
-					  나머지 주소: <input type="text"  id="namujiAddress" name="namujiAddress" size="50" />
+					  지번 주소: <br><input type="text" id="jibunAddress" name="jibunAddress" size="50"><br><br>
+					  나머지 주소: <br><input type="text"  id="namujiAddress" name="namujiAddress" size="50" />
 					  <span id="guide" style="color:#999;display:none"></span>
 					   </p>
 					</td>
