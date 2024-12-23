@@ -84,13 +84,6 @@
   </div>
 </details>
 
-<details>
-  <summary>🏗️ 구조 보기</summary>
-  <div markdown="1" style="padding-left: 15px;">
-    <img src="path_to_structure_image.png" alt="Structure" width="800px"/>
-  </div>
-</details>
-
 ---
 
 ## 🔑 핵심 기능
@@ -117,8 +110,8 @@
 
 ## 📕 기타 자료
 
-### 1. 📄 작업 분배 및 배정
+### 1. 📄 프로젝트 계획 문서
 
-- **링크:** [BookPlus - Notion](https://www.notion.so/14d3334795ae8075a400c6f4fd2805f0?pvs=4)
+- **링크:** [BookPlus - Notion](https://www.notion.so/1633334795ae80f18ae9f0e8ac9134d9?pvs=4)
 
 ---
