@@ -69,7 +69,7 @@
 
 ### 개발 및 협업 환경
 
-- **IDE:** Eclipse
+- **IDE:** Eclipse(Spring Tool Suit)
 - **버전 관리:** Git, GitHub
 - **문서 관리:** Notion
 
